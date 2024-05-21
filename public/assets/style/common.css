@@ -1,0 +1,28 @@
+/* I want to do horrible things, so to make my life easier,
+   this :root rule should be the first rule here.
+*/
+
+:root {
+    --accent-light: #ff9999;
+    --accent: #ea0042;
+    --accent-dark: #9a0062;
+
+    --accent2-light: #c6fff3;
+    --accent2: #00f5b8;
+    --accent2-dark: #1b88a3;
+}
+
+@font-face {
+    font-family: "lmmono";
+    src: url("/assets/fonts/lmmono10-regular-webfont.woff");
+}
+
+@font-face {
+    font-family: "eczar";
+    src: url("/assets/fonts/Eczar-Regular-webfont.woff");
+}
+
+body { 
+    margin: 0;
+    padding: 0;
+}

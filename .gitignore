@@ -1,0 +1,7 @@
+dist/
+.astro/
+.vscode/
+_content/
+node_modules/
+rvaenv.ps1
+deploy.ps1

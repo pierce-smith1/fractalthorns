@@ -1,0 +1,50 @@
+---
+    import * as Domain from "../descriptors/domain";
+
+    import Background from "../components/client/background.svelte";
+    import Page from "../components/client/page.svelte";
+
+    export interface Props {
+        domain?: Domain.Page["domain"],
+        item?: string,
+    }
+
+    const {domain, item} = Astro.params;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+        <link rel="stylesheet" href="/assets/style/common.css" /> <!-- because of client-side color scripts, 
+                                                                       this stylesheet MUST be first (or the only one here) -->
+		<title>fractal thorns</title>
+	</head>
+	<body data-domain={domain} data-item={item}>
+        <Background client:only="svelte" />
+        <Page client:only="svelte" />
+	</body>
+</html>
+
+<style>
+    :global(*) {
+        font-family: "lmmono";
+    }
+</style>
+
+<script>
+    import * as Domain from "../descriptors/domain";
+
+    import {current} from "../components/client/page.ts";
+
+    const body = document.querySelector("body");
+    const domain = body?.dataset["domain"];
+    const item = body?.dataset["item"];
+
+    if (Domain.is_valid_domain(domain)) {
+        current.set({domain, item});
+    } else {
+        console.error(`Tried to move to invalid domain ${domain}`);
+    }
+</script>

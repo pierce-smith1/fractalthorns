@@ -1,0 +1,124 @@
+---
+    import * as StoryModel from "../../loaders/episodicdic";
+    import * as RecordModel from "../../loaders/record";
+
+    import RecordSelect from "./recordselect.astro";
+
+    const this_record: RecordModel.Model = Astro.props.record;
+
+    const story = await StoryModel.get();
+
+    const record_index = story.records.findIndex(record => record.name === this_record.name);
+
+    const chapter_name = this_record.chapter;
+    const chapter_records = story.records.filter(record => record.chapter === chapter_name);
+    const next_record_index = record_index + 1 >= story.records.length
+        ? 0
+        : record_index + 1;
+    const prev_record_index = record_index - 1 < 0
+        ? story.records.length - 1
+        : record_index - 1;
+    const next_record_entry = story.records[next_record_index];
+    const prev_record_entry = story.records[prev_record_index];
+
+    const iteration = this_record.options["iter"];
+---
+
+<div class="header-container">
+    <div class="nav-container">
+        <div class="adjacent-record-button prev-record-button">
+            <a href={`/record/${prev_record_entry.chapter}/${prev_record_entry.name}`}>&lt;</a>
+        </div>
+        <div class="record-title-container">
+            <p class="chapter-title">{chapter_name} / {this_record.display_title}</p>
+            <RecordSelect current_record_name={this_record.name}/>
+        </div>
+        <div class="logo-container">
+            <img class="logo" src="/assets/images/nsirp.png"/>
+        </div>
+        <div class="adjacent-record-button next-record-button">
+            <a href={`/record/${next_record_entry.chapter}/${next_record_entry.name}`}>&gt;</a>
+        </div>
+    </div>
+    <div class="header-lines-container">
+        {this_record.header_lines.map(line => (
+            <pre class="header-line">{line}</pre>
+        ))}
+    </div>
+</div>
+
+<style>
+    .header-container {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        width: 100%; 
+        margin: auto;
+    }
+
+    .nav-container {
+        display: flex;
+        flex-flow: row nowrap;
+        border-bottom: 1px solid #aaa;
+    }
+
+    .adjacent-record-button {
+        height: auto;
+        width: 80px;
+    }
+
+    .adjacent-record-button a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--accent);
+        font-size: 3em;
+        font-family: "lmmono";
+        text-align: center;
+        height: 100%;
+        width: 100%;
+    }
+
+    .record-title-container {
+        display: flex;
+        flex-flow: column nowrap;
+        flex-grow: 2;
+        margin-right: 40px;
+    }
+
+    .logo-container {
+    }
+
+    .chapter-title {
+        font-family: "lmmono";
+        font-size: 1.5em;
+        margin: 0;
+        color: #666;
+    }
+
+    .record-title {
+        font-family: "lmmono";
+        font-size: 3em;
+        margin: 0;
+        line-height: 1em;
+        flex-grow: 1;
+        color: var(--accent);
+    }
+
+    .header-lines-container {
+        text-align: center;
+        margin: 30px;
+    }
+
+    .header-line {
+        font-size: 1em;
+        color: #aaa;
+        line-height: 5px;
+    }
+
+    .logo {
+        width: 100px;
+    }
+</style>
+

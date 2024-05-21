@@ -1,0 +1,111 @@
+
+---
+    import {marked} from "marked";
+
+    import * as RecordModel from "../../loaders/record";
+
+    type Props = {
+        record: RecordModel.Model,
+    };
+
+    const {record} = Astro.props;
+
+    type DisplayLine = RecordModel.LineModel & {transition?: boolean};
+    const display_lines: Array<DisplayLine> = record.lines.map((line, i, lines) => {
+        if (i === 0) {
+            return line;
+        }
+
+        let display_line: DisplayLine = {...line};
+        const last_line = lines[i - 1];
+
+        if (line.character !== last_line.character) {
+            display_line.transition = true;
+        }
+
+        if (line.character === "Narrator" || (line?.type === "Block" && !display_line.transition)) {
+            display_line.character = "";
+        }
+
+        return display_line;
+    });
+
+    function get_line_html(line: RecordModel.LineModel) {
+        if (line.type === "Sabre") {
+            return `<pre>&lt; ${line.text} &gt;</pre>`;
+        }
+
+        let html = marked.parse(line.text);
+
+        return html;
+    }
+---
+
+<style>
+    .record-text-container {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+    
+    .line-container {
+        display: flex;
+        flex-flow: row nowrap;
+        margin: 0;
+        padding: 0;
+    }
+
+    .speaker-name {
+        font-family: "lmmono";
+        font-size: 1.1em;
+        color: var(--accent-dark);
+        position: relative;
+        top: 5px;
+    }
+
+    .speaker-gutter {
+        padding: 2px 10px 2px 10px;
+        border-right: 1px solid var(--accent-light);
+        min-width: 70px;
+        max-width: 70px;
+        text-align: end;
+    }
+
+    .transition .speaker-gutter {
+        margin-top: 10px;
+    }
+
+    .line {
+        padding: 5px 10px 5px 10px;
+        font-family: "eczar";
+        font-size: 1.1em;
+        color: #666; 
+        margin: 0;
+    }
+
+    .transition .line {
+        margin-top: 10px;
+    }
+
+    .line :global(*) {
+        font-family: "eczar";
+        margin: 0;
+    }
+
+    .line :global(ul) {
+        list-style-type: "- ";
+        padding-left: 20px;
+    } 
+</style>
+
+<div class="record-text-container">
+    {display_lines.map(line => (
+        <div class:list={["line-container", line.transition ? "transition" : null]}>
+            <div class="speaker-gutter">
+                <strong class="speaker-name">{line.character}</strong>
+            </div>
+            <div class="line-container">
+                <div class="line" set:html={get_line_html(line)}></div>
+            </div>
+        </div>
+    ))}
+</div>

@@ -1,0 +1,227 @@
+---
+    import CommonPage from "../../layouts/commonpage.astro";
+
+    const {image, title} = Astro.props.frontmatter;
+---
+
+<CommonPage>
+    <div class="container">
+        <div class="title"><strong>{title}</strong></div>
+        <img class="header-image" src={image} />
+        <div class="toc">
+            <ol>
+            </ol>
+        </div>
+        <div class="story">
+            <slot />
+        </div>
+    </div>
+</CommonPage>
+
+<script>
+    const headers = [...document.querySelectorAll("h2")];
+    const toc_list = document.querySelector(".toc ol")!;
+
+    for (const header of headers) {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+
+        link.href = `#${header.id}`;
+        link.innerText = header.innerText;
+
+        item.appendChild(link);
+        toc_list.appendChild(item);
+    }
+</script>
+
+<style>
+    * {
+        font-family: "eczar";
+        font-size: 1.05em;
+        color: #334;
+    }
+
+    .container {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #eee;
+    }
+
+    :global(h2) {
+        padding-top: 20px;
+    }
+
+    :global(p) {
+        padding-left: 20px;
+        border-left: 1px solid #dad;
+    }
+
+    :global(blockquote) :global(p) {
+        border: none;
+        font-style: italic;
+        line-height: 1em;
+        color: #a3a;
+        font-size: 1.2em;
+    }
+
+    .header-image {
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+    .title {
+        position: absolute;
+        left: 10vw;
+        top: 60px;
+        width: 30%;
+        filter: drop-shadow(magenta 0 0 10px);
+    }
+
+    @media screen and (max-width: 800px) {
+        .title {
+            left: 20px;
+            top: 20px;
+        }
+    }
+
+    .title * {
+        line-height: 6vw;
+        font-size: 6vw;
+        color: #f4f;
+    }
+
+    .toc {
+        position: absolute;
+        top: 18vw;
+        left: 5vw;
+    }
+
+    @media screen and (max-width: 800px) {
+        .toc {
+            position: relative;
+            left: 0;
+            top: 0;
+            border-bottom: 1px solid #a3a;
+            border-top: 1px solid #a3a;
+        }
+    }
+
+    .toc ol {
+        list-style-type: none;
+        position: sticky;
+    }
+
+    :global(.toc *) {
+        color: #7af;
+        text-decoration: none;
+    }
+
+    :global(.toc a:hover)  {
+        color: #fa0;
+        transition: color 0.3s ease-in-out;
+    }
+    
+    .story {
+        width: 800px;
+    }
+
+    @media screen and (max-width: 800px) {
+        .story {
+            width: 90%;
+        }
+    }
+
+    :global(.act-img-header) {
+        position: relative;
+        width: 800px;
+        height: 225px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media screen and (max-width: 800px) {
+        :global(.act-img-header) {
+            width: 100%;
+            border-left: 1px solid #dad;
+            border-right: 1px solid #dad;
+        }
+    }
+
+    :global(.act-img-frame) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 800px;
+        height: 225px;
+        filter: brightness(75%) saturate(300%);
+    }
+
+    @media screen and (max-width: 800px) {
+        :global(.act-img-frame) {
+            width: 100%;
+        }
+    }
+
+    :global(.act-img) {
+        position: relative;
+        width: 700px;
+        height: 125px;
+        background-position: left;
+        isolation: isolate;
+    }
+
+    @media screen and (max-width: 800px) {
+        :global(.act-img) {
+            width: 100%;
+        }
+    }
+
+    :global(.frame-1) {
+        background-image: url("/assets/images/tlh/act-image-frame-1.png");
+    }
+
+    :global(.frame-2) {
+        background-image: url("/assets/images/tlh/act-image-frame-2.png");
+    }
+
+    :global(.frame-3) {
+        background-image: url("/assets/images/tlh/act-image-frame-3.png");
+    }
+
+    :global(.frame-4) {
+        background-image: url("/assets/images/tlh/act-image-frame-4.png");
+    }
+
+    :global(.frame-5) {
+        background-image: url("/assets/images/tlh/act-image-frame-5.png");
+    }
+
+    :global(.frame-end) {
+        background-image: url("/assets/images/tlh/act-image-frame-end.png");
+    }
+
+    :global(.act-1) {
+        background-image: url("/assets/images/tlh/act-image-1.png");
+    }
+
+    :global(.act-2) {
+        background-image: url("/assets/images/tlh/act-image-2.png");
+    }
+
+    :global(.act-3) {
+        background-image: url("/assets/images/tlh/act-image-3.png");
+    }
+
+    :global(.act-4) {
+        background-image: url("/assets/images/tlh/act-image-4.png");
+    }
+
+    :global(.act-5) {
+        background-image: url("/assets/images/tlh/act-image-5.png");
+    }
+</style>

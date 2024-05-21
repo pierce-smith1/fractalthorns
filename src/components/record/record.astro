@@ -1,0 +1,32 @@
+---
+    import * as RecordModel from "../../loaders/record";
+
+    import Header from "./header.astro";
+    import RecordText from "./recordtext.astro";
+    import RecordBackground from "./recordbackground.svelte";
+
+    type Props = {
+        record: RecordModel.Model,
+    };
+
+    const {record} = Astro.props;
+---
+
+<style>
+    .container {
+        width: 1000px;
+        position: relative;
+        top: 20px;
+        margin: auto;
+        padding: 20px;
+        border-top: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+        background-color: white;
+    }
+</style>
+
+<RecordBackground client:only="svelte" record={record}/>
+<div class="container" data-iter={record.options.iter}>
+    <Header record={record}/>
+    <RecordText record={record}/>
+</div>
