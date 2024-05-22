@@ -109,21 +109,17 @@
 </script>
 
 <div class="home-artist-container">
-    <h1 class="home-title">fractal thorns</h1>
-
-    <p class="splash">&gt; testing, testing, one two three</p>
+    <img class="quintic" src="/assets/images/common/thorns.png">
+    <p class="splash">testing, testing, one two three</p>
 
     <div class="canvas-container">
         <Canvas {artist} />
     </div>
-
-    {#await news_promise}
-    {:then news}
-    {/await}
 </div>
 
 <style>
     .home-artist-container {
+        position: relative;
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;
@@ -136,20 +132,22 @@
     .canvas-container {
         position: fixed;
     }
-    
-    .home-title {
-        padding: 10px 30px;
-        margin: 10px;
-        border: 2px solid rgba(255 255 255 / 50%);
-        border-radius: 10px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        z-index: 1000;
-        font-size: 40px;
+
+    .quintic {
+        position: relative;
+        top: 10px;
     }
 
     .splash {
+        position: relative;
+        top: 0;
         font-size: 20px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(255 255 255 / 50%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 1;
     }
 
     * {
