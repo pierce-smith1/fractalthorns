@@ -19,7 +19,7 @@
 
 <div class="search-results">
     {#if image_promises.length > 0}
-        <div class="domain-header"><h3>i</h3></div>
+        <div class="domain-header"><h3>images</h3></div>
     {/if}
     {#each image_promises as promise}
         {#await promise}
@@ -30,7 +30,7 @@
     {/each}
 
     {#if episodic_promises.length > 0}
-        <div class="domain-header"><h3>e</h3></div>
+        <div class="domain-header"><h3>records</h3></div>
     {/if}
     <div class="episodic-results">
         {#each episodic_promises as promise}

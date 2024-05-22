@@ -22,7 +22,7 @@
 </script>
 
 <div class="domain-search-container">
-    <input type="search" on:keyup={submit_search} />
+    <input type="search" placeholder="search everything" on:keyup={submit_search} />
 </div>
 
 <style>
