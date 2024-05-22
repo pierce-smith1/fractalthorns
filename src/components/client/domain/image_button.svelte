@@ -15,9 +15,9 @@
 
 <style>
     img {
+        box-sizing: border-box;
         border-radius: 5px;
-        max-width: 97%;
-        margin: 0 5px 0 5px;
+        max-width: 100%;
         border-left: 5px solid rgb(255 255 255 / 50%);
     }
 </style>
