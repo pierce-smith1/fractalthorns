@@ -12,7 +12,7 @@
     $: current_page = page ?? $current;
 </script>
 
-<div class="view-container" class:clear={current_page.domain === "home"}>
+<div class="view-container" class:clear={current_page.domain === "home"} class:extra-blur={current_page.domain === "episodic"}>
     {#if current_page.domain === "home"}
         <HomeView />
     {:else if current_page.domain === "image"}
@@ -30,10 +30,16 @@
         border: 2px solid white;
         border-top-width: 20px;
         border-radius: 5px;
+        background-color: rgba(0 0 0 / 50%);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         flex-grow: 5;
         overflow-y: auto;
+    }
+
+    .extra-blur {
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
     }
 
     .clear {

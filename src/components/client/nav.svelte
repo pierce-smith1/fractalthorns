@@ -61,6 +61,7 @@
         color: white;
         border: 1px solid white;
         border-radius: 5px;
+        background-color: rgba(0 0 0 / 50%);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         min-width: 300px;
