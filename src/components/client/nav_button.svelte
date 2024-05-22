@@ -34,13 +34,18 @@
     }
 
     .button-background {
-        width: 48px;
-        height: 48px;
+        background-size: cover;
+        width: 40px;
+        height: 40px;
     }
 
     .selected {
         color: black;
         background-color: white;
+    }
+
+    .selected .button-background {
+        filter: invert();
     }
     
     .domain-button :global(a) {
