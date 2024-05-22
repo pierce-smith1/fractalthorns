@@ -27,6 +27,7 @@ export const GET = Endpoint.use_get_handler<"single_image">(async (request, over
 
     const client_image = {...requested_image, 
         date: requested_image.date.toString(),
+        ordinal: images.length - image_index,
         next_image: next_image_name,
         prev_image: prev_image_name,
     };

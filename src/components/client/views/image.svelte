@@ -42,7 +42,7 @@
     {:then image}
         <div class="image-info-container">
             <div class="image-title-container">
-                <h1 class="title">{image.title}</h1>
+                <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
             </div>
             <div class="image-description-container">
@@ -135,6 +135,14 @@
 
     .title {
         font-family: "eczar";
+    }
+
+    .title-ordinal {
+        font-size: 16px;
+        color: rgba(255 255 255 / 75%);
+        position: relative;
+        bottom: 12px; 
+        left: 5px;
     }
 
     .subtitle {

@@ -13,7 +13,8 @@ export type Model = {
 export type ClientModel = Omit<Model, "date"> & {
     next_image: string,
     prev_image: string,
-    date: string
+    ordinal: number,
+    date: string,
 };
 
 export type SingleImageRequest = {
