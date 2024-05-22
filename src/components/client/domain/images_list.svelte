@@ -7,28 +7,22 @@
     let load_promise = Fetchers.get.all_images({});
 </script>
 
-<div class="container">
+<div class="images-container">
     {#await load_promise}
         <Loading/>
     {:then images}
-        <div class="image-portraits">
         {#each images as image}
             <ImageButton {image} />
         {/each}
-        </div>
     {/await}
 </div>
 
 <style>
-    .container {
+    .images-container {
         display: flex;
         flex-flow: column nowrap;
-        max-height: 100%;
-        width: 90%;
-    }
-
-    .image-portraits {
-        display: flex;
-        flex-flow: column nowrap;
+        height: 100%;
+        padding: 10px;
+        gap: 5px;
     }
 </style>

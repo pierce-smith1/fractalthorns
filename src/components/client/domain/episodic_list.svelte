@@ -7,7 +7,7 @@
     let load_promise = Fetchers.get.full_episodic({});
 </script>
 
-<div class="container">
+<div class="episodic-container">
     {#await load_promise}
         <Loading />
     {:then episodic}
@@ -23,13 +23,12 @@
 </div>
 
 <style>
-    .container {
+    .episodic-container {
         width: 90%;
-        height: 100%;
         padding: 10px;
     }
     
-    .container * {
+    .episodic-container * {
         padding: 0;
         margin: 0;
     }

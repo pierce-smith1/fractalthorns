@@ -111,7 +111,7 @@
 <div class="home-artist-container">
     <h1 class="home-title">fractal thorns</h1>
 
-    <p class="splash">testing, testing, one two three</p>
+    <p class="splash">&gt; testing, testing, one two three</p>
 
     <div class="canvas-container">
         <Canvas {artist} />
@@ -145,6 +145,11 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         z-index: 1000;
+        font-size: 40px;
+    }
+
+    .splash {
+        font-size: 20px;
     }
 
     * {

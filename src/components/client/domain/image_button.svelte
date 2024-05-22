@@ -15,9 +15,12 @@
 
 <style>
     img {
+        display: block;
         box-sizing: border-box;
-        border-radius: 5px;
         max-width: 100%;
-        border-left: 5px solid rgb(255 255 255 / 50%);
+        border-radius: 5px 0 0 5px;
+        border-right: 5px solid rgb(255 255 255 / 50%);
+        padding-right: 4px;
+        filter: drop-shadow(0 0 2px black);
     }
 </style>

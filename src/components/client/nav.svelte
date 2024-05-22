@@ -9,6 +9,7 @@
     import Loading from "./loading.svelte";
     import EpisodicList from "./domain/episodic_list.svelte";
     import NavButton from "./nav_button.svelte";
+    import News from "./news.svelte";
 
     let domain_search_results: Promise<Array<Domain.Page>> | undefined = undefined;
     $: showing_search_results = !!domain_search_results;
@@ -30,8 +31,6 @@
         </div>
     </div>
 
-    <div class="nav-ghost"></div>
-
     {#if domain_search_results && showing_search_results}
         {#await domain_search_results}
             <Loading />
@@ -40,7 +39,7 @@
         {/await}
     {:else}
         {#if $current.domain === "home"}
-            <p>↑ explore</p>
+            <News />
         {:else if $current.domain === "image"}
             <ImageList />
         {:else if $current.domain === "episodic"}
@@ -48,7 +47,8 @@
         {/if}
     {/if}
 
-    <div class="nav-spacer"></div>
+    <div class="nav-spacer">
+    </div>
 </nav>
 
 <style>
@@ -57,7 +57,7 @@
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         color: white;
         border: 1px solid white;
         border-radius: 5px;
@@ -82,16 +82,11 @@
         width: 90%;
         gap: 10px;
         padding: 10px;
-    }
-
-    .nav-ghost {
-        width: 300px;
-        min-height: 110px;
+        z-index: 1000;
     }
 
     .nav-spacer {
         width: 300px;
-        height: 100%;
     }
 
     .domain-buttons {
