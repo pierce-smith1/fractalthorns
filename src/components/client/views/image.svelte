@@ -5,7 +5,7 @@
     import * as Fetchers from "../../../fetchers";
 
     import Loading from "../loading.svelte";
-    import PageLink from '../page_link.svelte';
+    import Keynav from './keynav.svelte';
 
     export let name: string | undefined;
 
@@ -28,7 +28,7 @@
         parts.push(format_date(image));
 
         if (image.speedpaint_video_id) {
-            parts.push(`<a href="https://www.youtube.com/watch?v=${image.speedpaint_video_id}">speedpaint</a>`)
+            parts.push(`<a href="https://www.youtube.com/watch?v=${image.speedpaint_video_id}">speedpaint</a>`);
         }
 
         const subtitle = parts.join(" · ");
@@ -41,9 +41,6 @@
         <Loading />
     {:then image}
         <div class="image-info-container">
-            <PageLink dest={({domain: "image", item: image.next_image})}>
-                <div class="nav-arrow nav-arrow-next"><span>↟</span></div>
-            </PageLink>
             <div class="image-title-container">
                 <h1 class="title">{image.title}</h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
@@ -51,14 +48,11 @@
             <div class="image-description-container">
                 {@html marked.parse(image.description)}
             </div>
-            <div class="nav-arrow-spacer"></div>
-            <PageLink dest={({domain: "image", item: image.prev_image})}>
-                <div class="nav-arrow nav-arrow-prev"><span>↡</span></div>
-            </PageLink>
         </div>
         <div class="image-container">
             <a href={image.image_url}><img src={image.image_url}></a>
         </div>
+        <Keynav page_up={({domain: "image", item: image.next_image})} page_down={({domain: "image", item: image.prev_image})} />
     {/await}
 </div>
 
@@ -124,20 +118,6 @@
 
     .image-description-container :global(*) {
         font-family: "eczar";
-    }
-
-    .nav-arrow {
-        text-align: center;
-        font-size: 32px;
-    }
-
-    .nav-arrow:hover {
-        background-color: rgba(255 255 255 / 50%);
-    }
-
-    .nav-arrow-spacer {
-        width: 1px;
-        flex-grow: 10;
     }
 
     img {
