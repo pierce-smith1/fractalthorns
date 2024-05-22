@@ -104,8 +104,6 @@
     };
 
     const artist = new HomeArtist();
-
-    const news_promise = Fetchers.get.all_news({});
 </script>
 
 <div class="home-artist-container">
