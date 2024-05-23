@@ -38,8 +38,8 @@ export function get_iteration_sigil(iteration: string): string | undefined {
 export function get_iteration_color(iteration: string): string | undefined {
     switch (iteration) {
         case "154373": return "#FFF8D1";
-        case "209151": return "#00FFED";
-        case "265404": return "#FFC67C";
+        case "209151": return "#51CDFF";
+        case "265404": return "#FF8C1F";
         case "768220": return "#FF5588";
         case "768221": return "#E84CDB";
         case "auzoan": return "#E84CDB";

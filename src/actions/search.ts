@@ -1,4 +1,5 @@
-import * as Record from "../loaders/record";
+import * as Record from "../descriptors/record";
+import * as RecordLoader from "../loaders/record";
 import * as Character from "../loaders/character";
 import * as Episodic from "../loaders/episodic";
 
@@ -35,8 +36,8 @@ export async function search(options: SearchOptions, regex_string: string): Prom
     const story = await Episodic.get();
 
     let matches = await Promise.all(story.records.map(async record => {
-        const record_model = (await Record.get(record.name, record.chapter))!;
-        return [record.name, await search_in_record(record_model, options, regex_string)] as [string, Array<SearchMatch>];
+        const record_model = (await RecordLoader.get(record.name, record.chapter))!;
+        return [record.name, await search_in_record({...record_model, title: record.name}, options, regex_string)] as [string, Array<SearchMatch>];
     }));
     matches = matches.filter(match => match[1].length > 0)
     const matches_by_record = Object.fromEntries(matches);
@@ -44,12 +45,12 @@ export async function search(options: SearchOptions, regex_string: string): Prom
     return matches_by_record;
 }
 
-export async function search_in_record(record: Record.Model, options: SearchOptions, regex_string: string): Promise<Array<SearchMatch>> { 
+export async function search_in_record(record: Record.Model & {title: string}, options: SearchOptions, regex_string: string): Promise<Array<SearchMatch>> { 
     if (options.whole_words) {
         regex_string = `\\b${regex_string}\\b`;
     }
 
-    const record_matches_filters = option_is_satisfied_by(options.in_record, record.name)
+    const record_matches_filters = option_is_satisfied_by(options.in_record, record.title)
         || option_is_satisfied_by(options.in_iteration, record.options.iter)
 
     if (!record_matches_filters) {

@@ -35,10 +35,9 @@ export type GetEndpoints = {
         request: Record.RecordTextRequest,
         response: Record.Model,
     },
-
     domain_search: {
         request: Domain.DomainSearchRequest,
-        response: Array<Domain.Page>,
+        response: Domain.Page,
     },
 };
 

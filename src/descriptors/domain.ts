@@ -2,8 +2,8 @@ export const domains = [
     "image",
     "episodic",
     "home",
-    "tale", // we cannot call this "story" because that path already exists
     "subproject",
+    "episodic-line",
 ] as const;
 
 export type Page = {
