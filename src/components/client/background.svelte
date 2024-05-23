@@ -53,7 +53,6 @@
             const now = new Date();
             
             const time = (() => {
-                return "dusk";
                 const hour = now.getHours();
                 if (hour > 22 || hour <= 4) {
                     return "night";

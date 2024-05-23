@@ -2,6 +2,7 @@
     import {marked} from 'marked';
 
     import * as Record from "../../../descriptors/record";
+    import * as Episodic from "../../../descriptors/episodic";
 
     export let record: Record.Model;
     export let line: Record.LineModel;
@@ -18,6 +19,16 @@
     const should_show_language = line.language 
         && line.language !== last_line?.language
         && line.character !== Record.narrator_character;
+
+    function emphasize_keywords(text: string): string {
+        let emphasized_text = text;
+
+        for (const keyword of Episodic.mnemonic_keywords) {
+            emphasized_text = emphasized_text.replaceAll(keyword, `\`${keyword}\``);
+        }
+
+        return emphasized_text;
+    }
 </script>
 
 <div class="record-line-container" class:continuation={is_continuation_line}>
@@ -36,7 +47,7 @@
         {#if line.type === "Sabre"}
             <p>&lt; {line.text} &gt;</p>
         {:else}
-            {@html marked.parse(line.text, {breaks: record.options?.fmt === "poem"})}
+            {@html marked.parse(emphasize_keywords(line.text), {breaks: record.options?.fmt === "poem"})}
         {/if}
     </div>
 </div>
@@ -57,12 +68,13 @@
         gap: 10px;
         min-width: 500px;
         padding-top: 16px;
+        font-size: 18px;
     }
 
     .line-content-container {
-        min-width: 80%;
-        width: 80%;
-        max-width: 80%;
+        min-width: 90%;
+        width: 90%;
+        max-width: 90%;
         padding: 15px 10px 0 10px;
         margin-left: 10px;
         border-left: 2px solid rgba(255 255 255 / 50%);
@@ -80,5 +92,11 @@
         padding: 0;
         margin: 0;
         font-family: "eczar";
+        font-size: 18px;
+    }
+
+    .line-content-container :global(code) {
+        font-family: "lekton";
+        font-weight: 900;
     }
 </style>

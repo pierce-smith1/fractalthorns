@@ -1,10 +1,10 @@
 ---
-    import CommonPage from "../../layouts/commonpage.astro";
+    import Default from "../../layouts/default.astro";
 
     const {image, title} = Astro.props.frontmatter;
 ---
 
-<CommonPage>
+<Default>
     <div class="container">
         <div class="title"><strong>{title}</strong></div>
         <img class="header-image" src={image} />
@@ -16,7 +16,7 @@
             <slot />
         </div>
     </div>
-</CommonPage>
+</Default>
 
 <script>
     const headers = [...document.querySelectorAll("h2")];

@@ -11,7 +11,7 @@
 </script>
 
 <div class="domain-button-container">
-    <PageLink dest={({domain})}>
+    <PageLink dest={{domain}}>
         <button type="button" class="domain-button" class:selected={$current?.domain === domain && !showing_search_results} on:click={reset_search_results}>
            <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
         </button>

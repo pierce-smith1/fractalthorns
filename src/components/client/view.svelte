@@ -12,7 +12,7 @@
     $: current_page = page ?? $current;
 </script>
 
-<div class="view-container" class:clear={current_page.domain === "home"} class:extra-blur={current_page.domain === "episodic"}>
+<div class="view-container" class:clear={current_page.domain === "home"} class:reading-mode={current_page.domain === "episodic"}>
     {#if current_page.domain === "home"}
         <HomeView />
     {:else if current_page.domain === "image"}
@@ -37,9 +37,10 @@
         overflow-y: auto;
     }
 
-    .extra-blur {
+    .reading-mode {
         backdrop-filter: blur(30px);
         -webkit-backdrop-filter: blur(30px);
+        background-color: rgba(255 255 255 / 80%);
     }
 
     .clear {
@@ -54,7 +55,7 @@
     .window-title {
         color: rgba(0 0 0 / 50%);
         position: absolute;
-        top: 0;
+        top: -2px;
         right: 25px;
         text-align: right;
         width: 1000px;

@@ -62,7 +62,7 @@
     }
 
     * {
-        color: white;
+        color: black;
     }
 
     h1 {
@@ -70,6 +70,8 @@
         font-size: 64px;
         padding: 30px 0 30px 0;
         margin: 0;
+        line-height: 70px;
+        text-align: center;
     }
 
     .title-sigil {
