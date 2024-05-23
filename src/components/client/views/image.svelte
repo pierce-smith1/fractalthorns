@@ -148,4 +148,9 @@
     .subtitle {
         font-size: 16px;
     }
+
+    .image-info-container :global(code) {
+        font-family: "lekton";
+        font-weight: 900;
+    }
 </style>
