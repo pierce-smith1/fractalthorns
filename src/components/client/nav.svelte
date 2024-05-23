@@ -10,6 +10,7 @@
     import EpisodicList from "./domain/episodic_list.svelte";
     import NavButton from "./nav_button.svelte";
     import News from "./news.svelte";
+    import SubprojectList from "./domain/subproject_list.svelte";
 
     let domain_search_results: Promise<Array<Domain.Page>> | undefined = undefined;
     $: showing_search_results = !!domain_search_results;
@@ -25,6 +26,7 @@
             <NavButton domain={"home"} {showing_search_results} {reset_search_results} />
             <NavButton domain={"image"} {showing_search_results} {reset_search_results} />
             <NavButton domain={"episodic"} {showing_search_results} {reset_search_results} />
+            <NavButton domain={"subproject"} {showing_search_results} {reset_search_results} />
         </div>
         <div class="domain-search">
             <DomainSearch bind:results={domain_search_results} />
@@ -44,6 +46,8 @@
             <ImageList />
         {:else if $current.domain === "episodic"}
             <EpisodicList />
+        {:else if $current.domain === "subproject"}
+            <SubprojectList />
         {/if}
     {/if}
 

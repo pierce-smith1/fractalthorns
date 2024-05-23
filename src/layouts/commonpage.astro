@@ -31,8 +31,10 @@
 
     import {current} from "../components/client/page.ts";
 
-    const body = document.querySelector("body");
+    const body = document.querySelector(".page-body");
+    // @ts-ignore
     const domain = body?.dataset["domain"];
+    // @ts-ignore
     const item = body?.dataset["item"];
 
     if (Domain.is_valid_domain(domain)) {

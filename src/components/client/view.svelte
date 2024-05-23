@@ -6,6 +6,7 @@
     import ImageView from "./views/image.svelte";
     import RecordView from "./views/record.svelte";
     import HomeView from "./views/home.svelte";
+    import SubprojectView from "./views/subproject.svelte";
 
     export let page: Domain.Page | undefined = undefined;
 
@@ -19,6 +20,8 @@
         <ImageView name={current_page.item} />
     {:else if current_page.domain === "episodic"}
         <RecordView name={current_page.item} />
+    {:else if current_page.domain === "subproject"}
+        <SubprojectView name={current_page.item} />
     {/if}
 </div>
 <div class="view-title-surrogate">
