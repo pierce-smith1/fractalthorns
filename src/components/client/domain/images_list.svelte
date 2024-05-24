@@ -26,7 +26,6 @@
     .images-container {
         display: flex;
         flex-flow: column nowrap;
-        height: 100%;
         width: 90%;
         padding: 10px;
         gap: 5px;
