@@ -6,15 +6,15 @@
     import Page from "../components/client/page.svelte";
 
     export interface Props {
-        domain?: Domain.Page["domain"],
-        item?: string,
+        domain: string | undefined, 
+        path: string | undefined,
     }
 
-    const {domain, item} = Astro.params;
+    const {domain, path} = Astro.params;
 ---
 
 <Default>
-	<div class="page-body" data-domain={domain} data-item={item}>
+	<div class="page-body" data-domain={domain ?? "home"} data-path={path}>
         <Background client:only="svelte" />
         <Page client:only="svelte" />
     </div>
@@ -32,12 +32,12 @@
     import {current} from "../components/client/page.ts";
 
     const body = document.querySelector(".page-body");
+
     // @ts-ignore
     const domain = body?.dataset["domain"];
     // @ts-ignore
-    const item = body?.dataset["item"];
+    const path = body?.dataset["path"];
 
-    if (Domain.is_valid_domain(domain)) {
-        current.set({domain, item});
-    }
+    const page = Domain.path_to_page(`${domain}/${path ?? ""}`);
+    current.set(page);
 </script>

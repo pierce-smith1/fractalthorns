@@ -17,11 +17,11 @@
     {#if current_page.domain === "home"}
         <HomeView />
     {:else if current_page.domain === "image"}
-        <ImageView name={current_page.item} />
+        <ImageView name={current_page.name} />
     {:else if current_page.domain === "episodic"}
-        <RecordView name={current_page.item} />
+        <RecordView name={current_page.record_name} line_id={current_page.line_id} />
     {:else if current_page.domain === "subproject"}
-        <SubprojectView name={current_page.item} />
+        <SubprojectView name={current_page.name} />
     {/if}
 </div>
 <div class="view-title-surrogate">

@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {marked} from 'marked';
+    import {marked} from "marked";
+    import {onMount} from "svelte";
 
     import * as Record from "../../../descriptors/record";
     import * as Episodic from "../../../descriptors/episodic";
@@ -7,6 +8,8 @@
     export let record: Record.Model;
     export let line: Record.LineModel;
     export let last_line: Record.LineModel | undefined = undefined;
+    export let line_id: string;
+    export let requested_line_id: string | undefined;
 
     const should_show_speaker = line.character 
         && line.character !== Record.narrator_character
@@ -29,9 +32,15 @@
 
         return emphasized_text;
     }
+
+    onMount(() => {
+        if (requested_line_id === line_id) {
+            document.querySelector(`#${line_id}`)?.scrollIntoView();
+        }
+    });
 </script>
 
-<div class="record-line-container" class:continuation={is_continuation_line}>
+<div class="record-line-container" id={line_id} class:continuation={is_continuation_line}>
     <div class="speaker-gutter">
         {#if should_show_speaker}
             <span class="speaker">{line.character}</span>
@@ -43,7 +52,7 @@
             <span class="language"><em>(in {line.language})</em></span>
         {/if}
     </div>
-    <div class="line-content-container">
+    <div class="line-content-container" class:highlighted={requested_line_id === line_id}>
         {#if line.type === "Sabre"}
             <p>&lt; {line.text} &gt;</p>
         {:else}
@@ -98,5 +107,9 @@
     .line-content-container :global(code) {
         font-family: "lekton";
         font-weight: 900;
+    }
+
+    .highlighted {
+        font-weight: 600;
     }
 </style>

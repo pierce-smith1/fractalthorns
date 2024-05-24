@@ -12,8 +12,11 @@
     {#if !record.name}
         <h4 class="unsolved"><em>???</em></h4>
     {:else}
-        <PageLink dest={({domain: "episodic", item: record.name})}>
-            <h4 class="record-name" style:border-color={Episodic.get_iteration_color(record.iteration)} class:selected={$current.item === record.name}>
+        <PageLink dest={({domain: "episodic", record_name: record.name})}>
+            <h4 class="record-name" 
+                style:border-color={Episodic.get_iteration_color(record.iteration)} 
+                class:selected={$current.domain === "episodic" && $current.record_name === record.name}
+            >
                 {Episodic.get_iteration_sigil(record.iteration)} {record.title}
             </h4>
         </PageLink>

@@ -6,6 +6,7 @@
     import RecordLine from "./record_line.svelte";
 
     export let name: string | undefined = undefined;
+    export let line_id: string | undefined = undefined;
 
     $: record_entry_promise = Fetchers.get.single_record({name: name ?? "reservoir"});
     $: record_text_promise = Fetchers.get.record_text({name: name ?? "reservoir"});
@@ -18,12 +19,21 @@
     {:then [entry, text]}
         <div class="record-text-container">
             <h1 class="record-title">
-                <span style:color={Episodic.get_iteration_color(entry.iteration)} class="title-sigil">{Episodic.get_iteration_sigil(entry.iteration)}</span> {entry.title}
+                <span style:color={Episodic.get_iteration_color(entry.iteration)} class="title-sigil">{
+                    Episodic.get_iteration_sigil(entry.iteration)}
+                </span> 
+                {entry.title}
             </h1>
             <pre class="record-header">{text.header_lines.join("\n")}</pre>
             <div class="record-body-container">
                 {#each text.lines as line, i}
-                    <RecordLine {line} last_line={i > 0 ? text.lines[i - 1] : undefined} record={text} />
+                    <RecordLine 
+                        {line} 
+                        last_line={i > 0 ? text.lines[i - 1] : undefined} 
+                        record={text} 
+                        line_id={`line_${i}`} 
+                        requested_line_id={line_id}
+                    />
                 {/each}
             </div>
         </div>
