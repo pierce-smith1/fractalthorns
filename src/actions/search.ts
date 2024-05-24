@@ -18,6 +18,7 @@ type Line = Record.Model["lines"][number];
 
 export type SearchMatch = {
     line: Line,
+    line_index: number,
     start_index: number,
     matched_text: string,
 };
@@ -60,7 +61,7 @@ export async function search_in_record(record: Record.Model & {title: string}, o
     let matches = [] as Array<SearchMatch>;
 
     enumerate_lines:
-    for (const line of record.lines) {
+    for (const [line, i] of record.lines.map((line, i) => [line, i] as const)) {
         const character = await Character.get(line.character);
 
         const line_satisfies_filters = option_is_satisfied_by(options.from_speaker, line.character)
@@ -71,11 +72,11 @@ export async function search_in_record(record: Record.Model & {title: string}, o
             continue;
         }
 
-        const search_regex = new RegExp(regex_string, "g"); // n * m problem because global js regexes are stateful
+        const search_regex = new RegExp(regex_string, "gi"); // n * m problem because global js regexes are stateful
 
         let regex_match;
         while ((regex_match = search_regex.exec(line.text)) !== null) {
-            matches.push({line, start_index: regex_match.index, matched_text: regex_match[0]});
+            matches.push({line, line_index: i, start_index: regex_match.index, matched_text: regex_match[0]});
 
             if (matches.length >= (options.limit ?? 20)) {
                 break enumerate_lines;

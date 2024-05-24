@@ -7,10 +7,11 @@ export const domains = [
 
 export type Page =
     | {domain: "image", name?: string}
-    | {domain: "episodic", record_name?: string, line_id?: string}
+    | {domain: "episodic", record_name?: string, line_index?: number}
     | {domain: "home"}
     | {domain: "subproject", name?: string}
 
+export type PageSearchResult = Page & {matched_text?: string};
 
 export function is_valid_domain(name?: string): name is Page["domain"] {
     if (!name) {
@@ -25,7 +26,7 @@ export function page_to_path(page: Page) {
     const item_suffix = (() => {
         switch (page.domain) {
             case "image": return page.name;
-            case "episodic": return `${page.record_name ?? ""}/${page.line_id ?? ""}`;
+            case "episodic": return `${page.record_name ?? ""}/${page.line_index ?? ""}`;
             case "home": return;
             case "subproject": return page.name;
         }

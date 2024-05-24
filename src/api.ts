@@ -37,7 +37,7 @@ export type GetEndpoints = {
     },
     domain_search: {
         request: Domain.DomainSearchRequest,
-        response: Array<Domain.DomainSearchItem>,
+        response: Array<Domain.PageSearchResult>,
     },
 };
 

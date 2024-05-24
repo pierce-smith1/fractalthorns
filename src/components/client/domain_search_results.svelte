@@ -6,22 +6,22 @@
     import Loading from "./loading.svelte";
     import EpisodicButton from "./domain/episodic_button.svelte";
 
-    export let results: Array<Domain.Page>;
+    export let results: Array<Domain.PageSearchResult>;
 
     const image_promises = results
-        .filter(result => result.domain === "image")
-        .map(result => Fetchers.get.single_image({name: result.item}));
+        .filter(function(result): result is Extract<Domain.PageSearchResult, {domain: "image"}> { return result.domain === "image"; })
+        .map(result => [Fetchers.get.single_image({name: result.name}), result] as const);
 
     const episodic_promises = results
-        .filter(result => result.domain === "episodic")
-        .map(result => Fetchers.get.single_record({name: result.item!}));
+        .filter(function(result): result is Extract<Domain.PageSearchResult, {domain: "episodic"}> { return result.domain === "episodic"; })
+        .map(result => [Fetchers.get.single_record({name: result.record_name!}), result] as const);
 </script>
 
 <div class="search-results">
     {#if image_promises.length > 0}
         <div class="domain-header"><h3>images</h3></div>
     {/if}
-    {#each image_promises as promise}
+    {#each image_promises as [promise, result]}
         {#await promise}
             <Loading />
         {:then image} 
@@ -33,11 +33,11 @@
         <div class="domain-header"><h3>records</h3></div>
     {/if}
     <div class="episodic-results">
-        {#each episodic_promises as promise}
+        {#each episodic_promises as [promise, result]}
             {#await promise}
                 <Loading />
             {:then record} 
-                <EpisodicButton {record} />
+                <EpisodicButton {record} preview_line_index={result.line_index} preview_matched_text={result.matched_text} />
             {/await}
         {/each}
     </div>

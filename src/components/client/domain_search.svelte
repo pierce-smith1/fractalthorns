@@ -2,7 +2,8 @@
     import * as Domain from "../../descriptors/domain";
     import * as Fetchers from "../../fetchers";
 
-    export let results: Promise<Array<Domain.Page>> | undefined = undefined;
+    export let results_promise: Promise<Array<Domain.PageSearchResult>> | undefined = undefined;
+    export let term: string | undefined = undefined;
 
     function submit_search(event: KeyboardEvent) {
         if (event.key !== "Enter") {
@@ -10,14 +11,14 @@
         }
 
         // @ts-ignore
-        const term = event.target.value as string;
+        term = event.target.value as string;
 
         if (term.length === 0) {
-            results = undefined;
+            results_promise = undefined;
             return;
         }
 
-        results = Fetchers.get.domain_search(term);
+        results_promise = Fetchers.get.domain_search(term);
     }
 </script>
 

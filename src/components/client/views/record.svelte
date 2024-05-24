@@ -6,7 +6,7 @@
     import RecordLine from "./record_line.svelte";
 
     export let name: string | undefined = undefined;
-    export let line_id: string | undefined = undefined;
+    export let line_index: number | undefined = undefined;
 
     $: record_entry_promise = Fetchers.get.single_record({name: name ?? "reservoir"});
     $: record_text_promise = Fetchers.get.record_text({name: name ?? "reservoir"});
@@ -31,8 +31,8 @@
                         {line} 
                         last_line={i > 0 ? text.lines[i - 1] : undefined} 
                         record={text} 
-                        line_id={`line_${i}`} 
-                        requested_line_id={line_id}
+                        line_index={i} 
+                        requested_line_index={line_index}
                     />
                 {/each}
             </div>

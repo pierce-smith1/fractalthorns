@@ -8,8 +8,8 @@
     export let record: Record.Model;
     export let line: Record.LineModel;
     export let last_line: Record.LineModel | undefined = undefined;
-    export let line_id: string;
-    export let requested_line_id: string | undefined;
+    export let line_index: number;
+    export let requested_line_index: number | undefined;
 
     const should_show_speaker = line.character 
         && line.character !== Record.narrator_character
@@ -34,13 +34,13 @@
     }
 
     onMount(() => {
-        if (requested_line_id === line_id) {
-            document.querySelector(`#${line_id}`)?.scrollIntoView();
+        if (requested_line_index === line_index) {
+            document.querySelector(`#line_${line_index}`)?.scrollIntoView();
         }
     });
 </script>
 
-<div class="record-line-container" id={line_id} class:continuation={is_continuation_line}>
+<div class="record-line-container" id={`line_${line_index}`} class:continuation={is_continuation_line}>
     <div class="speaker-gutter">
         {#if should_show_speaker}
             <span class="speaker">{line.character}</span>
@@ -52,7 +52,7 @@
             <span class="language"><em>(in {line.language})</em></span>
         {/if}
     </div>
-    <div class="line-content-container" class:highlighted={requested_line_id === line_id}>
+    <div class="line-content-container" class:highlighted={requested_line_index === line_index}>
         {#if line.type === "Sabre"}
             <p>&lt; {line.text} &gt;</p>
         {:else}
