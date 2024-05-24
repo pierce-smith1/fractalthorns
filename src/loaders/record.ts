@@ -1,6 +1,5 @@
 import Config from "../config";
 
-import * as Episodic from "../descriptors/episodic";
 import * as Record from "../descriptors/record";
 import * as Filesystem from "../filesystem";
 import * as GenericUtil from "../genericutil";

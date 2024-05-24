@@ -31,7 +31,20 @@ export async function find_episodic_items(term: string): ReturnType<typeof find_
 }
 
 export async function find_episodic_lines(term: string): ReturnType<typeof find_items> {
-    const results = await Search.search({whole_words: true}, term);
+    term = term.trim();
+
+    // Try to guard against braindumps.
+    // I GUARANTEE you someone is going to try putting in just an "a" or something,
+    // realize they're not getting any results, then try to meticulously craft a payload that
+    // will braindump - and they will eventually do it, crying with joy as the server grinds
+    // to a halt, proud beyond compare that their incalculable genius has managed to expose 
+    // the shit software for the shitness it really is but is trying so deperately to hide.
+    // Just a prediction. Was I right?
+    if (term.length < 3 || term.toLowerCase() === "the") {
+        return [];
+    }
+
+    const results = await Search.search({whole_words: true, limit: 100}, term);
     const lines = Object.entries(results)
         .flatMap(([name, matches]) => matches
             .map(match => ({domain: "episodic" as const, record_name: name, line_index: match.line_index, matched_text: match.matched_text}))

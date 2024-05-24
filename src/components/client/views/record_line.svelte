@@ -38,6 +38,10 @@
             document.querySelector(`#line_${line_index}`)?.scrollIntoView();
         }
     });
+
+    $: if (requested_line_index === line_index) {
+        document.querySelector(`#line_${line_index}`)?.scrollIntoView();
+    }
 </script>
 
 <div class="record-line-container" id={`line_${line_index}`} class:continuation={is_continuation_line}>
