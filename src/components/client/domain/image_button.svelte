@@ -10,8 +10,11 @@
 </script>
 
 <div class="image-portrait">
-    <PageLink dest={({domain: "image", item: image.name})}>
-        <div class="portrait-block" style:border-color={Episodic.get_iteration_color(image.canon ?? "")} class:selected={$current.item === image.name}>
+    <PageLink dest={({domain: "image", name: image.name})}>
+        <div class="portrait-block" 
+            style:border-color={Episodic.get_iteration_color(image.canon ?? "")} 
+            class:selected={$current.domain === "image" && $current.name === image.name}
+        >
             <div class="portrait" style:background-image={`url(${image.thumb_url})`}></div>
         </div>
     </PageLink>

@@ -52,7 +52,6 @@
         <div class="image-container">
             <a href={image.image_url}><img src={image.image_url}></a>
         </div>
-        <Keynav page_up={({domain: "image", name: image.next_image})} page_down={({domain: "image", name: image.prev_image})} />
     {/await}
 </div>
 
