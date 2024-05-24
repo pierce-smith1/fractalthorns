@@ -102,10 +102,13 @@
     }
 
     .line-content-container :global(*) {
-        padding: 0;
-        margin: 0;
         font-family: "eczar";
         font-size: 18px;
+    }
+
+    .line-content-container :global(p) {
+        margin: 0;
+        padding: 0;
     }
 
     .line-content-container :global(code) {
