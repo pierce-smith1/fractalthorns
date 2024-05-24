@@ -1,22 +1,18 @@
 import * as Domain from "../descriptors/domain";
-import * as Record from "../descriptors/record";
 import * as ImageLoader from "../loaders/image";
 import * as EpisodicLoader from "../loaders/episodic";
 import * as Search from "./search";
-import * as GenericUtil from "../genericutil";
- 
-export async function find_items(term: string): Promise<Array<Domain.PageSearchResult>> {
-    const results: Array<Domain.PageSearchResult> = [];
 
-    const images = await find_image_items(term);
-    results.push(...images);
-
-    const records = await find_episodic_items(term);
-    results.push(...records);
-
-    const episodic_lines = await find_episodic_lines(term);
-    results.push(...episodic_lines);
-
+export async function find_items(term: string, type: Domain.SearchItemType): Promise<Array<Domain.PageSearchResult>> {
+    const results_promise = (() => {
+        switch (type) {
+            case "image": return find_image_items(term);
+            case "episodic-item": return find_episodic_items(term);
+            case "episodic-line": return find_episodic_lines(term);
+        }
+    })();
+    
+    const results = await results_promise;
     return results;
 }
 

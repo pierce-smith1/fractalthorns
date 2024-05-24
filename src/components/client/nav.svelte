@@ -12,8 +12,7 @@
     import News from "./news.svelte";
     import SubprojectList from "./domain/subproject_list.svelte";
 
-    let domain_search_term: string | undefined = undefined;
-    let domain_search_results: Promise<Array<Domain.Page>> | undefined = undefined;
+    let domain_search_results: Domain.HolisticSearchResults | undefined = undefined;
     $: showing_search_results = !!domain_search_results;
 
     function reset_search_results() {
@@ -30,16 +29,12 @@
             <NavButton domain={"subproject"} {showing_search_results} {reset_search_results} />
         </div>
         <div class="domain-search">
-            <DomainSearch bind:results_promise={domain_search_results} bind:term={domain_search_term} />
+            <DomainSearch bind:results_promises={domain_search_results} />
         </div>
     </div>
 
     {#if domain_search_results && showing_search_results}
-        {#await domain_search_results}
-            <Loading />
-        {:then results} 
-            <DomainSearchResults {results} />
-        {/await}
+        <DomainSearchResults results={domain_search_results} />
     {:else}
         {#if $current.domain === "home"}
             <News />

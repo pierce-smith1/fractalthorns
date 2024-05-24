@@ -2,7 +2,7 @@
     import * as Domain from "../../descriptors/domain";
     import * as Fetchers from "../../fetchers";
 
-    export let results_promise: Promise<Array<Domain.PageSearchResult>> | undefined = undefined;
+    export let results_promises: Domain.HolisticSearchResults | undefined = undefined;
     export let term: string | undefined = undefined;
 
     function submit_search(event: KeyboardEvent) {
@@ -14,11 +14,15 @@
         term = event.target.value as string;
 
         if (term.length === 0) {
-            results_promise = undefined;
+            results_promises = undefined;
             return;
         }
 
-        results_promise = Fetchers.get.domain_search(term);
+        results_promises = {
+            image: Fetchers.get.domain_search({term, type: "image"}),
+            "episodic-item": Fetchers.get.domain_search({term, type: "episodic-item"}),
+            "episodic-line": Fetchers.get.domain_search({term, type: "episodic-line"}),
+        } as any;
     }
 </script>
 

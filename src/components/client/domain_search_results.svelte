@@ -2,43 +2,60 @@
     import * as Fetchers from "../../fetchers";
     import * as Domain from "../../descriptors/domain";
 
-    import ImageButton from "./domain/image_button.svelte";
     import Loading from "./loading.svelte";
     import EpisodicButton from "./domain/episodic_button.svelte";
     import ImagesList from "./domain/images_list.svelte";
 
-    export let results: Array<Domain.PageSearchResult>;
+    export let results: Domain.HolisticSearchResults;
 
-    const image_promises = results
-        .filter(function(result): result is Extract<Domain.PageSearchResult, {domain: "image"}> { return result.domain === "image"; })
-        .map(result => Fetchers.get.single_image({name: result.name}));
+    $: image_promises = results["image"].then(images => Promise.all(images
+        .map(result => Fetchers.get.single_image({name: result.name}))));
 
-    const episodic_promises = results
-        .filter(function(result): result is Extract<Domain.PageSearchResult, {domain: "episodic"}> { return result.domain === "episodic"; })
-        .map(result => [Fetchers.get.single_record({name: result.record_name!}), result] as const);
+    $: episodic_item_promises = results["episodic-item"].then(results => Promise.all(results
+        .map(result => Fetchers.get.single_record({name: result.record_name!}))));
+
+    $: episodic_line_promises = results["episodic-line"].then(results => Promise.all(results
+        .map(result => Fetchers.get.single_record({name: result.record_name!}))));
+
+    $: episodic_line_results_promises = results["episodic-line"].then(results => Promise.all(results));
 </script>
 
 <div class="search-results">
-    {#if image_promises.length > 0}
-        <div class="domain-header"><h3>images</h3></div>
-    {/if}
-    {#await Promise.all(image_promises)}
-        <Loading />
-    {:then images}
-        <ImagesList {images} />
-    {/await}
+    <div class="results">
+        {#await image_promises}
+            <Loading />
+        {:then images}
+            {#if images.length > 0}
+                <div class="domain-header"><h3>images</h3></div>
+            {/if}
+            <ImagesList {images} />
+        {/await}
+    </div>
 
-    {#if episodic_promises.length > 0}
-        <div class="domain-header"><h3>records</h3></div>
-    {/if}
-    <div class="episodic-results">
-        {#each episodic_promises as [promise, result]}
-            {#await promise}
-                <Loading />
-            {:then record} 
-                <EpisodicButton {record} preview_line_index={result.line_index} preview_matched_text={result.matched_text} />
-            {/await}
-        {/each}
+    <div class="results">
+        {#await episodic_item_promises}
+            <Loading />
+        {:then records}
+            {#if records.length > 0}
+                <div class="domain-header"><h3>records</h3></div>
+            {/if}
+            {#each records as record, i}
+                <EpisodicButton {record} />
+            {/each}
+        {/await}
+    </div>
+
+    <div class="results">
+        {#await Promise.all([episodic_line_promises, episodic_line_results_promises])}
+            <Loading />
+        {:then [records, results]}
+            {#if records.length > 0}
+                <div class="domain-header"><h3>text search</h3></div>
+            {/if}
+            {#each records as record, i}
+                <EpisodicButton {record} preview_line_index={results[i].line_index} preview_matched_text={results[i].matched_text} />
+            {/each}
+        {/await}
     </div>
 </div>
 
@@ -59,11 +76,13 @@
     }
 
     .search-results {
-        width: 90%;
+        width: 100%;
         padding: 10px;
     }
 
-    .episodic-results {
-        width: 100%;
+    .results {
+        width: 90%;
+        margin: auto;
+        padding-bottom: 20px;
     }
 </style>

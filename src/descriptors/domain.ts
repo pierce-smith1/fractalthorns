@@ -13,6 +13,22 @@ export type Page =
 
 export type PageSearchResult = Page & {matched_text?: string};
 
+export type SearchItemType = 
+    | "image"
+    | "episodic-item"
+    | "episodic-line"
+
+export type HolisticSearchResults = {
+    "image": Promise<Array<Extract<PageSearchResult, {domain: "image"}>>>,
+    "episodic-item": Promise<Array<Extract<PageSearchResult, {domain: "episodic"}>>>,
+    "episodic-line": Promise<Array<Extract<PageSearchResult, {domain: "episodic"}>>>,
+};
+
+export type DomainSearchRequest = {
+    term: string,
+    type: SearchItemType,
+};
+
 export function is_valid_domain(name?: string): name is Page["domain"] {
     if (!name) {
         return false;
@@ -56,5 +72,3 @@ export type Domain = {
     name: string,
     items: Array<string>,
 };
-
-export type DomainSearchRequest = string;
