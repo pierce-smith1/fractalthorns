@@ -5,12 +5,13 @@
     import ImageButton from "./domain/image_button.svelte";
     import Loading from "./loading.svelte";
     import EpisodicButton from "./domain/episodic_button.svelte";
+    import ImagesList from "./domain/images_list.svelte";
 
     export let results: Array<Domain.PageSearchResult>;
 
     const image_promises = results
         .filter(function(result): result is Extract<Domain.PageSearchResult, {domain: "image"}> { return result.domain === "image"; })
-        .map(result => [Fetchers.get.single_image({name: result.name}), result] as const);
+        .map(result => Fetchers.get.single_image({name: result.name}));
 
     const episodic_promises = results
         .filter(function(result): result is Extract<Domain.PageSearchResult, {domain: "episodic"}> { return result.domain === "episodic"; })
@@ -21,13 +22,11 @@
     {#if image_promises.length > 0}
         <div class="domain-header"><h3>images</h3></div>
     {/if}
-    {#each image_promises as [promise, result]}
-        {#await promise}
-            <Loading />
-        {:then image} 
-            <ImageButton {image} />
-        {/await}
-    {/each}
+    {#await Promise.all(image_promises)}
+        <Loading />
+    {:then images}
+        <ImagesList {images} />
+    {/await}
 
     {#if episodic_promises.length > 0}
         <div class="domain-header"><h3>records</h3></div>

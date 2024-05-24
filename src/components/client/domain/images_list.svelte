@@ -1,10 +1,15 @@
 <script lang="ts">
     import * as Fetchers from "../../../fetchers";
+    import * as Image from "../../../descriptors/image";
 
     import Loading from "../loading.svelte";
     import ImageButton from "./image_button.svelte";
 
-    let load_promise = Fetchers.get.all_images({});
+    export let images: Array<Image.ClientModel> | undefined = undefined;
+
+    let load_promise = images ?
+        Promise.resolve(images)
+        : Fetchers.get.all_images({});
 </script>
 
 <div class="images-container">

@@ -1,10 +1,15 @@
 <script lang="ts">
     import * as Fetchers from "../../../fetchers";
+    import * as Episodic from "../../../descriptors/episodic";
 
     import Loading from "../loading.svelte";
     import EpisodicButton from "./episodic_button.svelte";
 
-    let load_promise = Fetchers.get.full_episodic({});
+    export let records: Episodic.ClientModel | undefined = undefined;
+
+    let load_promise = records ?
+        Promise.resolve(records)
+        : Fetchers.get.full_episodic({});
 </script>
 
 <div class="episodic-container">
