@@ -58,7 +58,7 @@
     </div>
     <div class="line-content-container" class:highlighted={requested_line_index === line_index}>
         {#if line.type === "Sabre"}
-            <p>&lt; {line.text} &gt;</p>
+            <code>&lt; {line.text} &gt;</code>
         {:else}
             {@html marked.parse(emphasize_keywords(line.text), {breaks: record.options?.fmt === "poem"})}
         {/if}
