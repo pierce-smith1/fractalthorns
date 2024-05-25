@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {onMount} from "svelte";
+
     import * as Image from "../../../descriptors/image";
     import * as Episodic from "../../../descriptors/episodic";
 
@@ -7,15 +9,28 @@
     import PageLink from "../page_link.svelte";
 
     export let image: Image.ClientModel;
+
+    let this_element: Element;
+    onMount(() => {
+        let scroll_observer = new IntersectionObserver(entries => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    // @ts-ignore
+                    entry.target.style = `background-image: url(${image.thumb_url});`;
+                }
+            }
+        });
+        scroll_observer.observe(this_element);
+    });
 </script>
 
-<div class="image-portrait">
+<div class="image-portrait" bind:this={this_element}>
     <PageLink dest={{domain: "image", name: image.name}}>
         <div class="portrait-block" 
             style:border-color={Episodic.get_iteration_color(image.canon ?? "")} 
             class:selected={$current.domain === "image" && $current.name === image.name}
         >
-            <div class="portrait" style:background-image={`url(${image.thumb_url})`}></div>
+            <div class="portrait"></div>
         </div>
     </PageLink>
 </div>

@@ -1,5 +1,8 @@
 import * as Api from "./api";
 
+// REDIS HATES HIM
+const fetch_cache: {[key: string]: any} = {};
+
 function define_get_fetcher<
     EndpointName extends keyof Api.GetEndpoints, 
     Params = Api.GetEndpoints[EndpointName]["request"], 
@@ -7,9 +10,18 @@ function define_get_fetcher<
 >(endpoint: EndpointName) {
     return (request: Params) => {
         const body = JSON.stringify(request);
-        return fetch(`/api/v1/${endpoint}?body=${body}`)
+        const url = `/api/v1/${endpoint}?body=${body}`;
+
+        if (url in fetch_cache) {
+            return fetch_cache[url];
+        }
+
+        const results = fetch(`/api/v1/${endpoint}?body=${body}`)
             .then(response => response.json())
             .then(response => response as Result);
+
+        fetch_cache[url] = results;
+        return results;
     }
 }
 
