@@ -61,8 +61,8 @@
         font-size: 0.7em;
     }
 
-    * {
-        margin: 0;
+    h4, p, span {
         padding: 0;
+        margin: 0;
     }
 </style>
