@@ -16,11 +16,13 @@
                 <div class="news-item">
                     <h4>{item.date}</h4>
                     <p>{item.title}</p>
-                    <ul>
-                        {#each item.items ?? [] as subitem}
-                            <li>{subitem}</li>
-                        {/each}
-                    </ul>
+                    {#if item.items && item.items.length > 0}
+                        <ul>
+                            {#each item.items ?? [] as subitem}
+                                <li>{subitem}</li>
+                            {/each}
+                        </ul>
+                    {/if}
                     {#if item.version}
                         <p class="version">{item.version}</p>
                     {/if}

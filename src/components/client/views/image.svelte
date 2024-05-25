@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="image-container">
-            <a href={image.image_url}><img src={image.image_url}></a>
+            <a href={image.image_url} class="image-link"><img src={image.image_url}></a>
         </div>
     {/await}
 </div>
@@ -99,20 +99,19 @@
         align-items: center;
         max-height: 100%;
         height: 100%;
+        max-width: 70%;
         margin: 0;
     }
 
-    .image-container a {
+    .image-link {
         display: flex;
         justify-content: center;
         align-items: center;
-        max-height: 100%;
         height: 100%;
-        max-width: 100%;
         width: 100%;
         padding-right: 15px;
     }
-    
+
     .image-description-container {
         border-top: 2px solid rgba(255 255 255 / 50%);
         padding-top: 8px;
@@ -124,10 +123,11 @@
     }
 
     img {
-        max-height: 95%;
-        max-width: 100%;
         filter: drop-shadow(0 0 10px black);
         border-radius: 5px;
+        max-height: 95%;
+        max-width: 100%;
+        object-fit: contain;
     }
 
     h1, h2 {
