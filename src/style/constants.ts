@@ -1,1 +1,0 @@
-export const iteration_style_container_id = "iteration-content";
