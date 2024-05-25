@@ -47,10 +47,11 @@
         height: 100%;
         border-radius: 5px;
         opacity: 0;
+        transition: opacity 0.2s ease-out;
     }
 
     .button-background:hover {
-        opacity: 40%;
+        opacity: 60%;
     }
 
     .selected {

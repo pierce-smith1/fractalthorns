@@ -19,9 +19,7 @@
     {:then [entry, text]}
         <div class="record-text-container">
             <h1 class="record-title">
-                <span style:color={Episodic.get_iteration_color(entry.iteration)} class="title-sigil">{
-                    Episodic.get_iteration_sigil(entry.iteration)}
-                </span> 
+                <img class="title-sigil" src={`/assets/images/common/iteration-${entry.iteration}.png`} />
                 {entry.title}
             </h1>
             <pre class="record-header">{text.header_lines.join("\n")}</pre>
@@ -85,6 +83,8 @@
     }
 
     .title-sigil {
-        font-size: 32px;
+        position: relative;
+        top: 5px;
+        width: 40px;
     }
 </style>

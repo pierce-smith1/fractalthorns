@@ -53,9 +53,8 @@
         <h4 class="unsolved"><em>???</em></h4>
     {:else}
         <PageLink dest={{domain: "episodic", record_name: record.name, line_index: preview_line_index}}>
-            <h4 class="record-name" 
-            >
-                {Episodic.get_iteration_sigil(record.iteration)} {record.title}
+            <h4 class="record-name">
+                <img class="iteration-sigil" src={`/assets/images/common/iteration-${record.iteration}.png`} /> {record.title}
             </h4>
             {#if preview_line_index !== undefined}
                 <p class="line-preview">
@@ -86,6 +85,13 @@
 
     .selected {
         background-color: rgba(255 255 255 / 25%);
+    }
+
+    .iteration-sigil {
+        position: relative;
+        top: 5px;
+        width: 16px;
+        filter: grayscale(100%) brightness(200%);
     }
 
     .record-name {

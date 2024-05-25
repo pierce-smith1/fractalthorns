@@ -16,7 +16,10 @@
     let selected_iterations: Set<Episodic.Iteration> = new Set();
 </script>
 
-<IterationFilterButtons bind:selected_iterations={selected_iterations} />
+<!-- Do not show iter filters if we are overriding the image list -->
+{#if !images}
+    <IterationFilterButtons bind:selected_iterations={selected_iterations} />
+{/if}
 <div class="images-container">
     {#await load_promise}
         <Loading/>

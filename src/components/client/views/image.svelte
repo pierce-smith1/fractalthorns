@@ -22,7 +22,7 @@
 
         const iteration_symbol = Episodic.get_iteration_sigil(image.canon ?? "");
         if (iteration_symbol) {
-            parts.push(`<span style="color: ${Episodic.get_iteration_color(image.canon ?? "")}">${iteration_symbol}</span>`);
+            parts.push(`<img class="iteration-sigil" src=/assets/images/common/iteration-${image.canon}.png />`);
         }
 
         parts.push(format_date(image));
@@ -155,5 +155,11 @@
     .image-info-container :global(code) {
         font-family: "lekton";
         font-weight: 900;
+    }
+
+    .image-info-container :global(.iteration-sigil) {
+        position: relative;
+        top: 3px;
+        width: 16px;
     }
 </style>
