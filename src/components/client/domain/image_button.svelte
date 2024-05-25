@@ -10,27 +10,27 @@
 
     export let image: Image.ClientModel;
 
-    let this_element: Element;
+    let portrait_element: Element;
     onMount(() => {
         let scroll_observer = new IntersectionObserver(entries => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
                     // @ts-ignore
-                    entry.target.style = `background-image: url(${image.thumb_url});`;
+                    entry.target.style.backgroundImage = `url(${image.thumb_url})`;
                 }
             }
         });
-        scroll_observer.observe(this_element);
+        scroll_observer.observe(portrait_element);
     });
 </script>
 
-<div class="image-portrait" bind:this={this_element}>
+<div class="image-portrait">
     <PageLink dest={{domain: "image", name: image.name}}>
         <div class="portrait-block" 
             style:border-color={Episodic.get_iteration_color(image.canon ?? "")} 
             class:selected={$current.domain === "image" && $current.name === image.name}
         >
-            <div class="portrait"></div>
+            <div class="portrait" bind:this={portrait_element}></div>
         </div>
     </PageLink>
 </div>
