@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as Domain from "../../descriptors/domain";
+    import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";
 
@@ -7,10 +8,13 @@
     import RecordView from "./views/record.svelte";
     import HomeView from "./views/home.svelte";
     import SubprojectView from "./views/subproject.svelte";
+    import Loading from "./loading.svelte";
 
     export let page: Domain.Page | undefined = undefined;
 
     $: current_page = page ?? $current;
+
+    let news_promise = Fetchers.get.all_news({});
 </script>
 
 <div class="view-container" class:clear={current_page.domain === "home"} class:reading-mode={current_page.domain === "episodic"}>
@@ -25,7 +29,11 @@
     {/if}
 </div>
 <div class="view-title-surrogate">
-    <span class="window-title">fractalthorns.com / these games are getting really realistic</span>
+    {#await news_promise}
+        <Loading />
+    {:then news}
+        <span class="window-title">fractalthorns.com / {news[news.length - 1].version}</span>
+    {/await}
 </div>
 
 <style>

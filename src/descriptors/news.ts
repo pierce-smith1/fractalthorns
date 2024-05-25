@@ -3,6 +3,7 @@ export type Model = {
     type: "announcement" | "update",
     items?: Array<string>,
     date: Date,
+    version: string,
 };
 
 export type ClientModel = Omit<Model, "date"> & {date: string};
