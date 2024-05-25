@@ -25,7 +25,7 @@
 
     <p>This is a 52-card llokin-themed deck designed specifically for use with the Windows Vista/7 card games.</p>
 
-    <a href="./yokdeck/yokdeck.zip">download</a>
+    <a href="/assets/downloads/yokdeck.zip">download</a>
 
     <p>The above download includes:
     <ul>

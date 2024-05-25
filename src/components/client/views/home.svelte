@@ -96,7 +96,7 @@
                 const pointyness = p_sq * 50;
                 const height = p_cube * p_cube * p_cube * 50;
                 p5.bezier(spread, 0, pointyness / 3, 0, 0, p_cube * 20 / 3, 0, height); 
-                p5.bezier(-spread, 0, -pointyness /3, 0, 0, p_cube * 20 / 3, 0, height); 
+                p5.bezier(-spread, 0, -pointyness / 3, 0, 0, p_cube * 20 / 3, 0, height); 
 
                 p5.pop();
             }
@@ -113,6 +113,10 @@
     <div class="canvas-container">
         <Canvas {artist} />
     </div>
+
+    <a class="repo-link" href="https://github.com/pierce-smith1/fractalthorns">
+        <img src="/assets/images/common/socials-github.png" />
+    </a>
 </div>
 
 <style>
@@ -146,6 +150,14 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         z-index: 1;
+    }
+
+    .repo-link {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 10px;
+        opacity: 50%;
     }
 
     * {

@@ -21,6 +21,9 @@
                             <li>{subitem}</li>
                         {/each}
                     </ul>
+                    {#if item.version}
+                        <p class="version">{item.version}</p>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -51,6 +54,11 @@
         border-left: 2px solid rgba(255 255 255 / 50%);
         padding: 10px;
         margin: 10px;
+    }
+
+    .version {
+        color: rgba(255 255 255 / 50%);
+        font-size: 12px;
     }
 
     * {
