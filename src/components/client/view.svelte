@@ -72,7 +72,7 @@
         width: 1000px;
         padding: 0;
         margin: 0;
-        font-size: 14px;
+        font-size: 0.9em;
         z-index: 1000;
     }
 </style>

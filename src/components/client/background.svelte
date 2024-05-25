@@ -1,12 +1,12 @@
 <script lang="ts">
     import p5 from "p5";
 
-    import { Artist } from "../canvas/artist";
-    import { current } from "./page.ts";
+    import {Artist} from "../canvas/artist";
+    import {current} from "./page.ts";
 
     import Canvas from "../canvas/canvas.svelte";
 
-    type Point = { x: number; y: number };
+    type Point = {x: number; y: number};
 
     const time = (() => {
         const now = new Date();
@@ -23,7 +23,7 @@
     })();
 
     class BackgroundArtist extends Artist<{}> {
-        state: { [key: string]: any } = {};
+        state: {[key: string]: any} = {};
 
         width() {
             return window.innerWidth;
@@ -47,7 +47,7 @@
         setup(p5: p5, canvas: HTMLCanvasElement) {
             super.setup(p5, canvas);
 
-            current.subscribe((new_page) => {
+            current.subscribe(new_page => {
                 this.domain = new_page?.domain;
             });
 
@@ -69,7 +69,6 @@
     }
 
     const artist = new BackgroundArtist();
-    const background_name = "asdf";
 </script>
 
 <div>

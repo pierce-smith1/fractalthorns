@@ -59,9 +59,8 @@
     .container {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: stretch;
-        align-content: stretch;
         max-height: 100%;
         height: 100%;
         max-width: 100%;
@@ -121,6 +120,7 @@
 
     .image-description-container :global(*) {
         font-family: "eczar";
+        font-size: 1em;
     }
 
     img {
@@ -138,10 +138,11 @@
 
     .title {
         font-family: "eczar";
+        font-size: 2vw;
     }
 
     .title-ordinal {
-        font-size: 16px;
+        font-size: 0.4em;
         color: rgba(255 255 255 / 75%);
         position: relative;
         bottom: 12px; 
@@ -149,7 +150,7 @@
     }
 
     .subtitle {
-        font-size: 16px;
+        font-size: 1.2em;
     }
 
     .image-info-container :global(code) {

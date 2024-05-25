@@ -75,7 +75,7 @@
 
     h1 {
         font-family: "eczar";
-        font-size: 64px;
+        font-size: 3vw;
         padding: 30px 0 30px 0;
         margin: 0;
         line-height: 70px;

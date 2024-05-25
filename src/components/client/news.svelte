@@ -58,7 +58,7 @@
 
     .version {
         color: rgba(255 255 255 / 50%);
-        font-size: 12px;
+        font-size: 0.7em;
     }
 
     * {

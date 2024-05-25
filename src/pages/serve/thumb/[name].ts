@@ -9,8 +9,15 @@ import Config from "../../../config";
 const image_thumbnail_width = 300;
 const image_thumbnail_height = 50;
 
+const thumbnail_cache:{[key: string]: Buffer} = {};
+
 export const GET: APIRoute = async context => {
     const name = context.params.name ?? "";
+
+    if (name in thumbnail_cache) {
+        return new Response(thumbnail_cache[name], {headers: {"Content-Type": "image/png"}});
+    }
+
     const image_model = await Image.get(name);
 
     if (!image_model) {
@@ -42,5 +49,8 @@ export const GET: APIRoute = async context => {
         .toBuffer();
 
     const response = new Response(thumb_data, {headers: {"Content-Type": "image/png"}});
+    
+    thumbnail_cache[name] = thumb_data;
+
     return response;
 };

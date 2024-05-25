@@ -42,6 +42,6 @@
         background-color: #111;
         border: 1px solid rgba(255 255 255 / 50%);
         color: white;
-        font-size: 16px;
+        font-size: 1em;
     }
 </style>

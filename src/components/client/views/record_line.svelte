@@ -81,7 +81,7 @@
         gap: 10px;
         min-width: 500px;
         padding-top: 16px;
-        font-size: 18px;
+        font-size: 1.1em;
     }
 
     .line-content-container {
@@ -103,7 +103,7 @@
 
     .line-content-container :global(*) {
         font-family: "eczar";
-        font-size: 18px;
+        font-size: 1.15em;
     }
 
     .line-content-container :global(p) {

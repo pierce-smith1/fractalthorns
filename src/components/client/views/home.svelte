@@ -143,7 +143,7 @@
     .splash {
         position: relative;
         top: 0;
-        font-size: 20px;
+        font-size: 1.3em;
         padding: 12px 20px 12px 20px;
         border-radius: 10px;
         border: 1px solid rgba(255 255 255 / 50%);
