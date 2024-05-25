@@ -1,24 +1,29 @@
 <script lang="ts">
     import p5 from "p5";
 
-    import {Artist} from "../canvas/artist";
-    import {current} from "./page.ts";
+    import { Artist } from "../canvas/artist";
+    import { current } from "./page.ts";
 
     import Canvas from "../canvas/canvas.svelte";
 
-    function image_defs() {
-        return {
-            night: "/assets/images/common/bg-night.png",
-            dawn: "/assets/images/common/bg-dawn.png",
-            day: "/assets/images/common/bg-day.png",
-            dusk: "/assets/images/common/bg-dusk.png",
-        };
-    }
+    type Point = { x: number; y: number };
 
-    type Point = {x: number, y: number};
+    const time = (() => {
+        const now = new Date();
+        const hour = now.getHours();
+        if (hour > 22 || hour <= 4) {
+            return "night";
+        } else if (hour > 4 && hour <= 10) {
+            return "dawn";
+        } else if (hour > 10 && hour <= 18) {
+            return "day";
+        } else {
+            return "dusk";
+        }
+    })();
 
-    class BackgroundArtist extends Artist<ReturnType<typeof image_defs>> {
-        state: {[key: string]: any} = {};
+    class BackgroundArtist extends Artist<{}> {
+        state: { [key: string]: any } = {};
 
         width() {
             return window.innerWidth;
@@ -28,7 +33,7 @@
             return window.innerHeight;
         }
 
-        image_defs = image_defs;
+        image_defs = () => ({});
 
         preload(p5: p5) {
             super.preload(p5);
@@ -41,8 +46,8 @@
         domain: string | undefined;
         setup(p5: p5, canvas: HTMLCanvasElement) {
             super.setup(p5, canvas);
-            
-            current.subscribe(new_page => {
+
+            current.subscribe((new_page) => {
                 this.domain = new_page?.domain;
             });
 
@@ -50,48 +55,51 @@
         }
 
         draw(p5: p5) {
-            const now = new Date();
-            
-            const time = (() => {
-                const hour = now.getHours();
-                if (hour > 22 || hour <= 4) {
-                    return "night";
-                } else if (hour > 4 && hour <= 10) {
-                    return "dawn";
-                } else if (hour > 10 && hour <= 18) {
-                    return "day";
-                } else {
-                    return "dusk";
-                }
-            })();
-
-            const bg_image = this.loaded_images[time];
-
-            p5.image(bg_image, 0, 0);
+            this.draw_stars(p5, [
+                /* TODO */
+            ]);
         }
 
         draw_stars(p5: p5, stars: Array<Point>) {
             p5.stroke(p5.color(255, 255, 255));
-            p5.strokeWeight(2);
             for (const star of stars) {
                 p5.point(star.x, star.y);
             }
         }
-    };
+    }
 
     const artist = new BackgroundArtist();
+    const background_name = "asdf";
 </script>
 
 <div>
-    <Canvas artist={artist}/>
+    <div
+        class="background"
+        style:background-image={`url(/assets/images/common/bg-${time}.png)`}
+    ></div>
+    <div class="canvas">
+        <Canvas {artist} />
+    </div>
 </div>
 
-<style>
-    div {
+<style lang="scss">
+    .background,
+    .canvas {
         position: fixed;
         z-index: -10;
         padding: 0;
         margin: 0;
-        overflow: hidden;
+        // prefer lvw/lvh but it's not totally suppoted yet
+        width: 100vw;
+        height: 100vh;
+        width: 100lvw;
+        height: 100lvh;
+    }
+
+    .background {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+        background-size: cover;
     }
 </style>
