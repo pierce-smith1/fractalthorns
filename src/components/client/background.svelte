@@ -72,22 +72,34 @@
     const background_name = "asdf";
 </script>
 
-<div class="wrapper">
-    <img
-        src={`/assets/images/common/bg-${time}.png`}
-        alt={`Background (${time} variant)`}
-    />
-    <div class="canvas-wrapper">
+<div>
+    <div
+        class="background"
+        style:background-image={`url(/assets/images/common/bg-${time}.png)`}
+    ></div>
+    <div class="canvas">
         <Canvas {artist} />
     </div>
 </div>
 
 <style lang="scss">
-    img,
-    .canvas-wrapper {
+    .background,
+    .canvas {
         position: fixed;
         z-index: -10;
         padding: 0;
         margin: 0;
+        // prefer lvw/lvh but it's not totally suppoted yet
+        width: 100vw;
+        height: 100vh;
+        width: 100lvw;
+        height: 100lvh;
+    }
+
+    .background {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+        background-size: cover;
     }
 </style>
