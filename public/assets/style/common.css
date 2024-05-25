@@ -27,6 +27,11 @@
     src: url("/assets/fonts/Lekton-Regular.ttf");
 }
 
+@font-face {
+    font-family: "agave";
+    src: url("/assets/fonts/Agave-Regular.ttf");
+}
+
 body { 
     margin: 0;
     padding: 0;

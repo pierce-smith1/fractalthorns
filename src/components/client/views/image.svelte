@@ -84,6 +84,10 @@
         padding: 10px;
     }
 
+    .image-info-container :global(a) {
+        text-decoration: underline;
+    }
+
     .image-title-container {
         display: flex;
         flex-flow: column nowrap;

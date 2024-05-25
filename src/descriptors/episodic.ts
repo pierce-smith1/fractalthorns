@@ -22,6 +22,18 @@ export type SolveRecordRequest = {
     name: string,
 };
 
+export const iterations = [
+    "154373",
+    "209151",
+    "265404",
+    "768220",
+    "768221",
+    "auzoan",
+    "event",
+    "0",
+];
+export type Iteration = typeof iterations[number];
+
 export function get_iteration_sigil(iteration: string): string | undefined {
     switch (iteration) {
         case "154373": return "⎊";
@@ -42,9 +54,9 @@ export function get_iteration_color(iteration: string): string | undefined {
         case "265404": return "#FF8C1F";
         case "768220": return "#FF5588";
         case "768221": return "#E84CDB";
-        case "auzoan": return "#E84CDB";
+        case "auzoan": return "#4CE84C";
         case "event": return "#EA0042";
-        case "0": return "#000000";
+        case "0": return "#888888";
     }
 }
 
