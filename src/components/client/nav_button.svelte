@@ -35,6 +35,7 @@
 
     .button-background {
         background-size: cover;
+        background-position: center;
         width: 40px;
         height: 40px;
     }
