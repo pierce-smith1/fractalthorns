@@ -6,6 +6,7 @@
     import {Artist} from "../../canvas/artist";
 
     import Canvas from "../../canvas/canvas.svelte";
+    import Keynav from "./keynav.svelte";
 
     function image_defs() {
         return {
@@ -118,6 +119,9 @@
         <img src="/assets/images/common/socials-github.png" />
     </a>
 </div>
+<Keynav 
+    page_right={{domain: "image"}}
+/>
 
 <style>
     .home-artist-container {

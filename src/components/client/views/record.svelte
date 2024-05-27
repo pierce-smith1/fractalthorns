@@ -1,9 +1,9 @@
 <script lang="ts">
     import * as Fetchers from "../../../fetchers";
-    import * as Episodic from "../../../descriptors/episodic";
 
     import Loading from '../loading.svelte';
     import RecordLine from "./record_line.svelte";
+    import Keynav from "./keynav.svelte";
 
     export let name: string | undefined = undefined;
     export let line_index: number | undefined = undefined;
@@ -35,8 +35,16 @@
                 {/each}
             </div>
         </div>
+        <Keynav 
+            page_up={{domain: "episodic", record_name: entry.prev_record}}
+            page_down={{domain: "episodic", record_name: entry.next_record}}
+        />
     {/await}
 </div>
+<Keynav
+    page_left={{domain: "image"}}
+    page_right={{domain: "subproject"}}
+/>
 
 <style>
     .record-container {

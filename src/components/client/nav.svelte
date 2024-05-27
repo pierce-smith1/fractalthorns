@@ -23,10 +23,10 @@
 <nav>
     <div class="nav-sticky"> 
         <div class="domain-buttons">
-            <NavButton domain={"home"} {showing_search_results} {reset_search_results} />
-            <NavButton domain={"image"} {showing_search_results} {reset_search_results} />
-            <NavButton domain={"episodic"} {showing_search_results} {reset_search_results} />
-            <NavButton domain={"subproject"} {showing_search_results} {reset_search_results} />
+            <NavButton domain={"home"} {reset_search_results} />
+            <NavButton domain={"image"} {reset_search_results} />
+            <NavButton domain={"episodic"} {reset_search_results} />
+            <NavButton domain={"subproject"} {reset_search_results} />
         </div>
         <div class="domain-search">
             <DomainSearch bind:results_promises={domain_search_results} />

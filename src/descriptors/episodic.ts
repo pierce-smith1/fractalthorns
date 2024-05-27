@@ -4,7 +4,10 @@ export type RecordEntry = {
     title: string,
     solved: boolean,
     iteration: string,
-}
+    next_record: string,
+    prev_record: string,
+};
+
 export type RedactableRecordEntry = Omit<RecordEntry, "name"> & {name?: string, title?: string}
 
 export type Model = {

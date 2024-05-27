@@ -6,6 +6,7 @@
     import * as Fetchers from "../../../fetchers";
 
     import Loading from "../loading.svelte";
+    import Keynav from './keynav.svelte';
 
     export let name: string | undefined;
 
@@ -46,8 +47,16 @@
         <div class="image-container">
             <a href={image.image_url} class="image-link"><img src={image.image_url}></a>
         </div>
+        <Keynav 
+            page_up={{domain: "image", name: image.next_image}}
+            page_down={{domain: "image", name: image.prev_image}}
+        />
     {/await}
 </div>
+<Keynav
+    page_left={{domain: "home"}}
+    page_right={{domain: "episodic"}}
+/>
 
 <style>
     .container {

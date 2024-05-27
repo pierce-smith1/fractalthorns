@@ -1,12 +1,17 @@
 <script lang="ts">
     import * as Subproject from "../../../descriptors/subproject";
+    import * as GenericUtil from "../../../genericutil.ts";
 
     import Tlh from "./subprojects/tlh.svelte";
     import Aor from "./subprojects/aor.svelte";
     import Yokdeck from "./subprojects/yokdeck.svelte";
     import Yokscr from "./subprojects/yokscr.svelte";
+    import Keynav from "./keynav.svelte";
 
     export let name: string | undefined;
+
+    $: subproject_index = Subproject.subprojects.findIndex(sp => sp.name === name);
+    $: [prev_subproject, next_subproject] = GenericUtil.neighbors(subproject_index, Subproject.subprojects);
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>
@@ -20,6 +25,11 @@
         <Yokscr />
     {/if}
 </div>
+<Keynav 
+    page_up={{domain: "subproject", name: prev_subproject.name}}
+    page_down={{domain: "subproject", name: next_subproject.name}}
+    page_left={{domain: "episodic"}}
+/>
 
 <style>
     .subproject-container {

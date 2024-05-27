@@ -6,13 +6,12 @@
     import PageLink from "./page_link.svelte";
 
     export let domain: Domain.Page["domain"];
-    export let showing_search_results: boolean;
     export let reset_search_results: () => void;
 </script>
 
 <div class="domain-button-container">
     <PageLink dest={{domain}}>
-        <button type="button" class="domain-button" class:selected={$current?.domain === domain && !showing_search_results} on:click={reset_search_results}>
+        <button type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={reset_search_results}>
            <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
         </button>
     </PageLink>

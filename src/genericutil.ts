@@ -14,3 +14,10 @@ export function sample<T>(array: Array<T>): T | undefined {
     const sample = array[Math.floor(Math.random() * array.length)];
     return sample;
 }
+
+export function neighbors<T>(index: number, array: Array<T>) {
+    const lower = index - 1 < 0 ? 0 : index - 1;
+    const higher = index + 1 >= array.length ? array.length - 1 : index + 1;
+
+    return [array[lower], array[higher]];
+}
