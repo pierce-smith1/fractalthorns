@@ -1,4 +1,13 @@
 ---
+    import Config from '../config';
+
+    export interface Props {
+        embed_url?: string;
+        embed_descr?: string;
+        embed_image_url?: string;
+    }
+
+    const {embed_url, embed_descr, embed_image_url} = Astro.props;
 ---
 
 <html lang="en">
@@ -6,8 +15,15 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-        <link rel="stylesheet" href="/assets/style/common.css" /> <!-- because of client-side color scripts, 
-                                                                       this stylesheet MUST be first (or the only one here) -->
+        <meta content="fractalthorns" property="og:title" />
+        <meta content="#FFFFFF" property="theme-color" />
+
+        {embed_url && <meta content={`${Config.self_url}/${embed_url}`} property="og:url" />}
+        {embed_descr && <meta content={embed_descr} property="og:description" />}
+        {embed_image_url && <meta content={`${Config.self_url}/${embed_image_url}`} property="og:image" />}
+        <meta name="twitter:card" content="summary_large_image" />
+
+        <link rel="stylesheet" href="/assets/style/common.css" />
 		<title>fractal thorns</title>
 	</head>
 	<body>

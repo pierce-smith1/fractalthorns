@@ -10,6 +10,12 @@ export type Model = {
     speedpaint_video_id?: string,
 };
 
+export function get_date_string(image: Model) {
+    const date = new Date(image.date);
+    const formatted_date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    return formatted_date;
+}
+
 export type ClientModel = Omit<Model, "date"> & {
     next_image: string,
     prev_image: string,

@@ -2,20 +2,14 @@
     import {marked} from 'marked';
 
     import * as Episodic from "../../../descriptors/episodic";
+    import * as Image from "../../../descriptors/image";
     import * as Fetchers from "../../../fetchers";
 
     import Loading from "../loading.svelte";
-    import Keynav from './keynav.svelte';
 
     export let name: string | undefined;
 
     $: image_promise = Fetchers.get.single_image({name});
-
-    function format_date(image: Awaited<typeof image_promise>) {
-        const date = new Date(image.date);
-        const formatted_date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-        return formatted_date;
-    }
 
     function format_subtitle(image: Awaited<typeof image_promise>) {
         const parts: Array<string> = [];
@@ -25,7 +19,7 @@
             parts.push(`<img class="iteration-sigil" src=/assets/images/common/iteration-${image.canon}.png />`);
         }
 
-        parts.push(format_date(image));
+        parts.push(Image.get_date_string(image));
 
         if (image.speedpaint_video_id) {
             parts.push(`<a href="https://www.youtube.com/watch?v=${image.speedpaint_video_id}">speedpaint</a>`);

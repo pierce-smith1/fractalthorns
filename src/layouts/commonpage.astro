@@ -1,5 +1,6 @@
 ---
-    import * as Domain from "../descriptors/domain";
+    import * as Image from "../descriptors/image";
+    import * as ImageLoader from "../loaders/image";
 
     import Default from "./default.astro";
     import Background from "../components/client/background.svelte";
@@ -11,9 +12,19 @@
     }
 
     const {domain, path} = Astro.params;
+
+    const url = `${domain}/${path ?? ""}`;
+    const embed = await (async () => {
+        if (domain === "image" && path) {
+            const name = path;
+            const image = await ImageLoader.get(name);
+
+            return {url, image_url: image.image_url, descr: `${image.title} / ${Image.get_date_string(image)}`};
+        }
+    })();
 ---
 
-<Default>
+<Default embed_url={embed?.url} embed_image_url={embed?.image_url} embed_descr={embed?.descr}>
 	<div class="page-body" data-domain={domain ?? "home"} data-path={path}>
         <Background client:only="svelte" />
         <Page client:only="svelte" />
