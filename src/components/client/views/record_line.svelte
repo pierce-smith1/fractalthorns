@@ -103,7 +103,7 @@
 
     .line-content-container :global(*) {
         font-family: "eczar";
-        font-size: 1.15em;
+        font-size: 1.15rem;
     }
 
     .line-content-container :global(p) {
