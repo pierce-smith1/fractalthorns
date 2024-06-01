@@ -16,24 +16,29 @@
                 return true;
             }
 
+            // Don't interrupt keyboard shortcuts
+            if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
+                return true;
+            }
+
             if (["ArrowUp", "w"].includes(event.key)) {
                 // @ts-ignore
-                document.querySelector(".keynav-up a").click(); // TODO brittle over PageLink
+                document.querySelector(".keynav-up a")?.click(); // TODO brittle over PageLink
             } 
             
             if (["ArrowDown", "s"].includes(event.key)) {
                 // @ts-ignore
-                document.querySelector(".keynav-down a").click();
+                document.querySelector(".keynav-down a")?.click();
             }
 
             if (["ArrowLeft", "a"].includes(event.key)) {
                 // @ts-ignore
-                document.querySelector(".keynav-left a").click();
+                document.querySelector(".keynav-left a")?.click();
             }
 
             if (["ArrowRight", "d"].includes(event.key)) {
                 // @ts-ignore
-                document.querySelector(".keynav-right a").click();
+                document.querySelector(".keynav-right a")?.click();
             }
             
             return false;

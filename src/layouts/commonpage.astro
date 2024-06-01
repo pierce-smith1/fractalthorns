@@ -19,7 +19,7 @@
             const name = path;
             const image = await ImageLoader.get(name);
 
-            return {url, image_url: image.image_url, descr: `${image.title} / ${Image.get_date_string(image)}`};
+            return {url, image_url: image.image_url, descr: `${image.title} · ${Image.get_date_string(image)}`};
         }
     })();
 ---
