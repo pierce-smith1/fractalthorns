@@ -25,7 +25,7 @@
         <Loading/>
     {:then images}
         {#each images as image}
-            {#if selected_iterations.size === 0 || selected_iterations.has(image.canon)}
+            {#if selected_iterations.size === 0 || selected_iterations.has(image.canon ?? "")}
                 <ImageButton {image} />
             {/if}
         {/each}

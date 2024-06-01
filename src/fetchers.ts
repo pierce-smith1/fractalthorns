@@ -7,7 +7,7 @@ function define_get_fetcher<
     EndpointName extends keyof Api.GetEndpoints, 
     Params = Api.GetEndpoints[EndpointName]["request"], 
     Result = Api.GetEndpoints[EndpointName]["response"]
->(endpoint: EndpointName) {
+>(endpoint: EndpointName): (request: Params) => Promise<Result> {
     return (request: Params) => {
         const body = JSON.stringify(request);
         const url = `/api/v1/${endpoint}?body=${body}`;

@@ -10,7 +10,7 @@ export type Model = {
     speedpaint_video_id?: string,
 };
 
-export function get_date_string(image: Model) {
+export function get_date_string(image: Model | ClientModel) {
     const date = new Date(image.date);
     const formatted_date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     return formatted_date;
