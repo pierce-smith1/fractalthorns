@@ -8,6 +8,8 @@
     import PageLink from "../page_link.svelte";
 
     export let record: Episodic.RedactableRecordEntry;
+    export let prev_neighbor: Episodic.RedactableRecordEntry | undefined = undefined;
+
     export let preview_line_index: number | undefined = undefined;
     export let preview_matched_text: string | undefined = undefined;
 
@@ -43,12 +45,16 @@
         const rejoined_text = [text_parts[0], ...middle_parts, text_parts[last]].join(preview_matched_text);
         return rejoined_text;
     }
+
+    function should_show_chapter(record: Episodic.RedactableRecordEntry, prev?: Episodic.RedactableRecordEntry) {
+        return !prev || prev.chapter !== record.chapter;
+    }
 </script>
 
-<div class="episodic-button"
-    style:border-color={Episodic.get_iteration_color(record.iteration)} 
-    class:selected={$current.domain === "episodic" && $current.record_name === record.name}
->
+{#if should_show_chapter(record, prev_neighbor)}
+    <h3 class="chapter-name">{record.chapter}</h3>
+{/if}
+<div class="episodic-button" style:border-color={Episodic.get_iteration_color(record.iteration)} class:selected={$current.domain === "episodic" && $current.record_name === record.name}>
     {#if !record.name}
         <h4 class="unsolved"><em>???</em></h4>
     {:else}
@@ -96,6 +102,11 @@
 
     .record-name {
         width: 100%;
+    }
+
+    .chapter-name {
+        text-align: right;
+        border-bottom: 1px solid rgba(255 255 255 / 50%);
     }
 
     .line-preview {

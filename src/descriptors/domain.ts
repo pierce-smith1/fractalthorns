@@ -1,3 +1,6 @@
+import * as Image from "./image";
+import * as Episodic from "./episodic";
+
 export const domains = [
     "image",
     "episodic",
@@ -11,23 +14,25 @@ export type Page =
     | {domain: "home"}
     | {domain: "subproject", name?: string}
 
-export type PageSearchResult = Page & {matched_text?: string};
+export type Item = 
+    | Extract<Page, {domain: "image"}> & {image: Image.ClientModel}
+    | Extract<Page, {domain: "episodic"}> & {record: Episodic.RedactableRecordEntry, matched_text?: string}
+    | Extract<Page, {domain: "home"}>
+    | Extract<Page, {domain: "subproject"}>
 
 export type SearchItemType = 
     | "image"
     | "episodic-item"
     | "episodic-line"
 
-export type HolisticSearchResults = {
-    "image": Promise<Array<Extract<PageSearchResult, {domain: "image"}>>>,
-    "episodic-item": Promise<Array<Extract<PageSearchResult, {domain: "episodic"}>>>,
-    "episodic-line": Promise<Array<Extract<PageSearchResult, {domain: "episodic"}>>>,
-};
-
 export type DomainSearchRequest = {
     term: string,
     type: SearchItemType,
 };
+
+export function sort_items(items: Array<Item>) {
+    return items.toSorted((a, b) => domains.indexOf(a.domain) - domains.indexOf(b.domain));
+}
 
 export function is_valid_domain(name?: string): name is Page["domain"] {
     if (!name) {
@@ -36,6 +41,14 @@ export function is_valid_domain(name?: string): name is Page["domain"] {
 
     const is_valid = domains.includes(name as Page["domain"]);
     return is_valid;
+}
+
+export function get_item_iteration(item: Item) {
+    switch (item.domain) {
+        case "image": return item.image.canon;
+        case "episodic": return item.record.iteration;
+    }
+    return undefined;
 }
 
 export function page_to_path(page: Page) {

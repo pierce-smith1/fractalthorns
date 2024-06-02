@@ -1,8 +1,9 @@
 <script lang="ts">
-    import * as Domain from "../../descriptors/domain";
     import * as Fetchers from "../../fetchers";
+    import * as Domain from "../../descriptors/domain";
 
-    export let results_promises: Domain.HolisticSearchResults | undefined = undefined;
+    import {current_items} from "./nav";
+
     export let term: string | undefined = undefined;
 
     function submit_search(event: KeyboardEvent) {
@@ -14,15 +15,18 @@
         term = event.target.value as string;
 
         if (term.length === 0) {
-            results_promises = undefined;
+            $current_items = [];
             return;
         }
 
-        results_promises = {
-            image: Fetchers.get.domain_search({term, type: "image"}),
-            "episodic-item": Fetchers.get.domain_search({term, type: "episodic-item"}),
-            "episodic-line": Fetchers.get.domain_search({term, type: "episodic-line"}),
-        } as any;
+        const image_results = Fetchers.get.domain_search({term, type: "image"});
+        const record_results = Fetchers.get.domain_search({term, type: "episodic-item"});
+        const line_results = Fetchers.get.domain_search({term, type: "episodic-line"});
+
+        $current_items = [];
+        image_results.then(images => $current_items = Domain.sort_items([...$current_items, ...images]));
+        record_results.then(records => $current_items = Domain.sort_items([...$current_items, ...records]));
+        line_results.then(lines => $current_items = Domain.sort_items([...$current_items, ...lines]));
     }
 </script>
 

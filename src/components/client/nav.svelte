@@ -1,50 +1,29 @@
 <script lang="ts">
-    import * as Domain from "../../descriptors/domain";
-
     import {current} from "./page.ts";
 
-    import ImageList from "./domain/images_list.svelte";
     import DomainSearch from "./domain_search.svelte";
-    import DomainSearchResults from "./domain_search_results.svelte";
-    import Loading from "./loading.svelte";
-    import EpisodicList from "./domain/episodic_list.svelte";
     import NavButton from "./nav_button.svelte";
     import News from "./news.svelte";
-    import SubprojectList from "./domain/subproject_list.svelte";
-
-    let domain_search_results: Domain.HolisticSearchResults | undefined = undefined;
-    $: showing_search_results = !!domain_search_results;
-
-    function reset_search_results() {
-        showing_search_results = false;
-    }
+    import NavItemsList from "./nav_items_list.svelte";
 </script>
 
 <nav>
     <div class="nav-sticky"> 
         <div class="domain-buttons">
-            <NavButton domain={"home"} {reset_search_results} />
-            <NavButton domain={"image"} {reset_search_results} />
-            <NavButton domain={"episodic"} {reset_search_results} />
-            <NavButton domain={"subproject"} {reset_search_results} />
+            <NavButton domain={"home"} />
+            <NavButton domain={"image"} />
+            <NavButton domain={"episodic"} />
+            <NavButton domain={"subproject"} />
         </div>
         <div class="domain-search">
-            <DomainSearch bind:results_promises={domain_search_results} />
+            <DomainSearch />
         </div>
     </div>
 
-    {#if domain_search_results && showing_search_results}
-        <DomainSearchResults results={domain_search_results} />
+    {#if $current.domain === "home"}
+        <News />
     {:else}
-        {#if $current.domain === "home"}
-            <News />
-        {:else if $current.domain === "image"}
-            <ImageList />
-        {:else if $current.domain === "episodic"}
-            <EpisodicList />
-        {:else if $current.domain === "subproject"}
-            <SubprojectList />
-        {/if}
+        <NavItemsList />
     {/if}
 
     <div class="nav-spacer">
@@ -98,5 +77,4 @@
         left: 0;
         gap: 10px;
     }
-
 </style>

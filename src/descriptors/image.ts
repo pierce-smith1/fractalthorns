@@ -17,8 +17,6 @@ export function get_date_string(image: Model | ClientModel) {
 }
 
 export type ClientModel = Omit<Model, "date"> & {
-    next_image: string,
-    prev_image: string,
     ordinal: number,
     date: string,
 };

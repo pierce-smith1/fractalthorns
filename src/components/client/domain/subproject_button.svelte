@@ -28,7 +28,6 @@
         border: 1px solid rgba(255 255 255 / 50%);
         border-radius: 5px;
         padding: 10px;
-        margin: 10px;
         transition: 0.3s background-color ease-out;
     }
 

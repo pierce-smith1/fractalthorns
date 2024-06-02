@@ -4,11 +4,21 @@ export type RecordEntry = {
     title: string,
     solved: boolean,
     iteration: string,
-    next_record: string,
-    prev_record: string,
 };
 
-export type RedactableRecordEntry = Omit<RecordEntry, "name"> & {name?: string, title?: string}
+export type RedactableRecordEntry = Omit<RecordEntry, "name" | "title" | "iteration"> & {name?: string, title?: string, iteration?: string}
+
+export function redact(entry: RecordEntry): RedactableRecordEntry {
+    if (entry.solved) {
+        return entry;
+    }
+
+    return {...entry,
+        name: undefined,
+        title: undefined,
+        iteration: undefined,
+    };
+}
 
 export type Model = {
     records: Array<RecordEntry>,
@@ -50,7 +60,7 @@ export function get_iteration_sigil(iteration: string): string | undefined {
     }
 }
 
-export function get_iteration_color(iteration: string): string | undefined {
+export function get_iteration_color(iteration: string | undefined): string {
     switch (iteration) {
         case "154373": return "#FFF8D1";
         case "209151": return "#51CDFF";
@@ -61,6 +71,7 @@ export function get_iteration_color(iteration: string): string | undefined {
         case "event": return "#EA0042";
         case "0": return "#888888";
     }
+    return "#888888";
 }
 
 // TODO maybe(?) this should be handled by the character API,
