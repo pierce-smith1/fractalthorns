@@ -1,6 +1,6 @@
 <script lang="ts">
     import {current} from "./page.ts";
-    import {current_items} from "./nav.ts";
+    import {current_items, currently_searching} from "./nav.ts";
 
     import ImageButton from "./domain/image_button.svelte";
     import IterationFilterButtons from "./domain/iteration_filter_buttons.svelte";
@@ -55,7 +55,9 @@
                 <SubprojectButton subproject={get_subproject(item.name ?? "")} />
             {/if}
         {/each}
-        {#if items_to_show.length === 0}
+        {#if items_to_show.length === 0 && $currently_searching}
+            <p class="nothing-warning"><em>searching...</em></p>
+        {:else if items_to_show.length === 0}
             <p class="nothing-warning"><em>nothing was found</em></p>
         {/if}
     </div>
