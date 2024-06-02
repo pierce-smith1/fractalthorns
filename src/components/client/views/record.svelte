@@ -35,10 +35,6 @@
                 {/each}
             </div>
         </div>
-        <Keynav 
-            page_up={{domain: "episodic", record_name: entry.prev_record}}
-            page_down={{domain: "episodic", record_name: entry.next_record}}
-        />
     {/await}
 </div>
 <Keynav

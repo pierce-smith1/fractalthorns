@@ -1,10 +1,12 @@
 <script lang="ts">
+    import {current} from "./page.ts";
     import {current_items} from "./nav.ts";
 
     import ImageButton from "./domain/image_button.svelte";
     import IterationFilterButtons from "./domain/iteration_filter_buttons.svelte";
     import EpisodicButton from "./domain/episodic_button.svelte";
     import SubprojectButton from "./domain/subproject_button.svelte";
+    import Keynav from "./views/keynav.svelte";
 
     import * as GenericUtil from "../../genericutil";
     import * as Domain from "../../descriptors/domain";
@@ -28,8 +30,13 @@
     }
 
     $: available_iterations = new Set(Episodic.iterations.filter(iter => $current_items.map(Domain.get_item_iteration).includes(iter)));
-
     $: items_to_show = $current_items.filter(item => !item.hide);
+
+    $: current_page_index = items_to_show.findIndex(item =>
+        (item.domain === "image" && $current.domain === "image" && item.name === $current.name) ||
+        (item.domain === "episodic" && $current.domain === "episodic" && item.record_name == $current.record_name && item.line_index == $current.line_index)
+    );
+    $: neighbor_pages = GenericUtil.neighbors(current_page_index, items_to_show);
 </script>
 
 <div class="nav-items-list">
@@ -53,6 +60,10 @@
         {/if}
     </div>
 </div>
+<Keynav
+    page_up={neighbor_pages[0]}
+    page_down={neighbor_pages[1]}
+/>
 
 <style>
     .nav-items-list {

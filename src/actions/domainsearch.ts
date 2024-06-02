@@ -3,6 +3,7 @@ import * as ImageLoader from "../loaders/image";
 import * as EpisodicLoader from "../loaders/episodic";
 import * as Episodic from "../descriptors/episodic";
 import * as Search from "./search";
+import * as GenericUtil from "../genericutil";
 
 export async function find_items(term: string, type: Domain.SearchItemType): Promise<Array<Domain.Item>> {
     const results_promise = (() => {
@@ -69,5 +70,6 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
                 matched_text: match.matched_text,
             }))
         );
-    return lines;
+    const unique_lines = GenericUtil.unique_by(lines, (a, b) => a.record_name === b.record_name && a.line_index === b.line_index);
+    return unique_lines;
 }
