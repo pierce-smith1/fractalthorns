@@ -39,6 +39,7 @@
 
 <script>
     import * as Domain from "../descriptors/domain";
+    import * as Nav from "../components/client/nav";
 
     import {current} from "../components/client/page.ts";
 
@@ -51,4 +52,5 @@
 
     const page = Domain.path_to_page(`${domain}/${path ?? ""}`);
     current.set(page);
+    Nav.set_domain_items(domain);
 </script>

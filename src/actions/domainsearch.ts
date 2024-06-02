@@ -6,11 +6,13 @@ import * as Search from "./search";
 import * as GenericUtil from "../genericutil";
 
 export async function find_items(term: string, type: Domain.SearchItemType): Promise<Array<Domain.Item>> {
+    const lowercase_term = term.toLowerCase();
+
     const results_promise = (() => {
         switch (type) {
-            case "image": return find_image_items(term);
-            case "episodic-item": return find_episodic_items(term);
-            case "episodic-line": return find_episodic_lines(term);
+            case "image": return find_image_items(lowercase_term);
+            case "episodic-item": return find_episodic_items(lowercase_term);
+            case "episodic-line": return find_episodic_lines(lowercase_term);
         }
     })();
     
@@ -21,7 +23,11 @@ export async function find_items(term: string, type: Domain.SearchItemType): Pro
 export async function find_image_items(term: string): ReturnType<typeof find_items> {
     const images = await ImageLoader.get_all();
     const matching_images = images
-        .filter(image => image.name.includes(term) || image.title.includes(term))
+        .filter(image => 
+            image.name.includes(term) || 
+            image.title.includes(term) || 
+            image.characters?.map?.(char => char.toLowerCase())?.includes?.(term)
+        )
         .map((image, i, array) => ({...image, ordinal: array.length - i, date: image.date.toString()}));
 
     const image_items = matching_images.map(image => ({
@@ -54,7 +60,7 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
     // to a halt, proud beyond compare that their incalculable genius has managed to expose 
     // the shit software for the shitness it really is but is trying so deperately to hide.
     // Just a prediction. Was I right?
-    if (term.length < 3 || term.toLowerCase() === "the") {
+    if (term.length < 3 || term === "the") {
         return [];
     }
 

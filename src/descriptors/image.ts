@@ -6,6 +6,7 @@ export type Model = {
     thumb_url: string,
     center: { x: number, y: number },
     canon?: string,
+    characters?: Array<string>,
     description: string,
     speedpaint_video_id?: string,
 };
