@@ -1,7 +1,8 @@
 <script lang="ts">
     import p5 from "p5";
+    import {onMount} from "svelte";
 
-    import * as Fetchers from "../../../fetchers";
+    import * as Nav from "../nav";
 
     import {Artist} from "../../canvas/artist";
 
@@ -105,6 +106,10 @@
     };
 
     const artist = new HomeArtist();
+
+    onMount(() => {
+        Nav.current_items.set([]);
+    });
 </script>
 
 <div class="home-artist-container">

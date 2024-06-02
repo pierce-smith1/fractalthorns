@@ -1,6 +1,9 @@
 <script lang="ts">
+    import {onMount} from "svelte";
+
     import * as Subproject from "../../../descriptors/subproject";
     import * as GenericUtil from "../../../genericutil.ts";
+    import * as Nav from "../nav";
 
     import Tlh from "./subprojects/tlh.svelte";
     import Aor from "./subprojects/aor.svelte";
@@ -12,6 +15,10 @@
 
     $: subproject_index = Subproject.subprojects.findIndex(sp => sp.name === name);
     $: [prev_subproject, next_subproject] = GenericUtil.neighbors(subproject_index, Subproject.subprojects);
+
+    onMount(() => {
+        Nav.set_domain_items("subproject");
+    });
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>

@@ -7,6 +7,7 @@ import * as Subproject from "../../descriptors/subproject";
 export type NavItem = Domain.Item & {hide?: boolean};
 export const current_items = Store.writable<Array<NavItem>>([]);
 export const currently_searching = Store.writable<boolean>(false);
+export const search_finished = Store.writable<boolean>(false);
 
 export function set_domain_items(domain: Domain.Page["domain"]) {
     const new_items_promise: Promise<Array<Domain.Item>> = (() => {
@@ -22,5 +23,6 @@ export function set_domain_items(domain: Domain.Page["domain"]) {
         return Promise.resolve([]);
     })();
 
+    search_finished.set(false);
     new_items_promise.then(items => current_items.set(items));
 }

@@ -2,7 +2,7 @@
     import * as Fetchers from "../../fetchers";
     import * as Domain from "../../descriptors/domain";
 
-    import {current_items, currently_searching} from "./nav";
+    import {current_items, currently_searching, search_finished} from "./nav";
 
     export let term: string | undefined = undefined;
 
@@ -16,6 +16,8 @@
 
         if (term.length === 0) {
             $current_items = [];
+            $currently_searching = false;
+            $search_finished = false;
             return;
         }
 
@@ -30,7 +32,10 @@
         record_results.then(records => $current_items = Domain.sort_items([...$current_items, ...records]));
         line_results.then(lines => $current_items = Domain.sort_items([...$current_items, ...lines]));
 
-        Promise.all([image_results, record_results, line_results]).then(_ => $currently_searching = false);
+        Promise.all([image_results, record_results, line_results]).then(_ => {
+            $currently_searching = false;
+            $search_finished = true;
+        });
     }
 </script>
 

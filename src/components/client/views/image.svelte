@@ -1,9 +1,11 @@
 <script lang="ts">
     import {marked} from 'marked';
+    import {onMount} from 'svelte';
 
     import * as Episodic from "../../../descriptors/episodic";
     import * as Image from "../../../descriptors/image";
     import * as Fetchers from "../../../fetchers";
+    import * as Nav from "../nav";
 
     import Loading from "../loading.svelte";
     import Keynav from './keynav.svelte';
@@ -29,6 +31,10 @@
         const subtitle = parts.join(" · ");
         return subtitle;
     }
+
+    onMount(() => {
+        Nav.set_domain_items("image");
+    });
 </script>
 
 <div class="container">

@@ -1,6 +1,5 @@
 <script lang="ts">
     import * as Domain from "../../descriptors/domain";
-    import * as Nav from "./nav";
 
     import {current} from "./page.ts";
 
@@ -11,7 +10,7 @@
 
 <div class="domain-button-container">
     <PageLink dest={{domain}}>
-        <button type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={() => Nav.set_domain_items(domain)}>
+        <button type="button" class="domain-button" class:selected={$current?.domain === domain}>
            <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
         </button>
     </PageLink>
