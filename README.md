@@ -1,5 +1,7 @@
 # fractalthorns
 
+![thorns](https://github.com/pierce-smith1/fractalthorns/assets/50504215/884c35c6-7640-4a78-b1d2-5e430c4fa6aa)
+
 [Visit the live site!](https://fractalthorns.com/)
 
 fractalthorns is my personal site and a nexus of the artwork, writing, and other things I do. It is the successor to [doughbyte.com](https://doughbyte.com).
