@@ -35,7 +35,7 @@ RVA_READERLAND_ROOT="D:/Projects/fractalthorns/_samplecontent/readerland"
 PRIVATE_API_KEY="<generate a cryptographically random string of characters here>"
 ```
 
-Then, you can run the local development server with `npm run dev`, which will serve on `localhost:4321`. Note that if a server is already running on 4321 it will _not_ fail fast, it will just pick a different port.
+Then, after running `npm install`, you can run the local development server with `npm run dev`, which will serve on `localhost:4321`. Note that if a server is already running on 4321 it will _not_ fail fast, it will just pick a different port.
 
 #### Building and deploying
 
