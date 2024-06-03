@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": ".\\rvaenv.ps1 && astro dev",
-    "start": ".\\rvaenv.ps1 && astro dev",
+    "dev": "env-cmd -f rvaenv && astro dev",
+    "start": "env-cmd -f rvaenv && astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -17,6 +17,7 @@
     "@types/node": "^20.10.5",
     "@types/p5": "^1.7.6",
     "astro": "^4.0.7",
+    "env-cmd": "^10.1.0",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-yoga": "^5.0.2",

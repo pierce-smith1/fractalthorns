@@ -3,5 +3,5 @@ dist/
 .vscode/
 _content/
 node_modules/
-rvaenv.ps1
+rvaenv
 deploy.ps1
