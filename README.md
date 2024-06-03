@@ -16,7 +16,9 @@ Sure! I have no specific requirements for process or anything like that, just go
 
 ### How do I get set up locally?
 
-The first thing you'll need is a content folder. A sample folder is provided as `_samplecontent` in this repo, which contains a subset of the content on the live site.
+The only software required is Node.js and NPM. The project has been tested extensively with Node 20 + NPM 10 on Windows 10. Mileage on other operating systems and with other versions of Node may vary.
+
+To get a local server going, the first thing you'll need is a content folder. A sample folder is provided as `_samplecontent` in this repo, which contains a subset of the content on the live site.
 
 Next, you'll need to create a file called `rvaenv` and in it, define four environment variables for the server:
 * `RVA_SELF_URL`: The URL the site will be served on, locally this should be `localhost:4321`
