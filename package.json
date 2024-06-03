@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "env-cmd -f rvaenv && astro dev",
-    "start": "env-cmd -f rvaenv && astro dev",
+    "dev": "env-cmd -f rvaenv astro dev",
+    "start": "env-cmd -f rvaenv astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
