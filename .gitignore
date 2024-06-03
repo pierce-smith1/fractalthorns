@@ -1,6 +1,7 @@
 dist/
 .astro/
 .vscode/
+.idea/
 _content/
 node_modules/
 rvaenv
