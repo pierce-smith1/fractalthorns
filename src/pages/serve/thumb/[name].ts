@@ -7,7 +7,7 @@ import * as Image from "../../../loaders/image";
 import Config from "../../../config";
 
 const image_thumbnail_width = 300;
-const image_thumbnail_height = 50;
+const image_thumbnail_height = 60;
 
 const thumbnail_cache:{[key: string]: Buffer} = {};
 

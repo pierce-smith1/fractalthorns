@@ -27,7 +27,7 @@
         box-sizing: border-box;
         min-width: 97%;
         max-width: 97%;
-        height: 45px;
+        height: 60px;
         border-radius: 5px 0 0 5px;
         filter: drop-shadow(0 0 2px black);
     }
