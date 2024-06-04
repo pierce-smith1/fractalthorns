@@ -3,11 +3,13 @@ import * as Store from "svelte/store";
 import * as Domain from "../../descriptors/domain";
 import * as Fetchers from "../../fetchers";
 import * as Subproject from "../../descriptors/subproject";
+import * as Episodic from "../../descriptors/episodic";
 
 export type NavItem = Domain.Item & {hide?: boolean};
 export type NavState = {
     nav_results: Array<NavItem>,
     search_results: Array<NavItem>,
+    iteration_filters: Set<Episodic.Iteration>,
     search_waiting: boolean,
     viewing_search_results: boolean,
 };
@@ -15,6 +17,7 @@ export type NavState = {
 export const nav_state = Store.writable<NavState>({
     nav_results: [],
     search_results: [],
+    iteration_filters: new Set(),
     search_waiting: false,
     viewing_search_results: false,
 });

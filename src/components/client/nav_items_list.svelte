@@ -29,20 +29,27 @@
         return Subproject.subprojects.find(subproject => subproject.name === name)!;
     }
 
-    $: nav_items = $nav_state.viewing_search_results ?
+    $: nav_items = $nav_state.viewing_search_results || $nav_state.search_waiting ?
         $nav_state.search_results
         : $nav_state.nav_results;
 
-    $: console.log({$nav_state});
-    $: console.log({nav_items});
-
     $: available_iterations = new Set(Episodic.iterations.filter(iter => nav_items.map(Domain.get_item_iteration).includes(iter)));
+
+    // If we switch to a set of nav items that doesn't have anything matching a certain
+    // iteration we have selected, then deselect that iteration
+    $: for (const iter of Episodic.iterations) {
+        if (!available_iterations.has(iter)) {
+            $nav_state.iteration_filters.delete(iter);
+        }
+    }
+
     $: items_to_show = nav_items.filter(item => !item.hide);
 
     $: current_page_index = items_to_show.findIndex(item =>
         (item.domain === "image" && $current.domain === "image" && item.name === $current.name) ||
         (item.domain === "episodic" && $current.domain === "episodic" && item.record_name == $current.record_name && item.line_index == $current.line_index)
     );
+
     $: neighbor_pages = GenericUtil.neighbors(current_page_index, items_to_show);
 </script>
 
@@ -62,7 +69,7 @@
                 <SubprojectButton subproject={get_subproject(item.name ?? "")} />
             {/if}
         {/each}
-        {#if items_to_show.length === 0 && $nav_state.search_waiting}
+        {#if $nav_state.search_waiting}
             <p class="nothing-warning"><em>searching...</em></p>
         {:else if items_to_show.length === 0}
             <p class="nothing-warning"><em>nothing was found</em></p>

@@ -1,23 +1,24 @@
 <script lang="ts">
-    import {nav_state} from "../nav";
+    import {nav_state, type NavItem} from "../nav";
 
     import * as Episodic from "../../../descriptors/episodic";
     import * as Domain from "../../../descriptors/domain";
 
-    export let selected_iterations: Set<Episodic.Iteration> = new Set();
     export let available_iterations: Set<Episodic.Iteration>;
 
     function toggle_iteration(iteration: Episodic.Iteration) {
-        if (selected_iterations.has(iteration)) {
-            selected_iterations.delete(iteration);
+        if ($nav_state.iteration_filters.has(iteration)) {
+            $nav_state.iteration_filters.delete(iteration);
         } else {
-            selected_iterations.add(iteration);
+            $nav_state.iteration_filters.add(iteration);
         }
-        selected_iterations = selected_iterations;
+        $nav_state.iteration_filters = $nav_state.iteration_filters;
+    }
 
-        $nav_state = {...$nav_state, nav_results: $nav_state.nav_results.map(item => {
+    $: {
+        function mark_as_hidden(item: NavItem) {
             const hide = (() => {
-                if (selected_iterations.size === 0) {
+                if ($nav_state.iteration_filters.size === 0) {
                     return false;
                 }
 
@@ -26,11 +27,16 @@
                     return true;
                 }
 
-                return !selected_iterations.has(iteration);
+                return !$nav_state.iteration_filters.has(iteration);
             })();
 
             return {...item, hide};
-        })};
+        }
+
+        $nav_state = {...$nav_state,
+            nav_results: $nav_state.nav_results.map(mark_as_hidden),
+            search_results: $nav_state.search_results.map(mark_as_hidden),
+        };
     }
 </script>
 
@@ -38,7 +44,7 @@
     {#each available_iterations as iteration}
         <button type="button" class="iteration-button" on:click={() => toggle_iteration(iteration)}>
             <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
-            <div class="button-background" style:background-color={Episodic.get_iteration_color(iteration)} style:border-color={Episodic.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
+            <div class="button-background" style:background-color={Episodic.get_iteration_color(iteration)} style:border-color={Episodic.get_iteration_color(iteration)} class:selected={$nav_state.iteration_filters.has(iteration)}></div>
         </button>
     {/each}
 </div>
