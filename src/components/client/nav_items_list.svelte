@@ -1,6 +1,6 @@
 <script lang="ts">
     import {current} from "./page.ts";
-    import {current_items, currently_searching} from "./nav.ts";
+    import {nav_state} from "./nav.ts";
 
     import ImageButton from "./domain/image_button.svelte";
     import IterationFilterButtons from "./domain/iteration_filter_buttons.svelte";
@@ -29,8 +29,15 @@
         return Subproject.subprojects.find(subproject => subproject.name === name)!;
     }
 
-    $: available_iterations = new Set(Episodic.iterations.filter(iter => $current_items.map(Domain.get_item_iteration).includes(iter)));
-    $: items_to_show = $current_items.filter(item => !item.hide);
+    $: nav_items = $nav_state.viewing_search_results ?
+        $nav_state.search_results
+        : $nav_state.nav_results;
+
+    $: console.log({$nav_state});
+    $: console.log({nav_items});
+
+    $: available_iterations = new Set(Episodic.iterations.filter(iter => nav_items.map(Domain.get_item_iteration).includes(iter)));
+    $: items_to_show = nav_items.filter(item => !item.hide);
 
     $: current_page_index = items_to_show.findIndex(item =>
         (item.domain === "image" && $current.domain === "image" && item.name === $current.name) ||
@@ -55,7 +62,7 @@
                 <SubprojectButton subproject={get_subproject(item.name ?? "")} />
             {/if}
         {/each}
-        {#if items_to_show.length === 0 && $currently_searching}
+        {#if items_to_show.length === 0 && $nav_state.search_waiting}
             <p class="nothing-warning"><em>searching...</em></p>
         {:else if items_to_show.length === 0}
             <p class="nothing-warning"><em>nothing was found</em></p>

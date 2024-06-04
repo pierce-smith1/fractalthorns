@@ -5,24 +5,39 @@ import * as Fetchers from "../../fetchers";
 import * as Subproject from "../../descriptors/subproject";
 
 export type NavItem = Domain.Item & {hide?: boolean};
-export const current_items = Store.writable<Array<NavItem>>([]);
-export const currently_searching = Store.writable<boolean>(false);
-export const search_finished = Store.writable<boolean>(false);
+export type NavState = {
+    nav_results: Array<NavItem>,
+    search_results: Array<NavItem>,
+    search_waiting: boolean,
+    viewing_search_results: boolean,
+};
+
+export const nav_state = Store.writable<NavState>({
+    nav_results: [],
+    search_results: [],
+    search_waiting: false,
+    viewing_search_results: false,
+});
 
 export function set_domain_items(domain: Domain.Page["domain"]) {
-    const new_items_promise: Promise<Array<Domain.Item>> = (() => {
+    const new_items_promise: Promise<Array<Domain.Item>> = (async () => {
         switch (domain) {
-            case "image": return Fetchers.get.all_images({})
-                .then(images => images.map(image => ({domain, name: image.name, image})));
+            case "image":
+                const images = await Fetchers.get.all_images({});
+                return images.map(image => ({domain, name: image.name, image}));
 
-            case "episodic": return Fetchers.get.full_episodic({})
-                .then(episodic => episodic.flatMap(chapter => chapter.records.map(record => ({domain, record_name: record.name, record}))));
+            case "episodic":
+                const episodic = await Fetchers.get.full_episodic({});
+                return episodic.flatMap(chapter => chapter.records.map(record => ({
+                    domain,
+                    record_name: record.name,
+                    record
+                })));
 
             case "subproject": return Promise.resolve(Subproject.subprojects.map(subproject => ({domain, name: subproject.name})));
         }
         return Promise.resolve([]);
     })();
 
-    search_finished.set(false);
-    new_items_promise.then(items => current_items.set(items));
+    new_items_promise.then(items => nav_state.update(state => ({...state, nav_results: items})));
 }

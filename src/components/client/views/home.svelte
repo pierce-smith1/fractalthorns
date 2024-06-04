@@ -106,10 +106,6 @@
     };
 
     const artist = new HomeArtist();
-
-    onMount(() => {
-        Nav.current_items.set([]);
-    });
 </script>
 
 <div class="home-artist-container">

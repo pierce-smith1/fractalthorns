@@ -2,15 +2,20 @@
     import * as Domain from "../../descriptors/domain";
 
     import {current} from "./page.ts";
+    import {nav_state} from "./nav.ts";
 
     import PageLink from "./page_link.svelte";
 
     export let domain: Domain.Page["domain"];
+
+    function hide_search() {
+        $nav_state = {...$nav_state, viewing_search_results: false};
+    }
 </script>
 
 <div class="domain-button-container">
     <PageLink dest={{domain}}>
-        <button type="button" class="domain-button" class:selected={$current?.domain === domain}>
+        <button type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={hide_search}>
            <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
         </button>
     </PageLink>

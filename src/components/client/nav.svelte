@@ -1,6 +1,6 @@
 <script lang="ts">
     import {current} from "./page.ts";
-    import {current_items, currently_searching, search_finished} from "./nav.ts";
+    import {nav_state} from "./nav.ts";
 
     import DomainSearch from "./domain_search.svelte";
     import NavButton from "./nav_button.svelte";
@@ -21,7 +21,9 @@
         </div>
     </div>
 
-    {#if $current.domain === "home" && (!$currently_searching && !$search_finished)}
+    {#if $nav_state.viewing_search_results || $nav_state.search_waiting}
+        <NavItemsList />
+    {:else if $current.domain === "home"}
         <News />
     {:else}
         <NavItemsList />

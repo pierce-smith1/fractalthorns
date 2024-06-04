@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {current_items} from "../nav";
+    import {nav_state} from "../nav";
 
     import * as Episodic from "../../../descriptors/episodic";
     import * as Domain from "../../../descriptors/domain";
@@ -15,7 +15,7 @@
         }
         selected_iterations = selected_iterations;
 
-        $current_items = $current_items.map(item => {
+        $nav_state = {...$nav_state, nav_results: $nav_state.nav_results.map(item => {
             const hide = (() => {
                 if (selected_iterations.size === 0) {
                     return false;
@@ -30,7 +30,7 @@
             })();
 
             return {...item, hide};
-        });
+        })};
     }
 </script>
 
