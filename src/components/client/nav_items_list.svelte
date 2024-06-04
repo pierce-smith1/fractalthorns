@@ -71,7 +71,7 @@
         {/each}
         {#if $nav_state.search_waiting}
             <p class="nothing-warning"><em>searching...</em></p>
-        {:else if items_to_show.length === 0}
+        {:else if items_to_show.length === 0 && $nav_state.viewing_search_results}
             <p class="nothing-warning"><em>nothing was found</em></p>
         {/if}
     </div>
