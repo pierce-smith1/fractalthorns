@@ -217,9 +217,13 @@
     .subtitle {
         font-size: 1.2em;
     }
+
+    .characters {
+        display: flex;
+        gap: 5px;
+    }
     
     .character-button {
-        line-height: 0;
         background: none;
         border: none;
         color: rgba(255 255 255 / 50%);
