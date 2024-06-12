@@ -9,7 +9,6 @@
     type Point = {x: number; y: number};
 
     const time = (() => {
-        return "dawn";
         const now = new Date();
         const hour = now.getHours();
         if (hour > 22 || hour <= 4) {
