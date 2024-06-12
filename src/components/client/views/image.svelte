@@ -1,6 +1,6 @@
 <script lang="ts">
     import {marked} from 'marked';
-    import {onMount} from 'svelte';
+    import * as svelte from 'svelte';
 
     import * as Episodic from "../../../descriptors/episodic";
     import * as Image from "../../../descriptors/image";
@@ -32,11 +32,20 @@
         return subtitle;
     }
 
-    function search_character(character: string) {
-        Nav.execute_search(character);
+    function setup_scroll_hint_observer(node: HTMLElement) {
+        const scroll_hint = node.querySelector<HTMLDivElement>(".scroll-hint")!;
+        const scroll_marker = node.querySelector<HTMLDivElement>(".scroll-marker")!;
+
+        const scroll_observer = new IntersectionObserver(entries => {
+            for (const entry of entries) {
+                scroll_hint.hidden = entry.isIntersecting;
+            }
+        });
+
+        scroll_observer.observe(scroll_marker);
     }
 
-    onMount(() => {
+    svelte.onMount(() => {
         Nav.set_domain_items("image");
     });
 </script>
@@ -45,21 +54,23 @@
     {#await image_promise}
         <Loading />
     {:then image}
-        <div class="image-info-container">
+        <div class="image-info-container" use:setup_scroll_hint_observer>
             <div class="image-title-container">
                 <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
                 {#if image.characters}
                     <div class="characters">
                         {#each image.characters as character}
-                            <button class="character-button" type="button" on:click={() => search_character(character)}>{character}</button>
+                            <button class="character-button" type="button" on:click={() => Nav.execute_search(character)}>{character}</button>
                         {/each}
                     </div>
                 {/if}
             </div>
             <div class="image-description-container">
                 {@html marked.parse(image.description)}
+                <div class="scroll-marker"></div>
             </div>
+            <div class="scroll-hint">...</div>
         </div>
         <div class="image-container">
             <a href={image.image_url} class="image-link"><img src={image.image_url}></a>
@@ -89,13 +100,13 @@
     .image-info-container {
         display: flex;
         flex-flow: column nowrap;
+        position: relative;
         color: white;
         border-right: 2px solid rgba(255 255 255 / 50%);
         max-width: 30%;
-        width: 100%;
+        width: 30%;
         height: 90%;
-        overflow-y: scroll;
-        scrollbar-width: none;
+        overflow: hidden;
         padding: 10px;
     }
 
@@ -131,11 +142,49 @@
     .image-description-container {
         border-top: 2px solid rgba(255 255 255 / 50%);
         padding-top: 8px;
+        overflow-y: auto;
+        scrollbar-width: none;
     }
 
     .image-description-container :global(*) {
         font-family: "eczar";
         font-size: 1em;
+    }
+
+    .scroll-hint {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 105%;
+        text-align: center;
+        font-size: 1rem;
+        pointer-events: none;
+        padding: 10px 0 10px 0;
+        background: linear-gradient(rgba(0 0 0 / 0%), rgba(0 0 0 / 75%));
+        opacity: 0%;
+        animation: 0.2s linear 0.3s fadein forwards;
+    }
+
+    /* TODO this animation looks nice but the real point of it is a nasty hack to 
+       hide the scroll hint in that split second before the intersection observer
+       sees it, since otherwise it flashes on screen like a rave for ants as you
+       page through images.
+       In other words, I'M NOT WEARING THIS COLOGNE FOR YOU PEOPLE,
+       I'M JUST DOING IT FOR THAT BITCH AT CHURCH!!!
+    */
+    @keyframes fadein {
+        from {
+            opacity: 0%;
+        }
+
+        to {
+            opacity: 100%;
+        }
+    }
+    
+    .scroll-marker {
+        width: 100%;
+        height: 1rem;
     }
 
     img {
