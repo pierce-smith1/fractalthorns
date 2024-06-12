@@ -21,7 +21,9 @@
     {#if current_page.domain === "home"}
         <HomeView />
     {:else if current_page.domain === "image"}
-        <ImageView name={current_page.name} />
+        {#if current_page.name}
+            <ImageView name={current_page.name} />
+        {/if}
     {:else if current_page.domain === "episodic"}
         <RecordView name={current_page.record_name} line_index={current_page.line_index} />
     {:else if current_page.domain === "subproject"}

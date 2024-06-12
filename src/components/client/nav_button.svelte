@@ -1,34 +1,58 @@
 <script lang="ts">
     import * as Domain from "../../descriptors/domain";
+    import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";
     import {nav_state} from "./nav.ts";
 
     import PageLink from "./page_link.svelte";
+    import Loading from "./loading.svelte";
 
     export let domain: Domain.Page["domain"];
 
-    function hide_search() {
-        $nav_state = {...$nav_state, viewing_search_results: false};
-    }
+    const destination_promise: Promise<Domain.Page> = (async () => {
+        switch (domain) {
+            case "home": return {domain};
+            case "image": {
+                const latest_image = await Fetchers.get.single_image({});
+                return {domain, name: latest_image.name};
+            }
+            case "episodic": {
+                const episodic = await Fetchers.get.full_episodic({});
+                return {domain, record_name: episodic[0].records[0].name};
+            }
+            case "subproject": return {domain};
+        }
+    })();
 
-    function get_tooltip_text() {
+    const tooltip_text = (() => {
         switch (domain) {
             case "home": return "home";
             case "image": return "images";
             case "episodic": return "story";
             case "subproject": return "other";
         }
+    })();
+
+    function hide_search() {
+        $nav_state = {...$nav_state, 
+            search_term: "",
+            viewing_search_results: false,
+        };
     }
 </script>
 
-<div class="domain-button-container">
-    <PageLink dest={{domain}}>
-        <button data-tooltip={get_tooltip_text()} type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={hide_search}>
-           <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
-        </button>
-    </PageLink>
-</div>
+{#await destination_promise}
+    <Loading />
+{:then destination}
+    <div class="domain-button-container">
+        <PageLink dest={destination}>
+            <button data-tooltip={tooltip_text} type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={hide_search}>
+            <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
+            </button>
+        </PageLink>
+    </div>
+{/await}
 
 <style>
     .domain-button {

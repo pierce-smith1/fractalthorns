@@ -10,7 +10,7 @@
     import Loading from "../loading.svelte";
     import Keynav from './keynav.svelte';
 
-    export let name: string | undefined;
+    export let name: string;
 
     $: image_promise = Fetchers.get.single_image({name});
 
