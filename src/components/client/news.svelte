@@ -4,6 +4,21 @@
     import Loading from "./loading.svelte";
 
     const news_promise = Fetchers.get.all_news({});
+
+    function extract_subitem_parts(subitem: string) {
+        const subitem_type_regex = /^\((\w+)\)/i;
+
+        const subitem_type_match = subitem.match(subitem_type_regex);
+        const subitem_type = subitem_type_match && subitem_type_match.length > 1 ? 
+            subitem_type_match[1] 
+            : undefined;
+
+        const subitem_text = subitem_type ?
+            subitem.replace(subitem_type_regex, "|").trim()
+            : subitem;
+
+        return {type: subitem_type, text: subitem_text};
+    }
 </script>
 
 <div class="news-container">
@@ -19,7 +34,10 @@
                     {#if item.items && item.items.length > 0}
                         <ul>
                             {#each item.items ?? [] as subitem}
-                                <li>{subitem}</li>
+                                <li>
+                                    <strong>{extract_subitem_parts(subitem).type}</strong>
+                                    {extract_subitem_parts(subitem).text}
+                                </li>
                             {/each}
                         </ul>
                     {/if}
@@ -45,6 +63,7 @@
 
     .news-title {
         margin-bottom: 20px;
+        line-height: 0;
     }
 
     .news-items {
@@ -66,5 +85,15 @@
     h4, p, span {
         padding: 0;
         margin: 0;
+    }
+
+    ul {
+        margin: 0;
+        padding-left: 1rem;
+        list-style-type: none;
+    }
+
+    li {
+        padding: 5px 0 5px 0;
     }
 </style>
