@@ -19,7 +19,7 @@
             }
             case "episodic": {
                 const episodic = await Fetchers.get.full_episodic({});
-                return {domain, record_name: episodic[0].records[0].name};
+                return {domain, record_name: episodic[0].records[0].name!};
             }
             case "subproject": return {domain};
         }

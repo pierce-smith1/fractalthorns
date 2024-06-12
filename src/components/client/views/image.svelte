@@ -77,10 +77,13 @@
         </div>
     {/await}
 </div>
-<Keynav
-    page_left={{domain: "home"}}
-    page_right={{domain: "episodic"}}
-/>
+{#await Fetchers.get.full_episodic({})}
+{:then episodic}
+    <Keynav
+        page_left={{domain: "home"}}
+        page_right={{domain: "episodic", record_name: episodic[0].records[0].name ?? ""}}
+    />
+{/await}
 
 <style>
     .container {

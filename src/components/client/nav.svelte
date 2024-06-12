@@ -29,8 +29,7 @@
         <NavItemsList />
     {/if}
 
-    <div class="nav-spacer">
-    </div>
+    <div class="nav-spacer"></div>
 </nav>
 
 <style>

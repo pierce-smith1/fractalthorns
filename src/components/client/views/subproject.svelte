@@ -4,6 +4,7 @@
     import * as Subproject from "../../../descriptors/subproject";
     import * as GenericUtil from "../../../genericutil.ts";
     import * as Nav from "../nav";
+    import * as Fetchers from "../../../fetchers.ts";
 
     import Tlh from "./subprojects/tlh.svelte";
     import Aor from "./subprojects/aor.svelte";
@@ -32,11 +33,14 @@
         <Yokscr />
     {/if}
 </div>
-<Keynav 
-    page_up={{domain: "subproject", name: prev_subproject.name}}
-    page_down={{domain: "subproject", name: next_subproject.name}}
-    page_left={{domain: "episodic"}}
-/>
+{#await Fetchers.get.full_episodic({})}
+{:then episodic}
+    <Keynav 
+        page_up={{domain: "subproject", name: prev_subproject.name}}
+        page_down={{domain: "subproject", name: next_subproject.name}}
+        page_left={{domain: "episodic", record_name: episodic[0].records[0].name ?? ""}}
+    />
+{/await}
 
 <style>
     .subproject-container {

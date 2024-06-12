@@ -9,8 +9,8 @@ export const domains = [
 ] as const;
 
 export type Page =
-    | {domain: "image", name?: string}
-    | {domain: "episodic", record_name?: string, line_index?: number}
+    | {domain: "image", name: string}
+    | {domain: "episodic", record_name: string, line_index?: number}
     | {domain: "home"}
     | {domain: "subproject", name?: string}
 

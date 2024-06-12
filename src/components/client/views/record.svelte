@@ -44,10 +44,13 @@
         </div>
     {/await}
 </div>
-<Keynav
-    page_left={{domain: "image"}}
-    page_right={{domain: "subproject"}}
-/>
+{#await Fetchers.get.single_image({})}
+{:then image}
+    <Keynav
+        page_left={{domain: "image", name: image.name}}
+        page_right={{domain: "subproject"}}
+    />
+{/await}
 
 <style>
     .record-container {

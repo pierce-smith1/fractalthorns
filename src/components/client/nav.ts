@@ -35,7 +35,7 @@ export function set_domain_items(domain: Domain.Page["domain"]) {
                 const episodic = await Fetchers.get.full_episodic({});
                 return episodic.flatMap(chapter => chapter.records.map(record => ({
                     domain,
-                    record_name: record.name,
+                    record_name: record.name ?? "???",
                     record
                 })));
 

@@ -1,8 +1,7 @@
 <script lang="ts">
     import p5 from "p5";
-    import {onMount} from "svelte";
 
-    import * as Nav from "../nav";
+    import * as Fetchers from "../../../fetchers";
 
     import {Artist} from "../../canvas/artist";
 
@@ -120,9 +119,12 @@
         <img src="/assets/images/common/socials-github.png" />
     </a>
 </div>
-<Keynav 
-    page_right={{domain: "image"}}
-/>
+{#await Fetchers.get.single_image({})}
+{:then image}
+    <Keynav 
+        page_right={{domain: "image", name: image.name}}
+    />
+{/await}
 
 <style>
     .home-artist-container {
