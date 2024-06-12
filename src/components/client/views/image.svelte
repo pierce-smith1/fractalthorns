@@ -32,6 +32,10 @@
         return subtitle;
     }
 
+    function search_character(character: string) {
+        Nav.execute_search(character);
+    }
+
     onMount(() => {
         Nav.set_domain_items("image");
     });
@@ -45,6 +49,13 @@
             <div class="image-title-container">
                 <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
+                {#if image.characters}
+                    <div class="characters">
+                        {#each image.characters as character}
+                            <button class="character-button" type="button" on:click={() => search_character(character)}>{character}</button>
+                        {/each}
+                    </div>
+                {/if}
             </div>
             <div class="image-description-container">
                 {@html marked.parse(image.description)}
@@ -156,6 +167,17 @@
 
     .subtitle {
         font-size: 1.2em;
+    }
+    
+    .character-button {
+        line-height: 0;
+        background: none;
+        border: none;
+        color: rgba(255 255 255 / 50%);
+        margin: 0;
+        padding: 0;
+        text-decoration: underline;
+        cursor: pointer;
     }
 
     .image-info-container :global(code) {

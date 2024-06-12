@@ -1,10 +1,16 @@
 <script lang="ts">
-    import * as Fetchers from "../../fetchers";
-    import * as Domain from "../../descriptors/domain";
+    import {nav_state, execute_search} from "./nav";
 
-    import {nav_state} from "./nav";
+    let search_box: HTMLInputElement;
 
-    export let term: string | undefined = undefined;
+    function clear_search() {
+        $nav_state = {...$nav_state, 
+            search_term: "",
+            viewing_search_results: false,
+        };
+
+        search_box.value = "";
+    }
 
     function submit_search(event: KeyboardEvent) {
         if (event.key !== "Enter") {
@@ -12,55 +18,17 @@
         }
 
         // @ts-ignore
-        term = event.target.value as string;
-
-        if (term.length === 0) {
-            $nav_state = {...$nav_state,
-                search_results: [],
-                search_waiting: false,
-                viewing_search_results: true,
-            }
-            return;
-        }
-
-        const image_results = Fetchers.get.domain_search({term, type: "image"});
-        const record_results = Fetchers.get.domain_search({term, type: "episodic-item"});
-        const line_results = Fetchers.get.domain_search({term, type: "episodic-line"});
-
-        $nav_state = {...$nav_state,
-            search_results: [],
-            search_waiting: true,
-        };
-
-        function update_search_items(items: Array<Domain.Item>) {
-            $nav_state = {...$nav_state, search_results: Domain.sort_items([...$nav_state.search_results, ...items])};
-        }
-
-        image_results.then(update_search_items);
-        record_results.then(update_search_items);
-        line_results.then(update_search_items);
-
-        Promise.all([image_results, record_results, line_results]).then(_ => {
-            $nav_state = {...$nav_state,
-                search_waiting: false,
-                viewing_search_results: true,
-            };
-        });
+        const term = event.target.value as string;
+        execute_search(term);
     }
 
-    function clear_search() {
-        $nav_state = {...$nav_state, viewing_search_results: false};
-
-        const search_box = document.querySelector(".domain-search-box");
-        if (search_box) {
-            // @ts-ignore
-            search_box.value = "";
-        }
+    $: if (search_box) {
+        search_box.value = $nav_state.search_term;
     }
 </script>
 
 <div class="domain-search-container">
-    <input type="search" class="domain-search-box" placeholder="search everything" on:keyup={submit_search} />
+    <input bind:this={search_box} type="search" class="domain-search-box" placeholder="search everything" on:keyup={submit_search} />
     {#if $nav_state.viewing_search_results}
         <button type="button" class="close-search-button" on:click={clear_search}>╳</button>
     {/if}
