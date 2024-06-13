@@ -40,7 +40,7 @@ export async function find_image_items(term: string): ReturnType<typeof find_ite
 
 export async function find_episodic_items(term: string): ReturnType<typeof find_items> {
     const episodic = await EpisodicLoader.get();
-    const matching_records = episodic.records.filter(record => record.solved && record.name.includes(term));
+    const matching_records = episodic.records.filter(record => record.solved && record.title.includes(term));
 
     const record_items = matching_records.map(record => ({
         domain: "episodic" as const, 
