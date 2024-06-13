@@ -9,15 +9,22 @@
     const submit_timeout_debounce_ms = 500;
 
     function submit_search(event: KeyboardEvent) {
+        // @ts-ignore
+        const term = event.target.value as string;
+
+        if (event.key === "Enter") {
+            execute_search(term);
+        }
+
         if (submit_timeout_handle) {
             clearTimeout(submit_timeout_handle);
         }
 
-        submit_timeout_handle = setTimeout(() => {
-            // @ts-ignore
-            const term = event.target.value as string;
-            execute_search(term);
-        }, submit_timeout_debounce_ms);
+        if (event.key !== "Enter") {
+            submit_timeout_handle = setTimeout(() => {
+                execute_search(term);
+            }, submit_timeout_debounce_ms);
+        }
     }
 
     function clear_search() {
