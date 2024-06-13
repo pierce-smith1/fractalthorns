@@ -64,6 +64,9 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
         return [];
     }
 
+    // Escape regex special characters
+    term = term.replace(/[-[\]{}()*+?.,\\&$|#\s]/g, "\\$&");
+
     const results = await Search.search({whole_words: true, limit: 100}, term);
     const episodic = await EpisodicLoader.get();
     const lines = Object.entries(results)

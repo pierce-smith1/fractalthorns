@@ -10,13 +10,13 @@ function define_get_fetcher<
 >(endpoint: EndpointName): (request: Params) => Promise<Result> {
     return (request: Params) => {
         const body = JSON.stringify(request);
-        const url = `/api/v1/${endpoint}?body=${body}`;
+        const url = `/api/v1/${endpoint}?body=${encodeURIComponent(body)}`;
 
         if (url in fetch_cache) {
             return fetch_cache[url];
         }
 
-        const results = fetch(`/api/v1/${endpoint}?body=${body}`)
+        const results = fetch(url)
             .then(response => response.json())
             .then(response => response as Result);
 
