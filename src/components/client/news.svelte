@@ -35,7 +35,7 @@
                         <ul>
                             {#each item.items ?? [] as subitem}
                                 <li>
-                                    <strong>{extract_subitem_parts(subitem).type}</strong>
+                                    <strong>{extract_subitem_parts(subitem).type ?? ""}</strong>
                                     {extract_subitem_parts(subitem).text}
                                 </li>
                             {/each}
