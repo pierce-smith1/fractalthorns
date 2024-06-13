@@ -50,6 +50,11 @@
         (item.domain === "episodic" && $current.domain === "episodic" && item.record_name == $current.record_name && item.line_index == $current.line_index)
     );
 
+    $: {
+        const current_item_element = document.querySelector<HTMLDivElement>(`#item-${current_page_index}`);
+        current_item_element?.scrollIntoView({behavior: "smooth", block: "center"});
+    }
+
     $: neighbor_pages = GenericUtil.neighbors(current_page_index, items_to_show);
 </script>
 
@@ -57,17 +62,19 @@
     <IterationFilterButtons {available_iterations} />
     <div class="items-list">
         {#each items_to_show as item, i}
-            {#if item.domain === "image"}
-                <ImageButton image={item.image} />
-            {:else if item.domain === "episodic"}
-                <EpisodicButton record={item.record} 
-                    prev_neighbor={get_neighbor(i, items_to_show, "prev")} 
-                    preview_matched_text={item.matched_text}
-                    preview_line_index={item.line_index}
-                />
-            {:else if item.domain === "subproject"}
-                <SubprojectButton subproject={get_subproject(item.name ?? "")} />
-            {/if}
+            <div id={`item-${i}`}>
+                {#if item.domain === "image"}
+                    <ImageButton image={item.image} />
+                {:else if item.domain === "episodic"}
+                    <EpisodicButton record={item.record} 
+                        prev_neighbor={get_neighbor(i, items_to_show, "prev")} 
+                        preview_matched_text={item.matched_text}
+                        preview_line_index={item.line_index}
+                    />
+                {:else if item.domain === "subproject"}
+                    <SubprojectButton subproject={get_subproject(item.name ?? "")} />
+                {/if}
+            </div>
         {/each}
         {#if $nav_state.search_waiting}
             <p class="nothing-warning"><em>searching...</em></p>
