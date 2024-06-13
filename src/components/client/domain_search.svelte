@@ -3,6 +3,23 @@
 
     let search_box: HTMLInputElement;
 
+    // In the browser a timeout handle is a number, not a NodeJS.Timeout.
+    // It doesn't matter for this usecase though, at least not right now.
+    let submit_timeout_handle: NodeJS.Timeout | undefined = undefined; 
+    const submit_timeout_debounce_ms = 500;
+
+    function submit_search(event: KeyboardEvent) {
+        if (submit_timeout_handle) {
+            clearTimeout(submit_timeout_handle);
+        }
+
+        submit_timeout_handle = setTimeout(() => {
+            // @ts-ignore
+            const term = event.target.value as string;
+            execute_search(term);
+        }, submit_timeout_debounce_ms);
+    }
+
     function clear_search() {
         $nav_state = {...$nav_state, 
             search_term: "",
@@ -10,16 +27,9 @@
         };
 
         search_box.value = "";
-    }
 
-    function submit_search(event: KeyboardEvent) {
-        if (event.key !== "Enter") {
-            return;
-        }
-
-        // @ts-ignore
-        const term = event.target.value as string;
-        execute_search(term);
+        clearTimeout(submit_timeout_handle);
+        submit_timeout_handle = undefined;
     }
 
     $: if (search_box) {
