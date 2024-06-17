@@ -79,4 +79,11 @@
         left: 0;
         gap: 10px;
     }
+
+    @media (width <= 1200px) {
+        nav {
+            max-width: 100%;
+            height: 100%;
+        }
+    }
 </style>

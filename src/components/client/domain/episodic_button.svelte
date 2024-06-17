@@ -58,7 +58,7 @@
     {#if !record.name}
         <h4 class="unsolved"><em>???</em></h4>
     {:else}
-        <PageLink dest={{domain: "episodic", record_name: record.name, line_index: preview_line_index}}>
+        <PageLink dest={{domain: "episodic", record_name: record.name, line_index: preview_line_index}} cause_layout_switch>
             <h4 class="record-name">
                 <img class="iteration-sigil" src={`/assets/images/common/iteration-${record.iteration}.png`} /> {record.title}
             </h4>

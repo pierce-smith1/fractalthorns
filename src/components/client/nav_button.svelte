@@ -3,7 +3,7 @@
     import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";
-    import {nav_state} from "./nav.ts";
+    import {nav_state, set_domain_items} from "./nav.ts";
 
     import PageLink from "./page_link.svelte";
     import Loading from "./loading.svelte";
@@ -40,6 +40,15 @@
             viewing_search_results: false,
         };
     }
+
+    function load_nav_items() {
+        set_domain_items(domain);
+    }
+    
+    function on_click() {
+        hide_search();
+        load_nav_items();
+    }
 </script>
 
 {#await destination_promise}
@@ -47,7 +56,7 @@
 {:then destination}
     <div class="domain-button-container">
         <PageLink dest={destination}>
-            <button data-tooltip={tooltip_text} type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={hide_search}>
+            <button data-tooltip={tooltip_text} type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={on_click}>
             <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
             </button>
         </PageLink>

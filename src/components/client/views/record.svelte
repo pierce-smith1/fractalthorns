@@ -1,12 +1,9 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-
     import * as Fetchers from "../../../fetchers";
-    import * as Nav from "../nav";
 
     import Loading from '../loading.svelte';
-    import RecordLine from "./record_line.svelte";
     import Keynav from "./keynav.svelte";
+    import RecordLine from "./record_line.svelte";
 
     export let name: string | undefined = undefined;
     export let line_index: number | undefined = undefined;
@@ -14,10 +11,6 @@
     $: record_entry_promise = Fetchers.get.single_record({name: name ?? "reservoir"});
     $: record_text_promise = Fetchers.get.record_text({name: name ?? "reservoir"});
     $: record_promise = Promise.all([record_entry_promise, record_text_promise]);
-
-    onMount(() => {
-        Nav.set_domain_items("episodic");
-    });
 </script>
 
 <div class="record-container">

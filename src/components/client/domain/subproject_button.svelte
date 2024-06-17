@@ -8,7 +8,7 @@
     export let subproject: Subproject.Model;
 </script>
 
-<PageLink dest={{domain: "subproject", name: subproject.name}}>
+<PageLink dest={{domain: "subproject", name: subproject.name}} cause_layout_switch>
     <div class="subproject-button" class:selected={$current.domain === "subproject" && $current.name === subproject.name}>
         <div class="subproject-icon-container">
             <img class="subproject-icon" src={`/assets/images/common/subproject-${subproject.name}.png`} />

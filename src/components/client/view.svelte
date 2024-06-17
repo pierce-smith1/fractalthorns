@@ -62,7 +62,8 @@
     }
 
     .view-title-surrogate {
-        position: relative;
+        position: absolute;
+        right: 16px;
     }
 
     .window-title {
@@ -76,5 +77,16 @@
         margin: 0;
         font-size: 0.9em;
         z-index: 1000;
+    }
+
+    @media (width <= 1200px) {
+        .view-container {
+            height: 200%;
+        }
+
+        .view-title-surrogate {
+            top: 78px;
+            right: -8px;
+        }
     }
 </style>

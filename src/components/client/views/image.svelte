@@ -44,10 +44,6 @@
 
         scroll_observer.observe(scroll_marker);
     }
-
-    svelte.onMount(() => {
-        Nav.set_domain_items("image");
-    });
 </script>
 
 <div class="container">

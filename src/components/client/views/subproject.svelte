@@ -1,25 +1,18 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-
     import * as Subproject from "../../../descriptors/subproject";
-    import * as GenericUtil from "../../../genericutil.ts";
-    import * as Nav from "../nav";
     import * as Fetchers from "../../../fetchers.ts";
+    import * as GenericUtil from "../../../genericutil.ts";
 
-    import Tlh from "./subprojects/tlh.svelte";
+    import Keynav from "./keynav.svelte";
     import Aor from "./subprojects/aor.svelte";
+    import Tlh from "./subprojects/tlh.svelte";
     import Yokdeck from "./subprojects/yokdeck.svelte";
     import Yokscr from "./subprojects/yokscr.svelte";
-    import Keynav from "./keynav.svelte";
 
     export let name: string | undefined;
 
     $: subproject_index = Subproject.subprojects.findIndex(sp => sp.name === name);
     $: [prev_subproject, next_subproject] = GenericUtil.neighbors(subproject_index, Subproject.subprojects);
-
-    onMount(() => {
-        Nav.set_domain_items("subproject");
-    });
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>

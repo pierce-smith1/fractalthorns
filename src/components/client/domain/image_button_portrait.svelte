@@ -30,5 +30,13 @@
         height: 60px;
         border-radius: 5px 0 0 5px;
         filter: drop-shadow(0 0 2px black);
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    @media (width <= 1200px) {
+        .portrait {
+            background-color: rgba(0 0 0 / 50%);
+        }
     }
 </style>
