@@ -85,8 +85,7 @@
         }
 
         .view-title-surrogate {
-            top: 78px;
-            right: -8px;
+            display: none;
         }
     }
 </style>
