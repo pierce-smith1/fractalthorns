@@ -1,9 +1,9 @@
 import * as Domain from "../descriptors/domain";
-import * as ImageLoader from "../loaders/image";
-import * as EpisodicLoader from "../loaders/episodic";
 import * as Episodic from "../descriptors/episodic";
-import * as Search from "./search";
 import * as GenericUtil from "../genericutil";
+import * as EpisodicLoader from "../loaders/episodic";
+import * as ImageLoader from "../loaders/image";
+import * as Search from "./search";
 
 export async function find_items(term: string, type: Domain.SearchItemType): Promise<Array<Domain.Item>> {
     const lowercase_term = term.toLowerCase();

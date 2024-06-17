@@ -1,7 +1,7 @@
 import * as Record from "../descriptors/record";
-import * as RecordLoader from "../loaders/record";
 import * as Character from "../loaders/character";
 import * as Episodic from "../loaders/episodic";
+import * as RecordLoader from "../loaders/record";
 
 type Invertible<T> = {value: T, not?: boolean};
 export type SearchOptions = {

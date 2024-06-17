@@ -2,7 +2,6 @@
     import {onMount} from "svelte";
 
     import * as Domain from "../../../descriptors/domain";
-
     import PageLink from '../page_link.svelte';
 
     export let page_up: Domain.Page | undefined = undefined;
@@ -12,6 +11,7 @@
 
     onMount(() => {
         window.onkeydown = event => {
+            // If we're typing in an input, don't listen to anything
             if (document.activeElement?.tagName?.toLowerCase() === "input") {
                 return true;
             }

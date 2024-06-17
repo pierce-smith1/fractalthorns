@@ -1,8 +1,8 @@
 <script lang="ts">
     import p5 from "p5";
-    import { onMount } from "svelte";
+    import {onMount} from "svelte";
 
-    import { Artist } from "./artist";
+    import {Artist} from "./artist";
 
     export let artist: Artist<any>;
 

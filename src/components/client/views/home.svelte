@@ -109,7 +109,6 @@
 
 <div class="home-artist-container">
     <img class="quintic" src="/assets/images/common/thorns.png">
-    <p class="splash">testing, testing, one two three</p>
 
     <div class="canvas-container">
         <Canvas {artist} />
@@ -140,23 +139,6 @@
 
     .canvas-container {
         position: fixed;
-    }
-
-    .quintic {
-        position: relative;
-        top: 10px;
-    }
-
-    .splash {
-        position: relative;
-        top: 0;
-        font-size: 1.3em;
-        padding: 12px 20px 12px 20px;
-        border-radius: 10px;
-        border: 1px solid rgba(255 255 255 / 50%);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        z-index: 1;
     }
 
     .repo-link {
