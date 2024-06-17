@@ -8,12 +8,6 @@
     import Canvas from "../../canvas/canvas.svelte";
     import Keynav from "./keynav.svelte";
 
-    function image_defs() {
-        return {
-            quintic: "/assets/images/common/quintic.png",
-        };
-    }
-
     function get_view_width() {
         const width = document.querySelector(".home-artist-container")?.clientWidth ?? 0;
         return width;
@@ -25,7 +19,7 @@
     }
 
     type SphericalPoint = {theta: number, phi: number, theta_velocity: number, phi_velocity: number};
-    class HomeArtist extends Artist<ReturnType <typeof image_defs>> {
+    class HomeArtist extends Artist<{}> {
         width() {
             return get_view_width();
         }
@@ -34,7 +28,7 @@
             return get_view_height();
         }
 
-        image_defs = image_defs;
+        image_defs = () => ({});
 
         preload(p5: p5) {
             super.preload(p5);

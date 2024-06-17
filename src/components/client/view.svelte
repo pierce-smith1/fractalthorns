@@ -70,7 +70,7 @@
         color: rgba(0 0 0 / 50%);
         position: absolute;
         top: -2px;
-        right: 25px;
+        right: 38px;
         text-align: right;
         width: 1000px;
         padding: 0;

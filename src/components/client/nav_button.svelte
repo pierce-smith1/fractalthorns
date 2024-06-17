@@ -28,7 +28,7 @@
     const tooltip_text = (() => {
         switch (domain) {
             case "home": return "home";
-            case "image": return "images";
+            case "image": return "art";
             case "episodic": return "story";
             case "subproject": return "other";
         }
