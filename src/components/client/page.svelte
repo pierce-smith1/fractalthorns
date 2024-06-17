@@ -25,8 +25,8 @@
 
 <div class="page">
     <div class="container">
-        <button type="button" class="toggle-layout-button" on:click={toggle_layout_state}>
-            v
+        <button type="button" class="toggle-layout-button" class:nav-open={$layout_state === "only-nav"} on:click={toggle_layout_state}>
+            ≡ 
         </button>
         {#if $layout_state === "full"}
             <Nav />
@@ -76,10 +76,15 @@
             border-radius: 5px;
             border: 1px solid white;
             color: white;
-            font-size: 1rem;
+            font-size: 1.5rem;
             background-color: rgba(0 0 0 / 50%);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+        }
+
+        .nav-open {
+            color: black;
+            background-color: white;
         }
 
         .container {
