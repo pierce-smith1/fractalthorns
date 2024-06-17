@@ -82,7 +82,7 @@
 
     h1 {
         font-family: "eczar";
-        font-size: 3vw;
+        font-size: 3rem;
         padding: 30px 0 30px 0;
         margin: 0;
         line-height: 70px;
@@ -93,5 +93,19 @@
         position: relative;
         top: 5px;
         width: 40px;
+    }
+
+    @media (width <= 1200px) {
+        .record-header {
+            font-size: 2.2vw;
+        }
+
+        .record-body-container {
+            margin-left: 0;
+        }
+
+        .record-text-container {
+            width: 100%;
+        }
     }
 </style>

@@ -45,17 +45,19 @@
 </script>
 
 <div class="record-line-container" id={`line_${line_index}`} class:continuation={is_continuation_line}>
-    <div class="speaker-gutter">
-        {#if should_show_speaker}
-            <span class="speaker">{line.character}</span>
-        {/if}
-        {#if line.emphasis}
-            <span class="emphasis">{line.emphasis}</span>
-        {/if}
-        {#if should_show_language}
-            <span class="language"><em>(in {line.language})</em></span>
-        {/if}
-    </div>
+    {#if should_show_speaker || line.emphasis || should_show_language}
+        <div class="speaker-gutter">
+            {#if should_show_speaker}
+                <span class="speaker">{line.character}</span>
+            {/if}
+            {#if line.emphasis}
+                <span class="emphasis">{line.emphasis}</span>
+            {/if}
+            {#if should_show_language}
+                <span class="language"><em>(in {line.language})</em></span>
+            {/if}
+        </div>
+    {/if}
     <div class="line-content-container" class:highlighted={requested_line_index === line_index}>
         {#if line.type === "Sabre"}
             <code>&lt; {line.text} &gt;</code>
@@ -118,5 +120,32 @@
 
     .highlighted {
         font-weight: 600;
+    }
+
+    @media (width <= 1200px) {
+        .record-line-container {
+            flex-flow: column nowrap;
+        }
+
+        .speaker-gutter {
+            position: relative;
+            flex-flow: row nowrap;
+            left: 0;
+            margin-left: 30px;
+            min-width: 0;
+            max-width: 90%;
+            width: 90%;
+            text-align: left;
+            color: rgba(0 0 0 / 60%);
+            font-weight: 900;
+            padding-bottom: 16px;
+        }
+
+        .line-content-container {
+            border-left: none;
+            padding-top: 0;
+        }
+
+
     }
 </style>
