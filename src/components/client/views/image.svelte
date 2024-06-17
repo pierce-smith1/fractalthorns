@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {marked} from 'marked';
-    import * as svelte from 'svelte';
+    import {marked} from "marked";
+    import {layout_state} from "../page";
 
     import * as Episodic from "../../../descriptors/episodic";
     import * as Image from "../../../descriptors/image";
@@ -44,12 +44,23 @@
 
         scroll_observer.observe(scroll_marker);
     }
+
+    function execute_character_search(character: string) {
+        Nav.execute_search(character);
+
+        if ($layout_state !== "full") {
+            $layout_state = "only-nav";
+        }
+    }
 </script>
 
 <div class="container">
     {#await image_promise}
         <Loading />
     {:then image}
+        <div class="smallscreen-image-container">
+            <img src={image.image_url}>
+        </div>
         <div class="image-info-container" use:setup_scroll_hint_observer>
             <div class="image-title-container">
                 <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
@@ -57,7 +68,7 @@
                 {#if image.characters}
                     <div class="characters">
                         {#each image.characters as character}
-                            <button class="character-button" type="button" on:click={() => Nav.execute_search(character)}>{character}</button>
+                            <button class="character-button" type="button" on:click={() => execute_character_search(character)}>{character}</button>
                         {/each}
                     </div>
                 {/if}
@@ -127,6 +138,10 @@
         height: 100%;
         max-width: 70%;
         margin: 0;
+    }
+
+    .smallscreen-image-container {
+        display: none;
     }
 
     .image-link {
@@ -202,7 +217,7 @@
 
     .title {
         font-family: "eczar";
-        font-size: 2vw;
+        font-size: 2rem;
     }
 
     .title-ordinal {
@@ -241,5 +256,36 @@
         position: relative;
         top: 3px;
         width: 16px;
+    }
+
+    @media (width <= 1200px) {
+        .container {
+            flex-flow: column nowrap;
+            overflow-y: auto;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .container > * {
+            margin: 0;
+        }
+
+        .smallscreen-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .image-info-container {
+            max-width: 90%;
+            width: 90%;
+            border-right: none;
+            height: auto;
+            overflow: visible;
+        }
+
+        .image-container {
+            display: none;
+        }
     }
 </style>
