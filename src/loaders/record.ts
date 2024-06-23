@@ -2,7 +2,7 @@ import Config from "../config";
 
 import * as Record from "../descriptors/record";
 import * as Filesystem from "../filesystem";
-import * as GenericUtil from "../genericutil";
+import { pipeline } from "../pipeline";
 
 export async function get(name: string, chapter: string): Promise<Record.Model> {
     const record_path = `${Config.authorland_root}/records/chapter-${chapter}/${name}.txt`;
@@ -15,131 +15,120 @@ export async function get(name: string, chapter: string): Promise<Record.Model> 
 }
 
 export function parse_from(record_contents: string): Record.Model {
-    const record: Record.Model = { 
-        requested: false,
-        options: {},
-        header_lines: [],
-        languages: [],
-        characters: [],
-        lines: [],
-    };
+    // Only trim the end because some markdown shit like lists has significant whitespace at the start
+    const lines = record_contents.split("\n").map(line => line.trimEnd());
 
-    type ParserState = 
-        | "ExpectingOptions"
-        | "ExpectingRequested"
-        | "ExpectingHeader"
-        | "InHeader"
-        | "InDocument"
-    let state: ParserState = "ExpectingOptions";
+    const {header, body} = get_parts(lines);
+    const parsed_header = parse_header(header);
+    const parsed_lines = parse_body(body);
 
-    let lines = record_contents.split("\n");
-    lines = lines.map(line => line.replaceAll("\r", ""));
+    const characters = pipeline.start(parsed_lines)
+        .then(lines => lines.map(line => line.character))
+        .then(chars => chars.filter(x => x) as Array<string>)
+        .then(chars => chars.toSorted())
+        .then(chars => [...new Set(chars)])
+        .done();
 
-    let last_line: Record.LineModel | undefined = undefined;
-    for (const line of lines) {
-        switch (state) {
-            case "ExpectingOptions": {
-                const raw_options = line.substring(2, line.length - 2);
-                const options_pairs = raw_options.split(",");
-                const options = options_pairs.map(pair => pair.split("="));
-                const options_object = Object.fromEntries(options);
+    const record = {...parsed_header, characters, lines: parsed_lines};
+    return record;
+}
 
-                record.options = options_object;
-                state = "ExpectingRequested";
-                break;
-            } case "ExpectingRequested": {
-                record.requested = line === "Record ordered on behalf of the NSIrP";
-                state = "ExpectingHeader";
-                break;
-            } case "ExpectingHeader": {
-                if (line.startsWith("<")) {
-                    record.header_lines.push(line);
-                    state = "InHeader";
-                }
-                break;
-            } case "InHeader": {
-                const language_match = line.match(/iteration\[.+\]\..+\.(.+).+->/);
-                if (language_match) {
-                    record.languages.push(language_match[1].toUpperCase());
-                }
+function get_parts(lines: Array<string>): {header: Array<string>, body: Array<string>} {
+    // The header ends at the first blank line after the angle-bracket lines.
+    const header_end_index = lines.findIndex((line, i, lines) => line.startsWith("<") && lines[i + 1] === "") + 1;
 
-                if (line.trim() === "") {
-                    state = "InDocument";
-                    break;
-                }
+    const header = lines.slice(0, header_end_index);
+    const body = lines.slice(header_end_index + 1);
 
-                record.header_lines.push(line);
-                break;
-            } case "InDocument": {
-                const last_line_was_block = last_line?.type === "Block";
-                if (last_line && line.trim() === "" && last_line_was_block && last_line?.text.trim() !== "") {
-                    record.lines.push(last_line);
-                    // @ts-ignore TODO what the fuck is wrong with TS here??????
-                    last_line = {...last_line, text: ""}; 
-                }
+    return {header, body};
+}
 
-                const line_start_match = line.trim().match(/(.+?) (\(.+?\) )?(\(.+?\) )?:( .+)?$/);
-                if (line_start_match) {
-                    if (last_line && last_line.text.trim() !== "") {
-                        record.lines.push(last_line);
-                    }
+function parse_header(lines: Array<string>): Pick<Record.Model, "requested" | "options" | "header_lines" | "languages"> {
+    const requested = lines[1] === "Record ordered on behalf of the NSIrP";
 
-                    let [_, character, modifier_1, modifier_2, content] = line_start_match;
-                    if (character === "_") {
-                        character = Record.narrator_character;
-                    }
+    const options = pipeline.start(lines[0])
+        .then(line => line.substring(2, line.length - 2))
+        .then(line => line.split(","))
+        .then(pairs => pairs.map(pair => pair.split("=")))
+        .then(entries => Object.fromEntries(entries) as Record.Model["options"])
+        .done();
 
-                    last_line = {
-                        type: content ? "Inline" : "Block",
-                        character: character,
-                        language: (last_line?.language ?? record.languages[0]).toUpperCase(),
-                        text: content?.trim() ?? "",
-                    };
+    const header_lines = lines.filter(line => line.startsWith("<"));
 
-                    if (modifier_1 && modifier_1.startsWith("(in ")) {
-                        last_line.language ??= modifier_1.substring(3).toUpperCase();
-                    } else {
-                        last_line.emphasis ??= modifier_1;
-                    }
+    const language_def_regex = /iteration\[.+\]\..+\.(.+) ->/;
+    const languages = pipeline.start(header_lines)
+        .then(lines => lines.filter(line => line.match(language_def_regex)))
+        .then(lines => lines.map(line => line.match(language_def_regex)![1]))
+        .done();
 
-                    if (modifier_2 && modifier_2.startsWith("(in ")) {
-                        last_line.language ??= modifier_2.substring(3).toUpperCase();
-                    } else {
-                        last_line.emphasis ??= modifier_2;
-                    }
+    return {requested, options, header_lines, languages};
+}
 
-                    break;
-                }
+function parse_body(lines: Array<string>): Array<Record.LineModel> {
+    const parsed_lines: Array<Record.LineModel> = [];
 
-                if (line.trim().startsWith("< ") && line.trim().endsWith(" >")) {
-                    if (last_line) {
-                        record.lines.push(last_line);
-                    }
-                    record.lines.push({type: "Sabre", text: line.substring(2, line.length - 2)});
-                    break;
-                }
+    const sabre_line_regex = /^< *(.+) *>/;
+    const label_regex = /^([A-Z_].*?)(\((?:in )?\w*?\))? *(\((?:in )?\w*?\))? *: *(.*)?/;
 
-                if (last_line) {
-                    last_line.text += `${line}\n`;
-                }
-            }
+    let current_label: Omit<Record.LineModel, "text"> | undefined;
+    let accumulated_text = "";
+
+    const commit_line = () => { 
+        if (current_label && accumulated_text.length > 0) {
+            parsed_lines.push({...current_label, text: accumulated_text});
         }
     }
 
-    record.lines = record.lines.map(line => ({...line, text: line.text.trim()}));
+    for (const line of lines) {
+        if (line === "...") {
+            commit_line();
+            parsed_lines.push({type: "Sabre", text: line});
+            current_label = undefined;
+        }
 
-    let all_characters = record.lines.map(line => line.character);
-    all_characters = all_characters.sort();
-    all_characters = GenericUtil.unique(all_characters);
-    all_characters = all_characters.filter(lang => lang);
-    record.characters = all_characters as Array<string>;
+        const sabre_line_match = line.match(sabre_line_regex);
+        if (sabre_line_match) {
+            commit_line();
+            parsed_lines.push({type: "Sabre", text: sabre_line_match[1]});
+            current_label = undefined;
+        }
 
-    let all_languages = record.lines.map(line => line.language);
-    all_languages = all_languages.concat(record.languages);
-    all_languages = all_languages.sort();
-    all_languages = GenericUtil.unique(all_languages);
-    all_languages = all_languages.filter(lang => lang);
-    record.languages = all_languages as Array<string>;
+        const label_match = line.match(label_regex);
+        if (label_match) {
+            const [, character, modifier_1, modifier_2, inline_text] = label_match;
 
-    return record;
+            const language = [modifier_1, modifier_2].find(modifier => modifier?.startsWith("in"));
+            const emphasis = [modifier_1, modifier_2].find(modifier => modifier && !modifier.startsWith("in"));
+            const is_inline = !!inline_text;
+
+            commit_line();
+
+            current_label = {
+                type: is_inline ? "Inline" : "Block", 
+                character: character === "_" ? Record.narrator_character : character, 
+                language, 
+                emphasis
+            };
+
+            accumulated_text = inline_text ?? "";
+        }
+
+        // A blank line means a new block line
+        if (line.length === 0 && current_label?.type === "Block") {
+            commit_line();
+            accumulated_text = "";
+        }
+
+        if (line.length > 0 && !label_match) {
+            // Line breaks must be preserved...
+            // The record texts get sent through a markdown processor on the client side
+            // so it doesn't really matter, but records with fmt=poem treat line breaks 
+            // as significant so we need them
+            accumulated_text += `${line}\n`; 
+        }
+    }
+
+    commit_line();
+        
+    return parsed_lines;
 }

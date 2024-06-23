@@ -98,8 +98,8 @@
     .button-background {
         background-size: cover;
         background-position: center;
-        width: 40px;
-        height: 40px;
+        width: 100%;
+        height: 100%;
     }
 
     .selected {
