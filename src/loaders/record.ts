@@ -66,7 +66,7 @@ function parse_body(lines: Array<string>): Array<Record.LineModel> {
     const parsed_lines: Array<Record.LineModel> = [];
 
     const sabre_line_regex = /^< *(.+) *>/;
-    const label_regex = /^([A-Z_].*?)(\((?:in )?\w*?\))? *(\((?:in )?\w*?\))? *: *(.*)?/;
+    const label_regex = /^(\w.*?)(\((?:in )?\w*?\))? *(\((?:in )?\w*?\))? : *(.*)?/;
 
     let current_label: Omit<Record.LineModel, "text"> | undefined;
     let accumulated_text = "";
