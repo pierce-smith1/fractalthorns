@@ -7,9 +7,7 @@ import { pipeline } from "../pipeline";
 export async function get(name: string, chapter: string): Promise<Record.Model> {
     const record_path = `${Config.authorland_root}/records/chapter-${chapter}/${name}.txt`;
 
-    const record_file_contents = await Filesystem.read(record_path);
-
-    const record = parse_from(record_file_contents);
+    const record = parse_from(await Filesystem.read(record_path));
 
     return record;
 }

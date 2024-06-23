@@ -2,6 +2,7 @@ import Config from "../config";
 
 import * as Filesystem from "../filesystem";
 import * as Image from "../descriptors/image";
+import { pipeline } from "../pipeline";
 
 export type Model = Image.Model;
 
