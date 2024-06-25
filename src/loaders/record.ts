@@ -41,23 +41,33 @@ function get_parts(lines: Array<string>): {header: Array<string>, body: Array<st
     return {header, body};
 }
 
-function parse_header(lines: Array<string>): Pick<Record.Model, "requested" | "options" | "header_lines" | "languages"> {
-    const requested = lines[1] === "Record ordered on behalf of the NSIrP";
-
-    const options = pipeline.start(lines[0])
+function parse_options(options: string): Record.Model["options"] {
+    const options_object = pipeline.start(options)
         .then(line => line.substring(2, line.length - 2))
         .then(line => line.split(","))
         .then(pairs => pairs.map(pair => pair.split("=")))
         .then(entries => Object.fromEntries(entries) as Record.Model["options"])
         .done();
 
-    const header_lines = lines.filter(line => line.startsWith("<"));
+    return options_object;
+}
 
+function parse_languages(header_lines: Array<string>): Array<string> {
     const language_def_regex = /iteration\[.+\]\..+\.(.+) ->/;
     const languages = pipeline.start(header_lines)
         .then(lines => lines.filter(line => line.match(language_def_regex)))
         .then(lines => lines.map(line => line.match(language_def_regex)![1]))
         .done();
+    
+    return languages;
+}
+
+function parse_header(lines: Array<string>): Pick<Record.Model, "requested" | "options" | "header_lines" | "languages"> {
+    const requested = lines[1] === "Record ordered on behalf of the NSIrP";
+    const options = parse_options(lines[0]);
+
+    const header_lines = lines.filter(line => line.startsWith("<"));
+    const languages = parse_languages(header_lines);
 
     return {requested, options, header_lines, languages};
 }

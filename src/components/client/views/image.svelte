@@ -10,6 +10,8 @@
     import Loading from "../loading.svelte";
     import Keynav from './keynav.svelte';
 
+    const no_description_placeholder = "🛠 *something indistinct echoes from the future...* 🛠";
+
     export let name: string;
 
     $: image_promise = Fetchers.get.single_image({name});
@@ -22,10 +24,10 @@
             parts.push(`<img class="iteration-sigil" src=/assets/images/common/iteration-${image.canon}.png />`);
         }
 
-        parts.push(Image.get_date_string(image));
+        parts.push(Image.get_date_string(image.date));
 
-        if (image.speedpaint_video_id) {
-            parts.push(`<a href="https://www.youtube.com/watch?v=${image.speedpaint_video_id}">speedpaint</a>`);
+        if (image.speedpaint_video_url) {
+            parts.push(`<a href="${image.speedpaint_video_url}">speedpaint</a>`);
         }
 
         const subtitle = parts.join(" · ");
@@ -74,7 +76,7 @@
                 {/if}
             </div>
             <div class="image-description-container">
-                {@html marked.parse(image.description)}
+                {@html marked.parse(image.description ?? no_description_placeholder)}
                 <div class="scroll-marker"></div>
             </div>
             <div class="scroll-hint">...</div>

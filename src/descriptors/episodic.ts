@@ -26,7 +26,6 @@ export type Model = {
 
 export type ClientModel = Array<{name: string, records: Array<RedactableRecordEntry>}>;
 
-export type FullEpisodicRequest = {}; 
 export type SingleRecordRequest = {
     name: string,
 };
