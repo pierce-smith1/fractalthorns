@@ -33,7 +33,7 @@ export const domain_search_request = {
     },
     type: {
         type: Interfaces.fields.required_string,
-        description: "Must be one of `image`, `episodic-item`, or `episodic-line`. If `images`, the term will be searched against the titles of images using a simple case-insensitive contains() check. If `episodic-item`, the term will be searched against the titles of records using a simple case-insensitive contains() check. If `episodic-line`, the term will be interpreted as a case-insensitive regex and searched against the text of all solved records."
+        description: "Must be one of `image`, `episodic-item`, or `episodic-line`. If `image`, the term will be searched against the titles of images using a simple case-insensitive contains() check. If `episodic-item`, the term will be searched against the titles of records using a simple case-insensitive contains() check. If `episodic-line`, the term will be interpreted as a case-insensitive regex and searched against the text of all solved records."
     },
 };
 export type DomainSearchRequest = Interfaces.ModelFromInterface<typeof domain_search_request>;
