@@ -1,11 +1,12 @@
 import * as Store from "svelte/store";
 
-import * as Domain from "../../descriptors/domain";
+import * as PrivateDomain from "../../descriptors/domain";
+import * as Domain from "../../descriptors/public/domain";
 import * as Fetchers from "../../fetchers";
 import * as Subproject from "../../descriptors/subproject";
-import * as Episodic from "../../descriptors/episodic";
+import * as Episodic from "../../descriptors/public/episodic";
 
-export type NavItem = Domain.Item & {hide?: boolean};
+export type NavItem = PrivateDomain.Item & {hide?: boolean};
 export type NavState = {
     nav_results: Array<NavItem>,
     search_results: Array<NavItem>,
@@ -24,18 +25,17 @@ export const nav_state = Store.writable<NavState>({
     viewing_search_results: false,
 });
 
-export function set_domain_items(domain: Domain.Page["domain"]) {
-    const new_items_promise: Promise<Array<Domain.Item>> = (async () => {
+export function set_domain_items(domain: PrivateDomain.Domain) {
+    const new_items_promise: Promise<Array<PrivateDomain.Item>> = (async () => {
         switch (domain) {
             case "image":
-                const images = await Fetchers.get.all_images({});
-                return images.map(image => ({domain, name: image.name, image}));
+                const {images} = await Fetchers.get.all_images({});
+                return images.map(image => ({domain, image}));
 
             case "episodic":
-                const episodic = await Fetchers.get.full_episodic({});
-                return episodic.flatMap(chapter => chapter.records.map(record => ({
-                    domain,
-                    record_name: record.name ?? "???",
+                const {chapters} = await Fetchers.get.full_episodic({});
+                return chapters.flatMap(chapter => chapter.records.map(record => ({
+                    domain: "episodic-item",
                     record
                 })));
 
@@ -72,15 +72,15 @@ export function execute_search(term: string) {
         search_waiting: true,
     }));
 
-    function update_search_items(items: Array<Domain.Item>) {
+    function update_search_items(results: Array<Domain.DomainSearchResult>) {
         nav_state.update(state => ({...state, 
-            search_results: Domain.sort_items([...state.search_results, ...items])
+            search_results: PrivateDomain.sort_items([...state.search_results, ...results.map(PrivateDomain.result_to_item)])
         }));
     }
 
-    image_results.then(update_search_items);
-    record_results.then(update_search_items);
-    line_results.then(update_search_items);
+    image_results.then(({results}) => update_search_items(results));
+    record_results.then(({results}) => update_search_items(results));
+    line_results.then(({results}) => update_search_items(results));
 
     Promise.all([image_results, record_results, line_results]).then(_ => {
         nav_state.update(state => ({...state,

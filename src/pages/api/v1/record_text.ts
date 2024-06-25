@@ -15,5 +15,15 @@ export const GET = Endpoint.use_get_handler<"record_text">(async (request, overr
     }
 
     const record = await RecordLoader.get(record_name, record_entry.chapter);
-    return record;
+    return {...record,
+        iteration: record.options["iter"],
+        format: record.options["fmt"],
+        lines: record.lines.map(line => ({...line,
+            // TODO stupid bullshit because {a?: string} is technically different from
+            // {a: string | undefined} FUCK YOU TS
+            character: line.character ? line.character : undefined,
+            emphasis: line.emphasis ? line.emphasis : undefined,
+            language: line.language ? line.language : undefined,
+        })),
+    };
 });

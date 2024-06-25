@@ -2,8 +2,8 @@
     import {marked} from "marked";
     import {layout_state} from "../page";
 
-    import * as Episodic from "../../../descriptors/episodic";
-    import * as Image from "../../../descriptors/image";
+    import * as Episodic from "../../../descriptors/public/episodic";
+    import * as Image from "../../../descriptors/public/image";
     import * as Fetchers from "../../../fetchers";
     import * as Nav from "../nav";
 
@@ -90,7 +90,7 @@
 {:then episodic}
     <Keynav
         page_left={{domain: "home"}}
-        page_right={{domain: "episodic", record_name: episodic[0].records[0].name ?? ""}}
+        page_right={{domain: "episodic", record_name: episodic.chapters[0].records[0].name ?? ""}}
     />
 {/await}
 

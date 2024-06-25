@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Episodic from "../../../descriptors/episodic";
+    import * as Episodic from "../../../descriptors/public/episodic";
     import * as Fetchers from "../../../fetchers";
     import Loading from "../loading.svelte";
 

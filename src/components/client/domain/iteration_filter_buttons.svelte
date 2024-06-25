@@ -1,7 +1,7 @@
 <script lang="ts">
     import {nav_state, type NavItem} from "../nav";
 
-    import * as Episodic from "../../../descriptors/episodic";
+    import * as Episodic from "../../../descriptors/public/episodic";
     import * as Domain from "../../../descriptors/domain";
 
     export let available_iterations: Set<Episodic.Iteration>;

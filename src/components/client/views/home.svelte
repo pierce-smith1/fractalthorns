@@ -112,7 +112,7 @@
         <img src="/assets/images/common/socials-github.png" />
     </a>
 </div>
-{#await Fetchers.get.single_image({})}
+{#await Fetchers.get.single_image({name: undefined})}
 {:then image}
     <Keynav 
         page_right={{domain: "image", name: image.name}}

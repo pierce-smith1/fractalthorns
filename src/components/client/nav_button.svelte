@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Domain from "../../descriptors/domain";
+    import * as PrivateDomain from "../../descriptors/domain";
     import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";
@@ -8,18 +8,18 @@
     import PageLink from "./page_link.svelte";
     import Loading from "./loading.svelte";
 
-    export let domain: Domain.Page["domain"];
+    export let domain: PrivateDomain.Page["domain"];
 
-    const destination_promise: Promise<Domain.Page> = (async () => {
+    const destination_promise: Promise<PrivateDomain.Page> = (async () => {
         switch (domain) {
             case "home": return {domain};
             case "image": {
-                const latest_image = await Fetchers.get.single_image({});
+                const latest_image = await Fetchers.get.single_image({name: undefined});
                 return {domain, name: latest_image.name};
             }
             case "episodic": {
                 const episodic = await Fetchers.get.full_episodic({});
-                return {domain, record_name: episodic[0].records[0].name!};
+                return {domain, record_name: episodic.chapters[0].records[0].name!};
             }
             case "subproject": return {domain};
         }

@@ -34,7 +34,7 @@
     {#await news_promise}
         <Loading />
     {:then news}
-        <span class="window-title">fractalthorns.com / {news[0].version}</span>
+        <span class="window-title">fractalthorns.com / {news.items[0].version}</span>
     {/await}
 </div>
 

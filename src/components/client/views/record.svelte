@@ -37,7 +37,7 @@
         </div>
     {/await}
 </div>
-{#await Fetchers.get.single_image({})}
+{#await Fetchers.get.single_image({name: undefined})}
 {:then image}
     <Keynav
         page_left={{domain: "image", name: image.name}}

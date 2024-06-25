@@ -1,5 +1,4 @@
-import * as Image from "./image";
-import * as Episodic from "./episodic";
+import * as PublicDomain from "./public/domain";
 
 export const domains = [
     "image",
@@ -8,6 +7,8 @@ export const domains = [
     "subproject",
 ] as const;
 
+export type Domain = typeof domains[number];
+
 export type Page =
     | {domain: "image", name: string}
     | {domain: "episodic", record_name: string, line_index?: number}
@@ -15,23 +16,46 @@ export type Page =
     | {domain: "subproject", name?: string}
 
 export type Item = 
-    | Extract<Page, {domain: "image"}> & {image: Image.ClientModel}
-    | Extract<Page, {domain: "episodic"}> & {record: Episodic.RedactableRecordEntry, matched_text?: string}
-    | Extract<Page, {domain: "home"}>
-    | Extract<Page, {domain: "subproject"}>
+    | {domain: "image", image: Exclude<PublicDomain.DomainSearchResult["image"], undefined>}
+    | {domain: "episodic-item", record: Exclude<PublicDomain.DomainSearchResult["record"], undefined>}
+    | {
+        domain: "episodic-line", 
+        record: Exclude<PublicDomain.DomainSearchResult["record"], undefined>, 
+        matched_text: Exclude<PublicDomain.DomainSearchResult["record_matched_text"], undefined>,
+        line_index: Exclude<PublicDomain.DomainSearchResult["record_line_index"], undefined>,
+    }
+    | {domain: "subproject", name?: string}
 
-export type SearchItemType = 
-    | "image"
-    | "episodic-item"
-    | "episodic-line"
+export function result_to_item(result: PublicDomain.DomainSearchResult): Item {
+    switch (result.type) {
+        case "image": return {domain: result.type, image: result.image!};
+        case "episodic-item": return {domain: result.type, record: result.record!}; 
+        case "episodic-line": return {domain: result.type, record: result.record!, matched_text: result.record_matched_text!, line_index: result.record_line_index!};
+    }
 
-export type DomainSearchRequest = {
-    term: string,
-    type: SearchItemType,
-};
+    return undefined!;
+}
+
+export function canonical_domain_of(item: Item): Domain {
+    switch (item.domain) {
+        case "image": return "image"
+        case "episodic-item":
+        case "episodic-line": return "episodic";
+        case "subproject": return "subproject";
+    }
+}
+
+export function item_to_page(item: Item): Page {
+    switch (item.domain) {
+        case "image": return {domain: "image", name: item.image.name};
+        case "episodic-item": return {domain: "episodic", record_name: item.record.name ?? ""};
+        case "episodic-line": return {domain: "episodic", record_name: item.record.name ?? "", line_index: item.line_index};
+        case "subproject": return item;
+    }
+}
 
 export function sort_items(items: Array<Item>) {
-    return items.toSorted((a, b) => domains.indexOf(a.domain) - domains.indexOf(b.domain));
+    return items.toSorted((a, b) => domains.indexOf(canonical_domain_of(a)) - domains.indexOf(canonical_domain_of(b)));
 }
 
 export function is_valid_domain(name?: string): name is Page["domain"] {
@@ -46,9 +70,9 @@ export function is_valid_domain(name?: string): name is Page["domain"] {
 export function get_item_iteration(item: Item) {
     switch (item.domain) {
         case "image": return item.image.canon;
-        case "episodic": return item.record.iteration;
+        case "episodic-item":
+        case "episodic-line": return item.record.iteration;
     }
-    return undefined;
 }
 
 export function page_to_path(page: Page) {
@@ -80,8 +104,3 @@ export function path_to_page(path: string): Page {
 
     return page ?? {domain: "home"};
 }
-
-export type Domain = {
-    name: string,
-    items: Array<string>,
-};

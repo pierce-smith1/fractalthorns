@@ -31,7 +31,7 @@
     <Keynav 
         page_up={{domain: "subproject", name: prev_subproject.name}}
         page_down={{domain: "subproject", name: next_subproject.name}}
-        page_left={{domain: "episodic", record_name: episodic[0].records[0].name ?? ""}}
+        page_left={{domain: "episodic", record_name: episodic.chapters[0].records[0].name ?? ""}}
     />
 {/await}
 

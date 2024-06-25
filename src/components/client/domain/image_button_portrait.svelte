@@ -1,9 +1,9 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    import * as Image from "../../../descriptors/image";
+    import * as Image from "../../../descriptors/public/image";
 
-    export let image: Image.ClientModel;
+    export let image: Image.ImageResponse;
 
     let visible = false;
     let portrait_element: Element;

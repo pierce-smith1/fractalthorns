@@ -2,10 +2,10 @@
     import {marked} from "marked";
     import {onMount} from "svelte";
 
-    import * as Record from "../../../descriptors/record";
-    import * as Episodic from "../../../descriptors/episodic";
+    import * as Record from "../../../descriptors/public/record";
+    import * as Episodic from "../../../descriptors/public/episodic";
 
-    export let record: Record.Model;
+    export let record: Record.RecordTextResponse;
     export let line: Record.LineModel;
     export let last_line: Record.LineModel | undefined = undefined;
     export let line_index: number;
@@ -62,7 +62,7 @@
         {#if line.type === "Sabre"}
             <code>&lt; {line.text} &gt;</code>
         {:else}
-            {@html marked.parse(emphasize_keywords(line.text), {breaks: record.options?.fmt === "poem"})}
+            {@html marked.parse(emphasize_keywords(line.text), {breaks: record?.format === "poem"})}
         {/if}
     </div>
 </div>

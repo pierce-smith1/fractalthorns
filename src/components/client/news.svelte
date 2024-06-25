@@ -27,7 +27,7 @@
         <Loading />
     {:then news} 
         <div class="news-items">
-            {#each news as item}
+            {#each news.items as item}
                 <div class="news-item">
                     <h4>{item.date}</h4>
                     <p>{item.title}</p>
