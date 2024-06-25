@@ -1,0 +1,192 @@
+---
+    import Default from "../../../layouts/default.astro";
+
+    import { marked } from "marked";
+
+    import * as Api from "../../../api";
+    import * as Interfaces from "../../../interfaces";
+
+    const endpoints = Object.entries(Api.endpoints);
+
+    function describe_interface(interface_: {[key: string]: {type: Interfaces.FieldTypes, description: string}}) {
+        if (Object.entries(interface_).length === 0) {
+            return "<p>No request fields; you must send the empty object (<code>{}</code>)</p>";
+        }
+
+        const items = Object.entries(interface_).map(([field_name, descriptor]) => {
+            return `<li><strong>${field_name}</strong> <span class=\"subtle\">&lt;${explain_type(descriptor.type)}&gt;</span> : ${marked.parse(descriptor.description)}</li>`;
+        }).join("");
+
+        const list = `<ul class="if-description">${items}</ul>`;
+        return list;
+    }
+
+    function explain_type(type: Interfaces.FieldTypes): string {
+        if (typeof type === "string") {
+            const type_parts = type.split("_");
+            const required = type_parts[0] === "required";
+            const type_name = type_parts[1];
+
+            return `${type_name}${required ? "" : " (optional)"}`;
+        }
+
+        const type_parts = type[0].split("_");
+        const required = type_parts[0] === "required";
+        const type_name = type_parts[1];
+        const inner_type = type[1];
+
+        if (type_name === "array") {
+            return `${required ? "" : "(optional) "}array of ${explain_type(inner_type as Interfaces.FieldTypes)}`;
+        }
+
+        return `object: ${required ? "" : "(optional) "}${describe_interface(inner_type as any)}`;
+    }
+---
+
+<Default>
+    <h1>fractalthorns API</h1>
+
+    <em>This documentation is auto-generated</em>
+
+    <p>fractalthorns uses an API that is primarily designed for private use, but is open to public applications that want to take advantage of it.</p>
+
+    <h2>Structure</h2>
+
+    <p>The API is HTTP-based and communicates entirely over JSON. There are only <code>GET</code> endpoints.</p>
+    <p>Make requests by sending a <code>GET</code> request to <code>/api/v1/(endpoint_name)?body=(request_payload)</code>, where <code>request_payload</code> is a URL-encoded JSON object holding the parameters of your request. You <strong>MUST</strong> always send the <code>body</code> parameter, and the body parameter must always contain a JSON object (even if it must be an empty one).</p>
+    <p>A successful request will return a 200 with a JSON object in the body, whose fields vary with each endpoint and are described below.</p>
+    <p>If the object you're looking for does not exist, you will recieve a 404.</p>
+    <p>Note that there is currently <strong>NO</strong> input validation. If your request payload is incorrect for the endpoint, you will invoke nasal demons and probably get a 500.</p>
+
+    <h2>Examples</h2>
+
+    <pre>
+{`
+curl 'https://fractalthorns.com/api/v1/single_image?body={"name":"aemil"}' | jq
+
+{
+    "name": "frost",
+    "title": "frost knight loxxe",
+    "date": "2023-07-09",
+    "ordinal": 89,
+    "image_url": "/serve/image/frost",
+    "thumb_url": "/serve/thumb/frost",
+    "characters": [
+        "loxxe"
+    ],
+    "speedpaint_video_url": "https://youtube.com/watch?v=blB9C9xt2zY"
+}
+
+curl 'http://localhost:4321/api/v1/domain_search?body={"term":"fruit","type":"episodic-line"}' | jq
+
+{
+    "results": [
+        {
+            "record": {
+                "name": "seven-hundred-days",
+                "title": "seven hundred days",
+                "chapter": "viii",
+                "solved": true,
+                "iteration": "768221"
+            },
+            "record_matched_text": "partner",
+            "record_line_index": 2,
+            "type": "episodic-line"
+        },
+        {
+            "record": {
+                "name": "compromises-i",
+                "title": "compromises i",
+                "chapter": "xii",
+                "solved": true,
+                "iteration": "265404"
+            },
+            "record_matched_text": "partner",
+            "record_line_index": 4,
+            "type": "episodic-line"
+        },
+        {
+            "record": {
+                "name": "virtues-ii",
+                "title": "virtues ii",
+                "chapter": "xv",
+                "solved": true,
+                "iteration": "265404"
+            },
+            "record_matched_text": "partner",
+            "record_line_index": 27,
+            "type": "episodic-line"
+        }
+    ]
+}
+`}</pre>
+
+    <p>For more examples: open the network tab in your dev tools while browsing the site normally.</p>
+
+    <h2>Endpoints</h2>
+    {endpoints.map(([name, endpoint]) => (
+        <h2 class="endpoint-name"><code><span class="subtle">/api/v1/</span>{name}</code></h2>
+        <p class="big">{endpoint.description}</p>
+        <Fragment>{Object.entries(endpoint.request).length > 0 && (<p>Request fields:</p>)}</Fragment>
+        <div set:html={describe_interface(endpoint.request)}></div>
+        <p>Response fields:</p>
+        <div set:html={describe_interface(endpoint.response)}></div>
+    ))}
+</Default>
+
+<style>
+    :global(body) {
+        width: 60%;
+        margin: auto;
+        font-family: "lekton";
+    }
+
+    @media (width <= 1000px) {
+        :global(body) {
+            width: 90%;
+        }
+    }
+
+    :global(h1, h2, h3, h4, h5, h6) {
+        margin-bottom: 0;
+    }
+
+    :global(p) {
+        font-size: 1.1rem;
+    }
+
+    :global(li) :global(p) {
+        padding: 0;
+        margin: 0;
+    }
+
+    :global(ul) {
+        padding-top: 0;
+        margin-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    :global(code) {
+        background-color: #fee;
+    }
+
+    :global(pre) {
+        font-family: "lekton";
+        background-color: #fee;
+        padding: 1rem;
+    }
+
+    :global(.endpoint-name) :global(code) {
+        display: inline-block;
+        width: 100%;
+    }
+
+    :global(.subtle) {
+        color: palevioletred;
+    }
+
+    :global(.if-description) {
+        color: black;
+    }
+</style>

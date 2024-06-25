@@ -11,6 +11,11 @@ export const fields = {
     required_object: <T>(field_type: T) => ["required_object", field_type] as const,
 } as const;
 
+export type FieldTypes = {[key in keyof typeof fields]: typeof fields[key] extends (...args: any) => any ? 
+    ReturnType<typeof fields[key]>
+    : typeof fields[key] 
+}[keyof typeof fields];
+
 export type FieldType<F> = 
 F extends readonly [infer M, infer T] ? 
     M extends "optional_array"

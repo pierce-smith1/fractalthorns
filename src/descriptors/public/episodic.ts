@@ -4,23 +4,23 @@ import * as Episodic from "../episodic";
 export const redactable_record_entry = {
     chapter: {
         type: Interfaces.fields.required_string,
-        description: "The chapter of this record",
+        description: "The chapter of this record.",
     },
     name: {
         type: Interfaces.fields.optional_string,
-        description: "The identifying name of this record, i.e. the one found in URLs. Not present if the record is unsolved. Use this name to query for the text of the record via the `record_text` endpoint"
+        description: "The identifying name of this record, i.e. the one found in URLs. Not present if the record is unsolved. Use this name to query for the text of the record via the `record_text` endpoint."
     },
     title: {
         type: Interfaces.fields.optional_string,
-        description: "The display title of this record. Not present if the record is unsolved",
+        description: "The display title of this record. Not present if the record is unsolved.",
     },
     solved: {
         type: Interfaces.fields.required_boolean,
-        description: "Whether or not this record has been solved (will be true for everything except right after new chapters come out)",
+        description: "Whether or not this record has been solved (will be true for everything except right after new chapters come out).",
     },
     iteration: {
         type: Interfaces.fields.optional_string,
-        description: `The iteration this record takes place in. Not present if the record is unsolved`,
+        description: `The iteration this record takes place in. Not present if the record is unsolved.`,
     },
 } as const;
 export type RedactableRecordEntry = Interfaces.ModelFromInterface<typeof redactable_record_entry>;
@@ -28,11 +28,11 @@ export type RedactableRecordEntry = Interfaces.ModelFromInterface<typeof redacta
 export const chapter_entry = {
     name: {
         type: Interfaces.fields.required_string,
-        description: "The name of this chapter",
+        description: "The name of this chapter.",
     },
     records: {
         type: Interfaces.fields.required_array(Interfaces.fields.required_object(redactable_record_entry)),
-        description: "The records in this chapter",
+        description: "The records in this chapter.",
     },
 } as const;
 export type ChapterEntry = Interfaces.ModelFromInterface<typeof chapter_entry>;
@@ -43,7 +43,7 @@ export type FullEpisodicRequest = Interfaces.ModelFromInterface<typeof full_epis
 export const single_record_request = {
     name: {
         type: Interfaces.fields.required_string,
-        description: "The name of the record to get info for. Use names gathered from the `name` field of the entries provided by `full_episodic`",
+        description: "The name of the record to get info for. Use names gathered from the `name` field of the entries provided by `full_episodic`.",
     },
 } as const;
 

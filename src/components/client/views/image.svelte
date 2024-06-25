@@ -15,6 +15,7 @@
     export let name: string;
 
     $: image_promise = Fetchers.get.single_image({name});
+    $: description_promise = Fetchers.get.image_description({name});
 
     function format_subtitle(image: Awaited<typeof image_promise>) {
         const parts: Array<string> = [];
@@ -76,7 +77,11 @@
                 {/if}
             </div>
             <div class="image-description-container">
-                {@html marked.parse(image.description ?? no_description_placeholder)}
+                {#await description_promise}
+                    <Loading />
+                {:then {description}} 
+                    {@html marked.parse(description ?? no_description_placeholder)}
+                {/await}
                 <div class="scroll-marker"></div>
             </div>
             <div class="scroll-hint">...</div>

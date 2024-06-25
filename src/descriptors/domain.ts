@@ -26,11 +26,28 @@ export type Item =
     }
     | {domain: "subproject", name?: string}
 
+export type SearchItemType =
+    | "image"
+    | "episodic-item"
+    | "episodic-line"
+
 export function result_to_item(result: PublicDomain.DomainSearchResult): Item {
     switch (result.type) {
         case "image": return {domain: result.type, image: result.image!};
         case "episodic-item": return {domain: result.type, record: result.record!}; 
         case "episodic-line": return {domain: result.type, record: result.record!, matched_text: result.record_matched_text!, line_index: result.record_line_index!};
+    }
+
+    return undefined!;
+}
+
+export function item_to_result(item: Item): PublicDomain.DomainSearchResult {
+    const empty = {image: undefined, record: undefined, record_matched_text: undefined, record_line_index: undefined};
+
+    switch (item.domain) {
+        case "image": return {...empty, type: item.domain, image: item.image};
+        case "episodic-item": return {...empty, type: item.domain, record: item.record};
+        case "episodic-line": return {...empty, type: item.domain, record: item.record, record_line_index: item.line_index, record_matched_text: item.matched_text}; 
     }
 
     return undefined!;

@@ -1,5 +1,4 @@
 import * as Record from "../descriptors/record";
-import * as Character from "../loaders/character";
 import * as Episodic from "../loaders/episodic";
 import * as RecordLoader from "../loaders/record";
 
@@ -62,10 +61,8 @@ export async function search_in_record(record: Record.Model & {title: string}, o
 
     enumerate_lines:
     for (const [line, i] of record.lines.map((line, i) => [line, i] as const)) {
-        const character = await Character.get(line.character);
 
         const line_satisfies_filters = option_is_satisfied_by(options.from_speaker, line.character)
-            || option_is_satisfied_by(options.from_species, character?.traits.race)
             || option_is_satisfied_by(options.in_language, line.language)
 
         if (!line_satisfies_filters) {

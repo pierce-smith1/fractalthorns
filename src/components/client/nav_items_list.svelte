@@ -51,8 +51,6 @@
         (item.domain === "episodic-line" && $current.domain === "episodic" && item.record.name == $current.record_name && item.line_index == $current.line_index)
     );
 
-    console.log({$nav_state});
-
     $: {
         const current_item_element = document.querySelector<HTMLDivElement>(`#item-${current_page_index}`);
         current_item_element?.scrollIntoView({behavior: "smooth", block: "center"});

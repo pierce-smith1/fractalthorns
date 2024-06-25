@@ -1,5 +1,6 @@
 import * as Domain from "../descriptors/domain";
-import * as Episodic from "../descriptors/episodic";
+import * as PublicEpisodic from "../descriptors/public/episodic";
+import * as PublicImage from "../descriptors/public/image";
 import * as GenericUtil from "../genericutil";
 import * as EpisodicLoader from "../loaders/episodic";
 import * as ImageLoader from "../loaders/image";
@@ -27,13 +28,11 @@ export async function find_image_items(term: string): ReturnType<typeof find_ite
             image.name.includes(term) || 
             image.title.includes(term) || 
             image.characters?.map?.(char => char.toLowerCase())?.includes?.(term)
-        )
-        .map((image, i, array) => ({...image, ordinal: array.length - i, date: image.date.toString()}));
+        );
 
     const image_items = matching_images.map(image => ({
         domain: "image" as const, 
-        name: image.name, 
-        image: image
+        image: PublicImage.to_public_model(image, images),
     }));
     return image_items;
 }
@@ -43,9 +42,8 @@ export async function find_episodic_items(term: string): ReturnType<typeof find_
     const matching_records = episodic.records.filter(record => record.solved && record.title.includes(term));
 
     const record_items = matching_records.map(record => ({
-        domain: "episodic" as const, 
-        record_name: record.name, 
-        record: Episodic.redact(record)
+        domain: "episodic-item" as const, 
+        record: PublicEpisodic.redact(record)
     }));
     return record_items;
 }
@@ -72,10 +70,10 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
     const lines = Object.entries(results)
         .flatMap(([name, matches]) => matches
             .map(match => ({
-                domain: "episodic" as const,
+                domain: "episodic-line" as const,
                 record_name: name, 
                 line_index: match.line_index,
-                record: Episodic.redact(episodic.records.find(record => record.name === name)!), 
+                record: PublicEpisodic.redact(episodic.records.find(record => record.name === name)!), 
                 matched_text: match.matched_text,
             }))
         );

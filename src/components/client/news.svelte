@@ -36,7 +36,7 @@
                             {#each item.items ?? [] as subitem}
                                 <li>
                                     <strong>{extract_subitem_parts(subitem).type ?? ""}</strong>
-                                    {extract_subitem_parts(subitem).text}
+                                    {@html extract_subitem_parts(subitem).text}
                                 </li>
                             {/each}
                         </ul>
@@ -95,5 +95,9 @@
 
     li {
         padding: 5px 0 5px 0;
+    }
+
+    li :global(a) {
+        text-decoration: underline;
     }
 </style>
