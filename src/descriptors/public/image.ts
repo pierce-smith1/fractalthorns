@@ -23,7 +23,7 @@ export type AllImagesRequest = Interfaces.ModelFromInterface<typeof all_images_r
 export const image_response = {
     name: {
         type: Interfaces.fields.required_string,
-        description: "The identifying name of the image, i.e. the one found in URLs.",
+        description: "The identifying name of the image. This is the name used in URLs.",
     },
     title: {
         type: Interfaces.fields.required_string,

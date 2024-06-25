@@ -5,11 +5,11 @@ import * as PublicEpisodic from "./episodic";
 export const domain_search_result = {
     type: {
         type: Interfaces.fields.required_string,
-        description: "The type of the search that this result originated from: either `images`, `episodic-item`, or `episodic-line`.",
+        description: "The type of the search that this result originated from: either `image`, `episodic-item`, or `episodic-line`.",
     },
     image: {
         type: Interfaces.fields.optional_object(PublicImage.image_response),
-        description: "If this was an `images` search, the image that was found.",
+        description: "If this was an `image` search, the image that was found.",
     },
     record: {
         type: Interfaces.fields.optional_object(PublicEpisodic.redactable_record_entry),
@@ -33,7 +33,7 @@ export const domain_search_request = {
     },
     type: {
         type: Interfaces.fields.required_string,
-        description: "Must be one of `images`, `episodic-item`, or `episodic-line`. If `images`, the term will be searched against the titles of images using a simple case-insensitive contains() check. If `episodic-item`, the term will be searched against the titles of records using a simple case-insensitive contains() check. If `episodic-line`, the term will be interpreted as a case-insensitive regex and searched against the text of all solved records."
+        description: "Must be one of `image`, `episodic-item`, or `episodic-line`. If `images`, the term will be searched against the titles of images using a simple case-insensitive contains() check. If `episodic-item`, the term will be searched against the titles of records using a simple case-insensitive contains() check. If `episodic-line`, the term will be interpreted as a case-insensitive regex and searched against the text of all solved records."
     },
 };
 export type DomainSearchRequest = Interfaces.ModelFromInterface<typeof domain_search_request>;
