@@ -12,6 +12,7 @@
     import * as PrivateDomain from "../../descriptors/domain";
     import * as Subproject from "../../descriptors/subproject";
     import * as Episodic from "../../descriptors/public/episodic";
+    import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {
         const neighbor = GenericUtil.neighbors(index, items)[direction === "prev" ? 0 : 1];
@@ -35,15 +36,7 @@
 
     $: available_iterations = new Set(Episodic.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter)));
 
-    // If we switch to a set of nav items that doesn't have anything matching a certain
-    // iteration we have selected, then deselect that iteration
-    $: for (const iter of Episodic.iterations) {
-        if (!available_iterations.has(iter)) {
-            $nav_state.iteration_filters.delete(iter);
-        }
-    }
-
-    $: items_to_show = nav_items.filter(item => !item.hide);
+    $: items_to_show = $nav_state.item_filters.reduce((acc, filter) => acc.filter(filter.fn), nav_items);
 
     $: current_page_index = items_to_show.findIndex(item =>
         (item.domain === "image" && $current.domain === "image" && item.image.name === $current.name) ||
@@ -60,7 +53,12 @@
 </script>
 
 <div class="nav-items-list">
-    <IterationFilterButtons {available_iterations} />
+    <div class="filter-buttons">
+        <IterationFilterButtons {available_iterations} />
+        {#if $current.domain === "image"}
+            <ImageDescriptionFilterButton />
+        {/if}
+    </div>
     <div class="items-list">
         {#each items_to_show as item, i}
             <div id={`item-${i}`}>
@@ -99,6 +97,14 @@
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
+    }
+
+    .filter-buttons {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
     }
 
     .items-list {

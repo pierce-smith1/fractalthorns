@@ -6,12 +6,13 @@ import * as Fetchers from "../../fetchers";
 import * as Subproject from "../../descriptors/subproject";
 import * as Episodic from "../../descriptors/public/episodic";
 
-export type NavItem = PrivateDomain.Item & {hide?: boolean};
+export type NavItemFilter = {name: string, fn: (item: PrivateDomain.Item) => boolean};
+
 export type NavState = {
-    nav_results: Array<NavItem>,
-    search_results: Array<NavItem>,
+    nav_results: Array<PrivateDomain.Item>,
+    search_results: Array<PrivateDomain.Item>,
     search_term: string,
-    iteration_filters: Set<Episodic.Iteration>,
+    item_filters: Array<NavItemFilter>,
     search_waiting: boolean,
     viewing_search_results: boolean,
 };
@@ -20,10 +21,18 @@ export const nav_state = Store.writable<NavState>({
     nav_results: [],
     search_results: [],
     search_term: "",
-    iteration_filters: new Set(),
+    item_filters: [],
     search_waiting: false,
     viewing_search_results: false,
 });
+
+export function register_filter(filter: NavItemFilter) {
+    nav_state.update(state => ({...state, item_filters: [...state.item_filters, filter]}));
+}
+
+export function unregister_filter(name: string) {
+    nav_state.update(state => ({...state, item_filters: state.item_filters.filter(filter => filter.name !== name)}));
+}
 
 export function set_domain_items(domain: PrivateDomain.Domain) {
     const new_items_promise: Promise<Array<PrivateDomain.Item>> = (async () => {

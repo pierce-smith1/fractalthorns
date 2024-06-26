@@ -49,6 +49,10 @@ export const image_response = {
         type: Interfaces.fields.optional_string,
         description: `If applicable, the iteration the image depicts.`,
     },
+    has_description: {
+        type: Interfaces.fields.required_boolean,
+        description: "True if and only if the image has a description, i.e. a call to `image_description` will return a non-empty `description` field."
+    },
     characters: {
         type: Interfaces.fields.required_array(Interfaces.fields.required_string),
         description: "A list of characters depicted in this image, including non-canon variants of those characters. May be empty.",
@@ -69,6 +73,7 @@ export function to_public_model(image: Image.Model, all_images: Array<Image.Mode
         image_url: image.image_url,
         thumb_url: image.thumb_url,
         canon: image.canon,
+        has_description: !!image.description,
         characters: image.characters ?? [],
         speedpaint_video_url: image.speedpaint_video_id ? Image.speedpaint_id_to_url(image.speedpaint_video_id) : undefined,
     };
