@@ -3,7 +3,7 @@
     import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";
-    import {nav_state, set_domain_items} from "./nav.ts";
+    import {nav_state} from "./nav.ts";
 
     import PageLink from "./page_link.svelte";
     import Loading from "./loading.svelte";
@@ -41,13 +41,8 @@
         };
     }
 
-    function load_nav_items() {
-        set_domain_items(domain);
-    }
-    
     function on_click() {
         hide_search();
-        load_nav_items();
     }
 </script>
 
