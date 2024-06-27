@@ -15,9 +15,9 @@
         selected_iterations.clear();
     }
 
-    // clear selection on changing tabs
-    // If someone complains about this I'm finally gonna shoot up that cheerios factory
-    $: if ($current.domain) {
+    // Clear selection on changing tabs
+    $: domain = $current.domain;
+    $: if (domain) {
         clear_selected();
     }
 
