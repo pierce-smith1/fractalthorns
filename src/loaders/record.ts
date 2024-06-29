@@ -76,7 +76,7 @@ function parse_body(lines: Array<string>): Array<Record.LineModel> {
     const parsed_lines: Array<Record.LineModel> = [];
 
     const sabre_line_regex = /^< *(.+) *>/;
-    const label_regex = /^(\w.*?)(\((?:in )?\w*?\))? *(\((?:in )?\w*?\))? : *(.*)?/;
+    const label_regex = /^(\w.*?)(?:\(((?:in )?[\w\s]*?)\))? *(?:\(((?:in )?[\w\s]*?)\))? : *(.*)?/;
 
     let current_label: Omit<Record.LineModel, "text"> | undefined;
     let accumulated_text = "";
@@ -105,7 +105,7 @@ function parse_body(lines: Array<string>): Array<Record.LineModel> {
         if (label_match) {
             const [, character, modifier_1, modifier_2, inline_text] = label_match;
 
-            const language = [modifier_1, modifier_2].find(modifier => modifier?.startsWith("in"));
+            const language = [modifier_1, modifier_2].find(modifier => modifier?.startsWith("in"))?.substring(3);
             const emphasis = [modifier_1, modifier_2].find(modifier => modifier && !modifier.startsWith("in"));
             const is_inline = !!inline_text;
 

@@ -51,7 +51,7 @@
                 <span class="speaker">{line.character}</span>
             {/if}
             {#if line.emphasis}
-                <span class="emphasis">{line.emphasis}</span>
+                <span class="emphasis">({line.emphasis})</span>
             {/if}
             {#if should_show_language}
                 <span class="language"><em>(in {line.language})</em></span>
