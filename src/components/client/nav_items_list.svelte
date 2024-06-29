@@ -41,7 +41,8 @@
     $: current_page_index = items_to_show.findIndex(item =>
         (item.domain === "image" && $current.domain === "image" && item.image.name === $current.name) ||
         (item.domain === "episodic-item" && $current.domain === "episodic" && item.record.name == $current.record_name) ||
-        (item.domain === "episodic-line" && $current.domain === "episodic" && item.record.name == $current.record_name && item.line_index == $current.line_index)
+        (item.domain === "episodic-line" && $current.domain === "episodic" && item.record.name == $current.record_name && item.line_index == $current.line_index) ||
+        (item.domain === "subproject" && $current.domain === "subproject" && item.name == $current.name)
     );
 
     $: {
@@ -50,6 +51,7 @@
     }
 
     $: neighbor_pages = GenericUtil.neighbors(current_page_index, items_to_show);
+    $: console.log({neighbor_pages, items_to_show, current_page_index});
 </script>
 
 <div class="nav-items-list">

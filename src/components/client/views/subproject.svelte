@@ -13,6 +13,7 @@
 
     $: subproject_index = Subproject.subprojects.findIndex(sp => sp.name === name);
     $: [prev_subproject, next_subproject] = GenericUtil.neighbors(subproject_index, Subproject.subprojects);
+
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>
@@ -29,8 +30,6 @@
 {#await Fetchers.get.full_episodic({})}
 {:then episodic}
     <Keynav 
-        page_up={{domain: "subproject", name: prev_subproject.name}}
-        page_down={{domain: "subproject", name: next_subproject.name}}
         page_left={{domain: "episodic", record_name: episodic.chapters[0].records[0].name ?? ""}}
     />
 {/await}
