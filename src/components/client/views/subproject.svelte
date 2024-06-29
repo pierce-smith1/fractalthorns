@@ -10,10 +10,6 @@
     import Yokscr from "./subprojects/yokscr.svelte";
 
     export let name: string | undefined;
-
-    $: subproject_index = Subproject.subprojects.findIndex(sp => sp.name === name);
-    $: [prev_subproject, next_subproject] = GenericUtil.neighbors(subproject_index, Subproject.subprojects);
-
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>

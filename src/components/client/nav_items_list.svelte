@@ -51,7 +51,6 @@
     }
 
     $: neighbor_pages = GenericUtil.neighbors(current_page_index, items_to_show);
-    $: console.log({neighbor_pages, items_to_show, current_page_index});
 </script>
 
 <div class="nav-items-list">
