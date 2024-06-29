@@ -12,7 +12,7 @@
         if (width > 1200) {
             $layout_state = "full";
         } else if ($layout_state === "full") {
-            $layout_state = "only-nav";
+            $layout_state = "only-page";
         }
     }
 
