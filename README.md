@@ -4,7 +4,7 @@
 
 [Visit the live site!](https://fractalthorns.com/)
 
-fractalthorns is my personal site and a nexus of the artwork, writing, and other things I do. It is the successor to [doughbyte.com](https://doughbyte.com).
+fractalthorns is my personal site and a nexus of the artwork, writing, and other things I do.
 
 fractalthorns is an [Astro](https://astro.build/) site with a frontend in Svelte. It is designed around showcasing static content and reads this content directly from the filesystem. Content is served over an API which is effectively private but is still open for public use. Please get in touch with me if you're interested in using the API to make your own apps using fractalthorn's content.
 
