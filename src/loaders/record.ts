@@ -28,6 +28,9 @@ export function parse_from(record_contents: string): Record.Model {
         .done();
 
     const record = {...parsed_header, characters, lines: parsed_lines};
+    record.lines = assign_missing_languages(record.lines, record.languages);
+    record.languages = record_missing_languages(record.lines, record.languages);
+
     return record;
 }
 
@@ -60,6 +63,28 @@ function parse_languages(header_lines: Array<string>): Array<string> {
         .done();
     
     return languages;
+}
+
+function assign_missing_languages(lines: Array<Record.LineModel>, languages: Array<string>): Array<Record.LineModel> {
+    const new_lines = lines.map((line, i) => {
+        if (line.language || line.type === "Sabre") {
+            return line;
+        }
+
+        const previous_line_with_language = lines.slice(0, i).findLast(line => line.language);
+        const first_language_in_record = languages[0];
+
+        return {...line,
+            language: previous_line_with_language?.language ?? first_language_in_record,
+        };
+    });
+    return new_lines;
+}
+
+function record_missing_languages(lines: Array<Record.LineModel>, languages: Array<string>): Array<string> {
+    const languages_in_lines = lines.map(line => line.language?.toLowerCase()).filter(x => x) as Array<string>;
+    const all_languages = [...new Set([...languages, ...languages_in_lines])];
+    return all_languages;
 }
 
 function parse_header(lines: Array<string>): Pick<Record.Model, "requested" | "options" | "header_lines" | "languages"> {
@@ -113,7 +138,7 @@ function parse_body(lines: Array<string>): Array<Record.LineModel> {
 
             current_label = {
                 type: is_inline ? "Inline" : "Block", 
-                character: character === "_" ? Record.narrator_character : character, 
+                character: character === "_" ? Record.narrator_character : character.trim(), 
                 language, 
                 emphasis
             };

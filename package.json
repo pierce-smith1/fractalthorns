@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "env-cmd -f rvaenv astro dev",
     "start": "env-cmd -f rvaenv astro dev",
-    "build": "astro check && astro build",
+    "build": "vitest && astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.3",
@@ -25,7 +26,8 @@
     "p5": "^1.9.0",
     "sharp": "^0.33.1",
     "svelte": "^4.2.10",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.6.0"
   },
   "devDependencies": {
     "sass": "^1.70.0"

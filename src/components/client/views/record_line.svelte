@@ -21,7 +21,8 @@
 
     const should_show_language = line.language 
         && line.language !== last_line?.language
-        && line.character !== Record.narrator_character;
+        && line.character !== Record.narrator_character
+        && last_line?.type !== "Sabre";
 
     function emphasize_keywords(text: string): string {
         let emphasized_text = text;
@@ -54,7 +55,7 @@
                 <span class="emphasis">({line.emphasis})</span>
             {/if}
             {#if should_show_language}
-                <span class="language"><em>(in {line.language})</em></span>
+                <span class="language"><em>(in {line.language?.toUpperCase()})</em></span>
             {/if}
         </div>
     {/if}
