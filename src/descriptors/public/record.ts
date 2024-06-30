@@ -7,11 +7,11 @@ export const line_model = {
     },
     character: {
         type: Interfaces.fields.optional_string,
-        description: "The character who says this line. Will be \"Narrator\" if the line is not attributed to a character, such as for generic narration. May be omitted if the character is undetermined or ambiguous.",
+        description: "The character who says this line. Will be \"Narrator\" if the line is not attributed to a character, such as for generic narration. May be omitted if the character is undetermined or ambiguous. Not necesarily in uppercase or any particular casing.",
     },
     language: {
         type: Interfaces.fields.optional_string,
-        description: "The language this line was originally said in. May be empty if the langauge is undetermined or ambiguous.",
+        description: "The language this line was originally said in. May be empty if the langauge is undetermined or ambiguous. Not necessarily in uppercase or any particular casing.",
     },
     emphasis: {
         type: Interfaces.fields.optional_string,
