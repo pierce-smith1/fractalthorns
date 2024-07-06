@@ -1,0 +1,279 @@
+---
+    import Default from "../../layouts/default.astro";
+---
+
+<Default>
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="bitplot" width=1200 height=800 />
+        </div>
+        <div class="controls-container">
+            <input type="file" id="bin-input" />
+
+            <label for="display-percentage">Display width</label>
+            <input type="range" id="display-percentage" min="2" max="200" value="200" />
+
+            <label for="display-offset">Offset</label>
+            <input type="range" id="display-offset" min="0" max="200" value="0" />
+
+            <fieldset>
+                <legend>Data format</legend>
+
+                <input type="radio" id="24bpp-rgb" name="format" checked />
+                <label for="24bpp-rgb">24bpp-rgb</label>
+
+                <input type="radio" id="8bpp-rgb" name="format" />
+                <label for="8bpp-rgb">8bpp-rgb</label>
+
+                <input type="radio" id="1bpp-rgb" name="format" />
+                <label for="1bpp-rgb">1bpp-rgb</label>
+            </fieldset>
+        </div>
+    </div>
+</Default>
+
+<script>
+    import p5 from "p5";
+
+    let bytes: ArrayBuffer | undefined = undefined;
+
+    const ctx = new p5(p5 => {
+        p5.setup = () => {
+            p5.createCanvas(1200, 800, bitplot_canvas_element);
+            p5.noSmooth();
+        };
+
+        p5.draw = () => {
+            if (!bytes) {
+                return;
+            }
+
+            draw(ctx, bytes, get_settings());
+        }
+    });
+
+    const bin_input_element = document.querySelector<HTMLInputElement>("#bin-input")!;
+    bin_input_element.addEventListener("change", event => {
+        const file = bin_input_element.files?.[0];
+        if (!file) {
+            return;
+        }
+
+        file.arrayBuffer().then(buffer => {
+            bytes = buffer;
+        });
+    });
+
+    const bitplot_canvas_element = document.querySelector<HTMLCanvasElement>("#bitplot")!;
+
+    const base_display_width = 1200;
+    const base_display_height = 1200;
+
+    let current_display_row = 0;
+
+    ctx.mouseWheel = event => {
+        // @ts-ignore
+        current_display_row += event.deltaY;
+
+        if (current_display_row < 0) {
+            current_display_row = 0;
+        }
+
+        return false;
+    };
+
+    type Settings = {
+        display_width_percentage: number,
+        display_offset: number,
+        display_row: number,
+        format: "24bpp-rgb" | "8bpp-rgb" | "1bpp-rgb",
+        pixel_scale: number,
+    };
+
+    function get_settings(): Settings {
+        function get_display_width_percentage() {
+            const display_width_percentage = parseInt(document.querySelector<HTMLInputElement>("#display-percentage")?.value ?? "200");
+            return display_width_percentage;
+        }
+        function get_display_offset() {
+            const display_offset = parseInt(document.querySelector<HTMLInputElement>("#display-offset")?.value ?? "0");
+            return display_offset;
+        }
+
+        function get_format() {
+            const format_buttons = [...document.querySelectorAll<HTMLInputElement>("input[type=\"radio\"]")];
+            const checked_button = format_buttons.find(button => button.checked)!;
+            
+            return checked_button.id as Settings["format"];
+        }
+
+        const settings = {
+            display_width_percentage: get_display_width_percentage(),
+            display_offset: get_display_offset(),
+            display_row: current_display_row,
+            format: get_format(),
+            pixel_scale: 2,
+        } as const;
+        return settings;
+    }
+
+    function display_width(settings: Settings) {
+        return Math.floor(base_display_width * (settings.display_width_percentage / 200));
+    }
+
+    function pixels_per_row(settings: Settings): number {
+        const pixels_per_row = Math.floor(display_width(settings) / settings.pixel_scale);
+        return pixels_per_row;
+    }
+
+    function visible_rows(settings: Settings): number {
+        const visible_rows = Math.ceil(base_display_height / settings.pixel_scale);
+        return visible_rows;
+    }
+
+    type RealCoord = {
+        x: number,
+        y: number,
+    } & {__brand: "RealCoord"};
+
+    type PixelCoord = {
+        x: number,
+        y: number,
+    } & {__brand: "PixelCoord"};
+
+    type Pixel = {
+        r: number,
+        g: number,
+        b: number,
+    };
+
+    const pixel_providers: {[key in Settings["format"]]: (bytes: ArrayBuffer) => Array<Pixel>} = {
+        "24bpp-rgb": (bytes: ArrayBuffer) => {
+            const pixels = [...new Uint8Array(bytes)].flatMap((byte, i, array) => {
+                if (i % 3 != 0) {
+                    return [];
+                }
+
+                return [{r: array[i], g: array[i + 1] ?? 0, b: array[i + 2] ?? 0}];
+            });
+            return pixels;
+        },
+
+        "8bpp-rgb": (bytes: ArrayBuffer) => {
+            const pixels = [...new Uint8Array(bytes)].map((byte, i, array) => {
+                // These bytes would be indexes into a palette, so without knowing the palette,
+                // the best thing to do is to make the colors effectively "random"
+                const pixel = {
+                    r: (((byte & 0b0000_0001) >> 0) + ((byte & 0b0000_1000) >> 2) + ((byte & 0b0100_0000) >> 4)) * (255 / 8),
+                    g: (((byte & 0b0000_0010) >> 1) + ((byte & 0b0001_0000) >> 3) + ((byte & 0b1000_0000) >> 5)) * (255 / 8),
+                    b: (((byte & 0b0000_0100) >> 2) + ((byte & 0b0010_0000) >> 4)) * (255 / 4),
+                };
+                return pixel;
+            });
+            return pixels;
+        },
+
+        "1bpp-rgb": (bytes: ArrayBuffer) => {
+            const pixels = [...new Uint8Array(bytes)].flatMap((byte, i, array) => {
+                const white = {r: 255, g: 255, b: 255};
+                const black = {r: 0, g: 0, b: 0};
+                const dots = [
+                    byte & 0b1000_0000 ? white : black,
+                    byte & 0b0100_0000 ? white : black,
+                    byte & 0b0010_0000 ? white : black,
+                    byte & 0b0001_0000 ? white : black,
+                    byte & 0b0000_1000 ? white : black,
+                    byte & 0b0000_0100 ? white : black,
+                    byte & 0b0000_0010 ? white : black,
+                    byte & 0b0000_0001 ? white : black,
+                ];
+                return dots;
+            });
+            return pixels;
+        },
+    };
+
+    function real_to_pixel_coord(real: RealCoord, settings: Settings): PixelCoord {
+        const pixel_coord = {
+            x: Math.floor(real.x / settings.pixel_scale),
+            y: Math.floor(real.y / settings.pixel_scale),
+        };
+        return pixel_coord as PixelCoord;
+    }
+
+    function pixel_to_real_coord(pixel: PixelCoord, settings: Settings): RealCoord {
+        const real_coord = {
+            x: pixel.x * settings.pixel_scale,
+            y: pixel.y * settings.pixel_scale,
+        };
+        return real_coord as RealCoord;
+    }
+
+    function pixel_index_to_pixel_coord(index: number, settings: Settings): PixelCoord {
+        const pixel_x = index % pixels_per_row(settings);
+        const pixel_y = Math.floor(index / pixels_per_row(settings)) * settings.pixel_scale;
+        return {x: pixel_x, y: pixel_y} as PixelCoord;
+    }
+
+    function pixel_coords_to_pixel_index(pixel_coord: PixelCoord, settings: Settings): number {
+        const index = pixel_coord.x + pixel_coord.y * pixels_per_row(settings);
+        return index;
+    }
+
+    function pixels_with_coords(pixels: Array<Pixel>, settings: Settings): Array<Pixel & PixelCoord> {
+        const with_coords = pixels.map((pixel, i) => ({...pixel, ...pixel_index_to_pixel_coord(i, settings)}));
+        return with_coords;
+    }
+
+    function draw(p5: p5, bytes: ArrayBuffer, settings: Settings) {
+        p5.background(200);
+
+        const pixels = pixel_providers[settings.format](bytes);
+        const visible_pixels = pixels.slice(settings.display_offset + pixels_per_row(settings) * current_display_row);
+
+        draw_pixels(p5, visible_pixels, settings);
+    }
+
+    function draw_pixels(p5: p5, pixels: Array<Pixel>, settings: Settings) {
+        const image = p5.createImage(pixels_per_row(settings), visible_rows(settings));
+
+        image.loadPixels();
+
+        function set_pixel(image: p5.Image, pixel_coord: PixelCoord, pixel: Pixel) {
+            const index = pixel_coords_to_pixel_index(pixel_coord, settings);
+            image.pixels[index * 4] = pixel.r;
+            image.pixels[index * 4 + 1] = pixel.g;
+            image.pixels[index * 4 + 2] = pixel.b;
+            image.pixels[index * 4 + 3] = 255;
+        }
+
+        for (let i = 0; i < pixels.length; i++) {
+            const pixel_x = i % Math.floor(display_width(settings) / settings.pixel_scale);
+            const pixel_y = Math.floor(i / (display_width(settings) / settings.pixel_scale));
+
+            const pixel_coord = {x: pixel_x, y: pixel_y} as PixelCoord;
+            set_pixel(image, pixel_coord, pixels[i]);
+        }
+
+        image.updatePixels();
+
+        p5.push();
+        p5.scale(settings.pixel_scale, settings.pixel_scale);
+
+        p5.image(image, 0, 0);
+
+        p5.pop();
+    }
+</script>
+
+<style>
+    .container {
+        display: flex;
+        flex-flow: row nowrap;
+    }
+
+    .controls-container {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+</style>

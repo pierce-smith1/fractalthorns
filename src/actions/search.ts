@@ -61,7 +61,6 @@ export async function search_in_record(record: Record.Model & {title: string}, o
 
     enumerate_lines:
     for (const [line, i] of record.lines.map((line, i) => [line, i] as const)) {
-
         const line_satisfies_filters = option_is_satisfied_by(options.from_speaker, line.character)
             || option_is_satisfied_by(options.in_language, line.language)
 
