@@ -4,7 +4,6 @@ import * as PrivateDomain from "../../descriptors/domain";
 import * as Domain from "../../descriptors/public/domain";
 import * as Fetchers from "../../fetchers";
 import * as Subproject from "../../descriptors/subproject";
-import * as Episodic from "../../descriptors/public/episodic";
 
 export type NavItemFilter = {name: string, fn: (item: PrivateDomain.Item) => boolean};
 
