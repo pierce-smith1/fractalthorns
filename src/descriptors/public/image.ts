@@ -61,10 +61,27 @@ export const image_response = {
         type: Interfaces.fields.optional_string,
         description: "If it exists, the URL of the speedpaint for the image.",
     },
+    primary_color: {
+        type: Interfaces.fields.optional_string,
+        description: "An approximation of the most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
+    },
+    secondary_color: {
+        type: Interfaces.fields.optional_string,
+        description: "An approximation of the second most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
+    },
 };
 export type ImageResponse = Interfaces.ModelFromInterface<typeof image_response>;
 
-export function to_public_model(image: Image.Model, all_images: Array<Image.Model>): ImageResponse {
+export const cheap_image_response = {...image_response, 
+    primary_color: undefined, 
+    secondary_color: undefined
+} as Omit<typeof image_response,
+    | "primary_color" 
+    | "secondary_color"
+>;
+export type CheapImageResponse = Interfaces.ModelFromInterface<typeof cheap_image_response>;
+
+export function to_cheap_public_model(image: Image.Model, all_images: Array<Image.Model>): CheapImageResponse {
     const client_image = {
         name: image.name,
         title: image.title,

@@ -27,7 +27,7 @@ const all_images_endpoint = {
     request: PublicImage.all_images_request,
     response: {
         images: {
-            type: Interfaces.fields.required_array(Interfaces.fields.required_object(PublicImage.image_response)),
+            type: Interfaces.fields.required_array(Interfaces.fields.required_object(PublicImage.cheap_image_response)),
             description: "A list of every image, sorted newest to oldest."
         },
     },
