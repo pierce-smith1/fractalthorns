@@ -9,6 +9,8 @@ export type Model = {
     characters?: Array<string>,
     description?: string,
     speedpaint_video_id?: string,
+    primary_color?: string,
+    secondary_color?: string,
 };
 
 export function speedpaint_id_to_url(id: string) {

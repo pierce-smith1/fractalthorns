@@ -17,6 +17,8 @@ export async function get(name: string): Promise<Model | undefined> {
     const info_file_contents = await Filesystem.read(info_path);
     const descr_file_contents = await Filesystem.exists(descr_path) ? await Filesystem.read(descr_path) : undefined;
 
+    const [primary_color, secondary_color] = await get_dominant_colors(name);
+
     const model = JSON.parse(info_file_contents) as Model;
     const final_model = {...model,
         name,
@@ -24,6 +26,8 @@ export async function get(name: string): Promise<Model | undefined> {
         image_url: `/serve/image/${name}`,
         thumb_url: `/serve/thumb/${name}`,
         description: descr_file_contents,
+        primary_color,
+        secondary_color,
     };
 
     return final_model;
@@ -49,7 +53,13 @@ export async function get_all(): Promise<Array<Model>> {
     return images_ordered_by_date;
 }
 
-export async function get_dominant_colors(name: string): Promise<[string | undefined, string | undefined]> {
+type DominantColors = [string | undefined, string | undefined];
+let dominant_colors_cache: {[name: string]: DominantColors} = {};
+export async function get_dominant_colors(name: string): Promise<DominantColors> {
+    if (name in dominant_colors_cache) {
+        return dominant_colors_cache[name];
+    }
+
     type Color = {r: number, g: number, b: number};
     type Brightness = "d" | "m" | "l";
     type ColorBucket = `${Brightness}${Brightness}${Brightness}`;
@@ -146,5 +156,8 @@ export async function get_dominant_colors(name: string): Promise<[string | undef
     const dominant_strings = dominant_colors.map(color => color ? color_to_string(color) : undefined);
 
     const [primary_string, secondary_string] = dominant_strings;
+
+    dominant_colors_cache[name] = [primary_string, secondary_string];
+
     return [primary_string, secondary_string];
 }

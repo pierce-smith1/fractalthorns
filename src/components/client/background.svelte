@@ -118,17 +118,24 @@
             }
             current_theme = theme;
         });
-    })
+    });
+
+    const backgrounds = [
+        "canyon",
+        "inferno",
+        "pollen",
+        "sand",
+        "saronite",
+        "shell",
+        "twist",
+    ];
+
+    const background_for_today = backgrounds[new Date().getDay() % backgrounds.length];
 </script>
 
 <div>
-    <div class="background" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-canyon.png)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
-    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-canyon-overlay.png)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
-    
-    <!--
-    <div class="background" style:background-color={current_theme.primary_color}></div>
-    -->
-
+    <div class="background" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.png)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
+    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.png)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
     <div class="canvas">
         <Canvas {artist} />
     </div>

@@ -72,16 +72,7 @@ export const image_response = {
 };
 export type ImageResponse = Interfaces.ModelFromInterface<typeof image_response>;
 
-export const cheap_image_response = {...image_response, 
-    primary_color: undefined, 
-    secondary_color: undefined
-} as Omit<typeof image_response,
-    | "primary_color" 
-    | "secondary_color"
->;
-export type CheapImageResponse = Interfaces.ModelFromInterface<typeof cheap_image_response>;
-
-export function to_cheap_public_model(image: Image.Model, all_images: Array<Image.Model>): CheapImageResponse {
+export function to_public_model(image: Image.Model, all_images: Array<Image.Model>): ImageResponse {
     const client_image = {
         name: image.name,
         title: image.title,
@@ -93,6 +84,8 @@ export function to_cheap_public_model(image: Image.Model, all_images: Array<Imag
         has_description: !!image.description,
         characters: image.characters ?? [],
         speedpaint_video_url: image.speedpaint_video_id ? Image.speedpaint_id_to_url(image.speedpaint_video_id) : undefined,
+        primary_color: image.primary_color,
+        secondary_color: image.secondary_color,
     };
     return client_image;
 }

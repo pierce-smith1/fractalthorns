@@ -12,13 +12,5 @@ export const GET = Endpoint.use_get_handler<"single_image">(async (request, over
         return override(new Response(null, {status: 404}));
     }
 
-    const [primary_color, secondary_color] = await ImageLoader.get_dominant_colors(image.name);
-    
-    const cheap_model = PublicImage.to_cheap_public_model(image, all_images);
-    const model = {...cheap_model,
-        primary_color,
-        secondary_color,
-    };
-
-    return model;
+    return PublicImage.to_public_model(image, all_images);
 });
