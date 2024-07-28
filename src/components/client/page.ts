@@ -21,7 +21,7 @@ export type Theme = {
 
 export const default_theme = {
     primary_color: "#ffffff",
-    secondary_color: "#000000",
+    secondary_color: "#ea0042",
 };
 
 export async function get_theme(current_page: Domain.Page): Promise<Theme> {

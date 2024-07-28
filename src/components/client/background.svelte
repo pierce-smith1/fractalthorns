@@ -112,13 +112,18 @@
 
     let current_theme = Page.default_theme;
     Page.theme_promise.subscribe(theme_promise => {
-        theme_promise.then(theme => current_theme = theme);
+        theme_promise.then(theme => {
+            if (theme === Page.default_theme) {
+                return;
+            }
+            current_theme = theme;
+        });
     })
 </script>
 
 <div>
-    <div class="background" style:background-image={`url(/assets/images/common/dodecas.png)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
-    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/dodecas-overlay.png)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
+    <div class="background" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-canyon.png)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
+    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-canyon-overlay.png)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
     
     <!--
     <div class="background" style:background-color={current_theme.primary_color}></div>
