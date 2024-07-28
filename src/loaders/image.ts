@@ -79,8 +79,8 @@ export async function get_dominant_colors(name: string): Promise<DominantColors>
 
         for (const color of colors) {
             const bucket_name = color_to_bucket(color);
-            buckets[bucket_name] ??= [];
-            buckets[bucket_name].push(color);
+            const bucket = buckets[bucket_name] ??= [];
+            bucket.push(color);
         }
 
         return buckets;

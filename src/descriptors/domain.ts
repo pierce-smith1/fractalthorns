@@ -1,4 +1,4 @@
-import * as PublicDomain from "./public/domain";
+import * as Api from "../api";
 
 export const domains = [
     "image",
@@ -16,13 +16,13 @@ export type Page =
     | {domain: "subproject", name?: string}
 
 export type Item = 
-    | {domain: "image", image: Exclude<PublicDomain.DomainSearchResult["image"], undefined>}
-    | {domain: "episodic-item", record: Exclude<PublicDomain.DomainSearchResult["record"], undefined>}
+    | {domain: "image", image: Exclude<Api.DomainSearchResult["image"], undefined>}
+    | {domain: "episodic-item", record: Exclude<Api.DomainSearchResult["record"], undefined>}
     | {
         domain: "episodic-line", 
-        record: Exclude<PublicDomain.DomainSearchResult["record"], undefined>, 
-        matched_text: Exclude<PublicDomain.DomainSearchResult["record_matched_text"], undefined>,
-        line_index: Exclude<PublicDomain.DomainSearchResult["record_line_index"], undefined>,
+        record: Exclude<Api.DomainSearchResult["record"], undefined>, 
+        matched_text: Exclude<Api.DomainSearchResult["record_matched_text"], undefined>,
+        line_index: Exclude<Api.DomainSearchResult["record_line_index"], undefined>,
     }
     | {domain: "subproject", name?: string}
 
@@ -31,7 +31,7 @@ export type SearchItemType =
     | "episodic-item"
     | "episodic-line"
 
-export function result_to_item(result: PublicDomain.DomainSearchResult): Item {
+export function result_to_item(result: Api.DomainSearchResult): Item {
     switch (result.type) {
         case "image": return {domain: result.type, image: result.image!};
         case "episodic-item": return {domain: result.type, record: result.record!}; 
@@ -41,7 +41,7 @@ export function result_to_item(result: PublicDomain.DomainSearchResult): Item {
     return undefined!;
 }
 
-export function item_to_result(item: Item): PublicDomain.DomainSearchResult {
+export function item_to_result(item: Item): Api.DomainSearchResult {
     const empty = {image: undefined, record: undefined, record_matched_text: undefined, record_line_index: undefined};
 
     switch (item.domain) {

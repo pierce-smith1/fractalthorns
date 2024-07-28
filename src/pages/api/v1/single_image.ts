@@ -1,5 +1,5 @@
 import * as ImageLoader from "../../../loaders/image";
-import * as PublicImage from "../../../descriptors/public/image";
+import * as Image from "../../../descriptors/image";
 import * as Endpoint from "../../../endpoint";
 
 export const GET = Endpoint.use_get_handler<"single_image">(async (request, override) => {
@@ -12,5 +12,5 @@ export const GET = Endpoint.use_get_handler<"single_image">(async (request, over
         return override(new Response(null, {status: 404}));
     }
 
-    return PublicImage.to_public_model(image, all_images);
+    return Image.to_public_model(image, all_images);
 });

@@ -2,12 +2,13 @@
     import {marked} from "marked";
     import {onMount} from "svelte";
 
-    import * as Record from "../../../descriptors/public/record";
-    import * as Episodic from "../../../descriptors/public/episodic";
+    import * as Api from "../../../api";
+    import * as Record from "../../../descriptors/record";
+    import * as Episodic from "../../../descriptors/episodic";
 
-    export let record: Record.RecordTextResponse;
-    export let line: Record.LineModel;
-    export let last_line: Record.LineModel | undefined = undefined;
+    export let record: Api.RecordTextResponse;
+    export let line: Api.RecordLine;
+    export let last_line: Api.RecordLine | undefined = undefined;
     export let line_index: number;
     export let requested_line_index: number | undefined;
 

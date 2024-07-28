@@ -1,5 +1,6 @@
 <script lang="ts">
-    import * as Episodic from "../../../descriptors/public/episodic";
+    import * as Api from "../../../api";
+    import * as Episodic from "../../../descriptors/episodic";
     import * as Fetchers from "../../../fetchers";
     import Loading from "../loading.svelte";
 
@@ -7,8 +8,8 @@
 
     import PageLink from "../page_link.svelte";
 
-    export let record: Episodic.RedactableRecordEntry;
-    export let prev_neighbor: Episodic.RedactableRecordEntry | undefined = undefined;
+    export let record: Api.RedactableRecordEntry;
+    export let prev_neighbor: Api.RedactableRecordEntry | undefined = undefined;
 
     export let preview_line_index: number | undefined = undefined;
     export let preview_matched_text: string | undefined = undefined;
@@ -46,7 +47,7 @@
         return rejoined_text;
     }
 
-    function should_show_chapter(record: Episodic.RedactableRecordEntry, prev?: Episodic.RedactableRecordEntry) {
+    function should_show_chapter(record: Api.RedactableRecordEntry, prev?: Api.RedactableRecordEntry) {
         return !prev || prev.chapter !== record.chapter;
     }
 </script>

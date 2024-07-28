@@ -2,11 +2,8 @@
     import {onMount} from "svelte";
 
     import {nav_state, register_filter, unregister_filter} from "../nav";
-    import {current} from "../page";
 
-    import * as Episodic from "../../../descriptors/public/episodic";
     import * as Domain from "../../../descriptors/domain";
-    import * as Fetchers from "../../../fetchers";
 
     let descriptions_only = false;
 

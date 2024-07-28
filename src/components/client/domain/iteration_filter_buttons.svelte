@@ -4,7 +4,7 @@
     import {nav_state, register_filter, unregister_filter} from "../nav";
     import {current} from "../page";
 
-    import * as Episodic from "../../../descriptors/public/episodic";
+    import * as Episodic from "../../../descriptors/episodic";
     import * as Domain from "../../../descriptors/domain";
 
     export let available_iterations: Set<Episodic.Iteration>;

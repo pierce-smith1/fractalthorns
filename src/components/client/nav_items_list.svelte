@@ -11,7 +11,7 @@
     import * as GenericUtil from "../../genericutil";
     import * as PrivateDomain from "../../descriptors/domain";
     import * as Subproject from "../../descriptors/subproject";
-    import * as Episodic from "../../descriptors/public/episodic";
+    import * as Episodic from "../../descriptors/episodic";
     import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {

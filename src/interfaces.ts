@@ -41,4 +41,4 @@ F extends "required_string"
     ? string :
 Record<string, never>;
 
-export type ModelFromInterface<D extends {[key: string]: {type: any}}> = {[key in keyof D]: FieldType<D[key]["type"]>};
+export type TypeFromSchema<D extends {[key: string]: {type: any}}> = {[key in keyof D]: FieldType<D[key]["type"]>};

@@ -1,13 +1,13 @@
 <script lang="ts">
-    import * as Image from "../../../descriptors/public/image";
-    import * as Episodic from "../../../descriptors/public/episodic";
+    import * as Api from "../../../api";
+    import * as Episodic from "../../../descriptors/episodic";
 
     import {current} from "../page.ts";
 
     import PageLink from "../page_link.svelte";
     import Portrait from "./image_button_portrait.svelte";
 
-    export let image: Image.ImageResponse;
+    export let image: Api.ImageObject;
 </script>
 
 <div class="image-portrait">

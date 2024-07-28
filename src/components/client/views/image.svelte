@@ -1,9 +1,9 @@
 <script lang="ts">
     import {marked} from "marked";
-    import {layout_state} from "../page";
 
-    import * as Episodic from "../../../descriptors/public/episodic";
-    import * as Image from "../../../descriptors/public/image";
+    import {layout_state} from "../page";
+    import * as Episodic from "../../../descriptors/episodic";
+    import * as Image from "../../../descriptors/image";
     import * as Fetchers from "../../../fetchers";
     import * as Nav from "../nav";
 

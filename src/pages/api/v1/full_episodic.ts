@@ -1,6 +1,6 @@
 import * as Endpoint from "../../../endpoint";
 import * as EpisodicLoader from "../../../loaders/episodic";
-import * as PublicEpisodic from "../../../descriptors/public/episodic";
+import * as PublicEpisodic from "../../../descriptors/episodic";
 
 export const GET = Endpoint.use_get_handler<"full_episodic">(async (request, override) => {
     const episodic = await EpisodicLoader.get_by_chapter();

@@ -1,6 +1,6 @@
 import * as Domain from "../descriptors/domain";
-import * as PublicEpisodic from "../descriptors/public/episodic";
-import * as PublicImage from "../descriptors/public/image";
+import * as Episodic from "../descriptors/episodic";
+import * as PublicImage from "../descriptors/image";
 import * as GenericUtil from "../genericutil";
 import * as EpisodicLoader from "../loaders/episodic";
 import * as ImageLoader from "../loaders/image";
@@ -43,7 +43,7 @@ export async function find_episodic_items(term: string): ReturnType<typeof find_
 
     const record_items = matching_records.map(record => ({
         domain: "episodic-item" as const, 
-        record: PublicEpisodic.redact(record)
+        record: Episodic.redact(record)
     }));
     return record_items;
 }
@@ -73,7 +73,7 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
                 domain: "episodic-line" as const,
                 record_name: name, 
                 line_index: match.line_index,
-                record: PublicEpisodic.redact(episodic.records.find(record => record.name === name)!), 
+                record: Episodic.redact(episodic.records.find(record => record.name === name)!), 
                 matched_text: match.matched_text,
             }))
         );

@@ -2,7 +2,7 @@ import * as Store from "svelte/store";
 
 import * as Domain from "../../descriptors/domain";
 import * as Fetchers from "../../fetchers";
-import * as Episodic from "../../descriptors/public/episodic";
+import * as Episodic from "../../descriptors/episodic";
 
 export const current = Store.writable<Domain.Page>({domain: "home"});
 
@@ -25,7 +25,6 @@ export const default_theme = {
 };
 
 export async function get_theme(current_page: Domain.Page): Promise<Theme> {
-
     if (current_page.domain === "image") {
         const image = await Fetchers.get.single_image({name: current_page.name});
         return {

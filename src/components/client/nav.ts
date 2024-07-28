@@ -1,15 +1,15 @@
 import * as Store from "svelte/store";
 
-import * as PrivateDomain from "../../descriptors/domain";
-import * as Domain from "../../descriptors/public/domain";
+import * as Api from "../../api";
+import * as Domain from "../../descriptors/domain";
 import * as Fetchers from "../../fetchers";
 import * as Subproject from "../../descriptors/subproject";
 
-export type NavItemFilter = {name: string, fn: (item: PrivateDomain.Item) => boolean};
+export type NavItemFilter = {name: string, fn: (item: Domain.Item) => boolean};
 
 export type NavState = {
-    nav_results: Array<PrivateDomain.Item>,
-    search_results: Array<PrivateDomain.Item>,
+    nav_results: Array<Domain.Item>,
+    search_results: Array<Domain.Item>,
     search_term: string,
     item_filters: Array<NavItemFilter>,
     search_waiting: boolean,
@@ -33,8 +33,8 @@ export function unregister_filter(name: string) {
     nav_state.update(state => ({...state, item_filters: state.item_filters.filter(filter => filter.name !== name)}));
 }
 
-export function set_domain_items(domain: PrivateDomain.Domain) {
-    const new_items_promise: Promise<Array<PrivateDomain.Item>> = (async () => {
+export function set_domain_items(domain: Domain.Domain) {
+    const new_items_promise: Promise<Array<Domain.Item>> = (async () => {
         switch (domain) {
             case "image":
                 const {images} = await Fetchers.get.all_images({});
@@ -80,9 +80,9 @@ export function execute_search(term: string) {
         search_waiting: true,
     }));
 
-    function update_search_items(results: Array<Domain.DomainSearchResult>) {
+    function update_search_items(results: Array<Api.DomainSearchResult>) {
         nav_state.update(state => ({...state, 
-            search_results: PrivateDomain.sort_items([...state.search_results, ...results.map(PrivateDomain.result_to_item)])
+            search_results: Domain.sort_items([...state.search_results, ...results.map(Domain.result_to_item)])
         }));
     }
 
