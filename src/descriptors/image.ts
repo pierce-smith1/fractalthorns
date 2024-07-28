@@ -25,12 +25,11 @@ export function get_date_string(image_date: string | Date) {
     return formatted_date;
 }
 
-export function to_public_model(image: Model, all_images: Array<Model>): Api.ImageObject {
+export function to_public_model(image: Model): Api.ImageObject {
     const client_image = {
         name: image.name,
         title: image.title,
         date: image.date.toISOString().split("T")[0], // lol
-        ordinal: all_images.length - all_images.findIndex(other => other.name === image.name), 
         image_url: image.image_url,
         thumb_url: image.thumb_url,
         canon: image.canon,

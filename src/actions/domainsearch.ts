@@ -32,7 +32,7 @@ export async function find_image_items(term: string): ReturnType<typeof find_ite
 
     const image_items = matching_images.map(image => ({
         domain: "image" as const, 
-        image: PublicImage.to_public_model(image, images),
+        image: PublicImage.to_public_model(image),
     }));
     return image_items;
 }

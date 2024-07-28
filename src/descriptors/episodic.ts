@@ -33,7 +33,7 @@ export const iterations = [
     "auzoan",
     "event",
     "0",
-];
+] as const;
 export type Iteration = typeof iterations[number];
 
 export function get_iteration_sigil(iteration: string): string | undefined {

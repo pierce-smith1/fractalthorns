@@ -6,7 +6,12 @@ import sharp from "sharp";
 
 export type Model = Image.Model;
 
-export async function get(name: string): Promise<Model | undefined> {
+export async function get(name: string | undefined): Promise<Model | undefined> {
+    if (!name) {
+        const latest_name = await Filesystem.read(`${Config.authorland_root}/images/_latest.txt`);
+        name = latest_name;
+    }
+
     const info_path = `${Config.authorland_root}/images/${name}/info.json`;
     const descr_path = `${Config.authorland_root}/images/${name}/descr.md`;
 
@@ -45,7 +50,8 @@ export async function get_latest(): Promise<Model | undefined> {
 export async function get_all(): Promise<Array<Model>> {
     const images_root_path = `${Config.authorland_root}/images`;
 
-    const image_entries = await Filesystem.enumerate(images_root_path);
+    const image_entries = (await Filesystem.enumerate(images_root_path))
+        .filter(entry => entry.type === "Directory");
 
     const images = await Promise.all(image_entries.map(async entry => (await get(entry.name))!));
     const images_ordered_by_date = images.toSorted((a, b) => b.date.valueOf() - a.date.valueOf());

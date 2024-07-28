@@ -66,7 +66,7 @@
         </div>
         <div class="image-info-container" use:setup_scroll_hint_observer>
             <div class="image-title-container">
-                <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
+                <h1 class="title">{image.title}</h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
                 {#if image.characters}
                     <div class="characters">
@@ -225,14 +225,6 @@
     .title {
         font-family: "eczar";
         font-size: 2rem;
-    }
-
-    .title-ordinal {
-        font-size: 0.4em;
-        color: rgba(255 255 255 / 75%);
-        position: relative;
-        bottom: 12px; 
-        left: 5px;
     }
 
     .subtitle {
