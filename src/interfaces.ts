@@ -35,13 +35,9 @@ export type TypeFromSchemaField<SchemaField> =
     : SchemaField extends readonly ["required_array", infer InnerType] ?
         Array<TypeFromSchemaField<InnerType>>
     : SchemaField extends readonly ["optional_object", infer InnerType] ?
-        (InnerType extends ObjectSchema ?
-            TypeFromSchema<InnerType>
-        : never) | undefined
+        (InnerType extends ObjectSchema ? TypeFromSchema<InnerType> : never) | undefined
     : SchemaField extends readonly ["required_object", infer InnerType] ?
-        InnerType extends ObjectSchema ?
-            TypeFromSchema<InnerType>
-        : never
+        InnerType extends ObjectSchema ? TypeFromSchema<InnerType> : never
     : never;
 
 export type TypeFromSchema<Schema extends ObjectSchema> =
@@ -50,4 +46,3 @@ export type TypeFromSchema<Schema extends ObjectSchema> =
     } & {[key in keyof Schema as Extract<TypeFromSchemaField<Schema[key]["type"]>, undefined> extends never ? key : never]: 
         TypeFromSchemaField<Schema[key]["type"]>
     };
-
