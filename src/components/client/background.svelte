@@ -134,8 +134,8 @@
 </script>
 
 <div>
-    <div class="background" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.png)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
-    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.png)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
+    <div class="background" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.webp)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
+    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.webp)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
     <div class="canvas">
         <Canvas {artist} />
     </div>
