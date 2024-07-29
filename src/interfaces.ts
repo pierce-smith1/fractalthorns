@@ -51,28 +51,3 @@ export type TypeFromSchema<Schema extends ObjectSchema> =
         TypeFromSchemaField<Schema[key]["type"]>
     };
 
-const redactable_record_entry_schema = {
-    solved: {
-        type: fields.required_boolean,
-        description: "Whether or not this record has been solved (will be true for everything except right after new chapters come out).",
-    },
-    chapter: {
-        type: fields.required_string,
-        description: "The chapter of this record.",
-    },
-    name: {
-        type: fields.optional_string,
-        description: "The identifying name of this record, i.e. the one found in URLs. Not present if the record is unsolved. Use this name to query for the text of the record via the `record_text` endpoint."
-    },
-    title: {
-        type: fields.optional_string,
-        description: "The display title of this record. Not present if the record is unsolved.",
-    },
-    iteration: {
-        type: fields.optional_string,
-        description: `The iteration this record takes place in. Not present if the record is unsolved.`,
-    },
-} as const;
-
-type RRE = TypeFromSchema<typeof redactable_record_entry_schema>
-
