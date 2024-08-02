@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as Fetchers from "../../fetchers";
+    import * as ImageHelpers from "../../helpers/image";
 
     import Loading from "./loading.svelte";
 
@@ -29,7 +30,7 @@
         <div class="news-items">
             {#each news.items as item}
                 <div class="news-item">
-                    <h4>{item.date}</h4>
+                    <h4>{ImageHelpers.get_date_string(item.date)}</h4>
                     <p>{item.title}</p>
                     {#if item.items && item.items.length > 0}
                         <ul>
