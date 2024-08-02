@@ -57,6 +57,10 @@ export const image_object_schema = {
         type: Interfaces.fields.required_string,
         description: "The date the image was made in ISO 8601 YYYY-MM-DD format.",
     },
+    ordinal: {
+        type: Interfaces.fields.required_number,
+        description: "The 1-based index of the image from oldest to newest, i.e. the \"#n\" displayed on the site.",
+    },
     image_url: {
         type: Interfaces.fields.required_string,
         description: "The URL (relative to the root of the server) the image data can be requested from.",

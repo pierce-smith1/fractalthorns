@@ -2,11 +2,12 @@ import * as Images from "../stores/image";
 import * as ImageHelpers from "../helpers/image";
 import * as Api from "../api";
 
-export function to_api_object(image: Images.PrivateImage): Api.ImageObject {
-    const object: Api.ImageObject = {
+export function to_api_object(image: Images.Image): Api.ImageObject {
+    const object = {
         name: image.name,
         title: image.title,
         date: image.date.toISOString().split("T")[0],
+        ordinal: image.ordinal,
         image_url: `/serve/image/${image.name}`,
         thumb_url: `/serve/thumb/${image.name}`,
         has_description: !!image.description,

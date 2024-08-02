@@ -22,28 +22,35 @@ export type ImageInfo = {
     speedpaint_video_id?: string,
 };
 
-export type PrivateImage = Omit<ImageInfo, "date"> & {
+export type Image = Omit<ImageInfo, "date"> & {
     name: string,
     date: Date,
     colors: DominantColors,
     description?: string,
+    ordinal: number,
 };
 
 const info_file_name = "info.json";
 const description_file_name = "descr.md";
 
-export class ImageStore extends Store.Store<PrivateImage> {
+export class ImageStore extends Store.Store<Image> {
     async load() {
         const images_root_path = `${Config.authorland_root}/images`;
 
         const image_entries = (await Filesystem.enumerate(images_root_path))
             .filter(entry => entry.type === "Directory");
 
-        const images = await Promise.all(image_entries.map(async entry => (await this.load_one(entry.name))!));
+        const images = await (async () => {
+            const image_objects = await Promise.all(image_entries.map(async entry => (await this.load_one(entry.name))!));
+            const by_date = image_objects.toSorted((a, b) => b.date.valueOf() - a.date.valueOf());
+            const with_ordinals = by_date.map((image, i, images) => ({...image, ordinal: images.length - i}));
+            return with_ordinals;
+        })();
+
         return images;
     }
 
-    async load_one(name: string) {
+    async load_one(name: string): Promise<Omit<Image, "ordinal"> | undefined> {
         const info_path = `${Config.authorland_root}/images/${name}/${info_file_name}`;
 
         if (!await Filesystem.exists(info_path)) {
@@ -58,7 +65,7 @@ export class ImageStore extends Store.Store<PrivateImage> {
             ? await Filesystem.read(description_path)
             : undefined;
 
-        const private_image: PrivateImage = {...info,
+        const private_image = {...info,
             name,
             description,
             date: new Date(info.date),
