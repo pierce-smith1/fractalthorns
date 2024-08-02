@@ -1,6 +1,4 @@
-import * as Record from "../descriptors/record";
-import * as Episodic from "../loaders/episodic";
-import * as RecordLoader from "../loaders/record";
+import Records, * as RecordStore from "../stores/record";
 
 type Invertible<T> = {value: T, not?: boolean};
 export type SearchOptions = {
@@ -13,7 +11,7 @@ export type SearchOptions = {
     whole_words?: boolean,
 };
 
-type Line = Record.Model["lines"][number];
+type Line = RecordStore.Record["lines"][number];
 
 export type SearchMatch = {
     line: Line,
@@ -33,11 +31,10 @@ function option_is_satisfied_by<T>(option?: Invertible<T>, value?: T) {
 }
 
 export async function search(options: SearchOptions, regex_string: string): Promise<SearchResult> {
-    const story = await Episodic.get();
+    const records = Records.get();
 
-    let matches = await Promise.all(story.records.map(async record => {
-        const record_model = (await RecordLoader.get(record.name, record.chapter))!;
-        return [record.name, await search_in_record({...record_model, title: record.name}, options, regex_string)] as [string, Array<SearchMatch>];
+    let matches = await Promise.all(records.map(async record => {
+        return [record.name, await search_in_record(record, options, regex_string)] as [string, Array<SearchMatch>];
     }));
     matches = matches.filter(match => match[1].length > 0)
     const matches_by_record = Object.fromEntries(matches);
@@ -45,7 +42,7 @@ export async function search(options: SearchOptions, regex_string: string): Prom
     return matches_by_record;
 }
 
-export async function search_in_record(record: Record.Model & {title: string}, options: SearchOptions, regex_string: string): Promise<Array<SearchMatch>> { 
+export async function search_in_record(record: RecordStore.Record, options: SearchOptions, regex_string: string): Promise<Array<SearchMatch>> { 
     if (options.whole_words) {
         regex_string = `\\b${regex_string}\\b`;
     }
