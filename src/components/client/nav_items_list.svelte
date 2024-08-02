@@ -10,8 +10,8 @@
 
     import * as RecordHelpers from "../../helpers/record";
     import * as GenericUtil from "../../genericutil";
-    import * as PrivateDomain from "../../descriptors/domain";
-    import * as Subproject from "../../descriptors/subproject";
+    import * as PrivateDomain from "../../helpers/domain.ts";
+    import * as Subproject from "../../helpers/subproject.ts";
     import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {

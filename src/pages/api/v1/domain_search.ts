@@ -1,5 +1,5 @@
 import * as DomainSearch from "../../../actions/domainsearch";
-import * as Domain from "../../../descriptors/domain";
+import * as Domain from "../../../helpers/domain";
 import * as Endpoint from "../../../endpoint";
 
 export const GET = Endpoint.use_get_handler<"domain_search">(async (request, override) => {

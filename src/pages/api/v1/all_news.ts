@@ -1,8 +1,8 @@
-import * as NewsLoader from "../../../loaders/news";
 import * as Endpoint from "../../../endpoint";
+import News from "../../../stores/news";
 
 export const GET = Endpoint.use_get_handler<"all_news">(async (request, override) => {
-    const news = await NewsLoader.get_all();
+    const news = News.get();
 
     const client_news = news.map(item => ({...item, 
         items: item.items ?? [], 

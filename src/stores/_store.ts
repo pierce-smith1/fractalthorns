@@ -6,7 +6,7 @@ export abstract class Store<T> {
     }
 
     get() {
-        return this.items;
+        return [...this.items];
     }
 
     abstract load(): Promise<Array<T>>;

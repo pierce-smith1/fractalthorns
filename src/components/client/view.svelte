@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Domain from "../../descriptors/domain";
+    import * as Domain from "../../helpers/domain.ts";
     import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";

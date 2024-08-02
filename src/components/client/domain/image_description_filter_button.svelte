@@ -3,7 +3,7 @@
 
     import {nav_state, register_filter, unregister_filter} from "../nav";
 
-    import * as Domain from "../../../descriptors/domain";
+    import * as Domain from "../../../helpers/domain";
 
     let descriptions_only = false;
 

@@ -1,6 +1,6 @@
 import * as Store from "svelte/store";
 
-import * as Domain from "../../descriptors/domain";
+import * as Domain from "../../helpers/domain";
 import * as Fetchers from "../../fetchers";
 import * as RecordHelpers from "../../helpers/record";
 

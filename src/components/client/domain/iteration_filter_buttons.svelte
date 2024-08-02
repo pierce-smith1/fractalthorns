@@ -5,7 +5,7 @@
     import {current} from "../page";
 
     import * as RecordHelpers from "../../../helpers/record";
-    import * as Domain from "../../../descriptors/domain";
+    import * as Domain from "../../../helpers/domain";
 
     export let available_iterations: Set<RecordHelpers.Iteration>;
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Subproject from "../../../descriptors/subproject";
+    import * as Subproject from "../../../helpers/subproject";
 
     import {current} from "../page";
 

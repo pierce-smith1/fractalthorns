@@ -1,9 +1,9 @@
-import * as Domain from "../descriptors/domain";
-import * as Episodic from "../descriptors/episodic";
+import * as Domain from "../helpers/domain";
 import Images from "../stores/image";
 import * as ImageTransformers from "../transformers/image";
+import Records from "../stores/record";
+import * as RecordTransformers from "../transformers/record";
 import * as GenericUtil from "../genericutil";
-import * as EpisodicLoader from "../loaders/episodic";
 import * as Search from "./search";
 
 export async function find_items(term: string, type: Domain.SearchItemType): Promise<Array<Domain.Item>> {
@@ -38,12 +38,12 @@ export async function find_image_items(term: string): ReturnType<typeof find_ite
 }
 
 export async function find_episodic_items(term: string): ReturnType<typeof find_items> {
-    const episodic = await EpisodicLoader.get();
-    const matching_records = episodic.records.filter(record => record.solved && record.title.includes(term));
+    const records = Records.get();
+    const matching_records = records.filter(record => record.solved && record.title.includes(term));
 
     const record_items = matching_records.map(record => ({
         domain: "episodic-item" as const, 
-        record: Episodic.redact(record)
+        record: RecordTransformers.to_redactable_entry(record)
     }));
     return record_items;
 }
@@ -66,14 +66,14 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
     term = term.replace(/[-[\]{}()*+?.,\\&$|#\s]/g, "\\$&");
 
     const results = await Search.search({whole_words: true, limit: 100}, term);
-    const episodic = await EpisodicLoader.get();
+    const records = Records.get();
     const lines = Object.entries(results)
         .flatMap(([name, matches]) => matches
             .map(match => ({
                 domain: "episodic-line" as const,
                 record_name: name, 
                 line_index: match.line_index,
-                record: Episodic.redact(episodic.records.find(record => record.name === name)!), 
+                record: RecordTransformers.to_redactable_entry(records.find(record => record.name === name)!), 
                 matched_text: match.matched_text,
             }))
         );

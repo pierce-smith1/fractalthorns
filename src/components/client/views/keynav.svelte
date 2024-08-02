@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    import * as Domain from "../../../descriptors/domain";
+    import * as Domain from "../../../helpers/domain";
     import PageLink from '../page_link.svelte';
 
     export let page_up: Domain.Page | undefined = undefined;

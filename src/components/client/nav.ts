@@ -1,9 +1,9 @@
 import * as Store from "svelte/store";
 
 import * as Api from "../../api";
-import * as Domain from "../../descriptors/domain";
+import * as Domain from "../../helpers/domain";
 import * as Fetchers from "../../fetchers";
-import * as Subproject from "../../descriptors/subproject";
+import * as Subproject from "../../helpers/subproject";
 
 export type NavItemFilter = {name: string, fn: (item: Domain.Item) => boolean};
 

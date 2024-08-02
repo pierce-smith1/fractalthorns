@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Domain from "../../descriptors/domain";
+    import * as Domain from "../../helpers/domain.ts";
     import {current, layout_state} from "./page.ts";
 
     export let dest: Domain.Page;
