@@ -2,7 +2,6 @@
     import {marked} from "marked";
 
     import {layout_state} from "../page";
-    import * as Episodic from "../../../descriptors/episodic";
     import * as ImageHelpers from "../../../helpers/image";
     import * as Fetchers from "../../../fetchers";
     import * as Nav from "../nav";
@@ -20,8 +19,7 @@
     function format_subtitle(image: Awaited<typeof image_promise>) {
         const parts: Array<string> = [];
 
-        const iteration_symbol = Episodic.get_iteration_sigil(image.canon ?? "");
-        if (iteration_symbol) {
+        if (image.canon) {
             parts.push(`<img class="iteration-sigil" src=/assets/images/common/iteration-${image.canon}.png />`);
         }
 

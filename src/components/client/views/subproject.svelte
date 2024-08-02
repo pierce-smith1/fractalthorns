@@ -1,7 +1,5 @@
 <script lang="ts">
-    import * as Subproject from "../../../descriptors/subproject";
     import * as Fetchers from "../../../fetchers.ts";
-    import * as GenericUtil from "../../../genericutil.ts";
 
     import Keynav from "./keynav.svelte";
     import Aor from "./subprojects/aor.svelte";

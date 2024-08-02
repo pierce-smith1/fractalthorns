@@ -2,7 +2,7 @@ import sharp from "sharp";
 
 import Config from "../config";
 
-import * as Store from "../loaders/_store";
+import * as Store from "./_store";
 import * as Filesystem from "../filesystem";
 
 export type DominantColors = {

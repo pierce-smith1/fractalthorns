@@ -1,14 +1,11 @@
 import * as Endpoint from "../../../endpoint";
-import * as EpisodicLoader from "../../../loaders/episodic";
-import * as PublicEpisodic from "../../../descriptors/episodic";
+import Records from "../../../stores/record";
+import * as RecordTransformers from "../../../transformers/record";
 
 export const GET = Endpoint.use_get_handler<"full_episodic">(async (request, override) => {
-    const episodic = await EpisodicLoader.get_by_chapter();
+    const episodic = Records.get();
 
-    const episodic_redacted = episodic.map(chapter => ({
-        name: chapter.chapter,
-        records: chapter.records.map(PublicEpisodic.redact),
-    }));
+    const episodic_redacted = RecordTransformers.to_chapter_entries(episodic);
 
     return {chapters: episodic_redacted};
 });

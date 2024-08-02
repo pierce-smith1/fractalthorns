@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Api from "../../../api";
-    import * as Episodic from "../../../descriptors/episodic";
+    import * as RecordHelpers from "../../../helpers/record";
     import * as Fetchers from "../../../fetchers";
     import Loading from "../loading.svelte";
 
@@ -55,7 +55,7 @@
 {#if should_show_chapter(record, prev_neighbor)}
     <h3 class="chapter-name">{record.chapter}</h3>
 {/if}
-<div class="episodic-button" style:border-color={Episodic.get_iteration_color(record.iteration)} class:selected={$current.domain === "episodic" && $current.record_name === record.name}>
+<div class="episodic-button" style:border-color={RecordHelpers.get_iteration_color(record.iteration)} class:selected={$current.domain === "episodic" && $current.record_name === record.name}>
     {#if !record.name}
         <h4 class="unsolved"><em>???</em></h4>
     {:else}

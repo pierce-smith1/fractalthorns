@@ -4,12 +4,12 @@
     import {nav_state, register_filter, unregister_filter} from "../nav";
     import {current} from "../page";
 
-    import * as Episodic from "../../../descriptors/episodic";
+    import * as RecordHelpers from "../../../helpers/record";
     import * as Domain from "../../../descriptors/domain";
 
-    export let available_iterations: Set<Episodic.Iteration>;
+    export let available_iterations: Set<RecordHelpers.Iteration>;
 
-    let selected_iterations = new Set<Episodic.Iteration>();
+    let selected_iterations = new Set<RecordHelpers.Iteration>();
     
     function clear_selected() {
         selected_iterations.clear();
@@ -34,7 +34,7 @@
         return selected_iterations.has(iteration);
     };
 
-    function toggle_iteration(iteration: Episodic.Iteration) {
+    function toggle_iteration(iteration: RecordHelpers.Iteration) {
         if (selected_iterations.has(iteration)) {
             selected_iterations.delete(iteration);
         } else {
@@ -54,7 +54,7 @@
     {#each new Set([...available_iterations, ...selected_iterations]) as iteration}
         <button type="button" class="iteration-button" on:click={() => toggle_iteration(iteration)}>
             <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
-            <div class="button-background" style:background-color={Episodic.get_iteration_color(iteration)} style:border-color={Episodic.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
+            <div class="button-background" style:background-color={RecordHelpers.get_iteration_color(iteration)} style:border-color={RecordHelpers.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
         </button>
     {/each}
 </div>

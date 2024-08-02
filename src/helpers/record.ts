@@ -1,28 +1,4 @@
-import * as Api from "../api";
-
-export type RecordEntry = {
-    chapter: string,
-    name: string,
-    title: string,
-    solved: boolean,
-    iteration: string,
-};
-
-export type Model = {
-    records: Array<RecordEntry>,
-};
-
-export function redact(entry: RecordEntry): Api.RedactableRecordEntry {
-    if (entry.solved) {
-        return entry;
-    }
-
-    return {...entry,
-        name: undefined,
-        title: undefined,
-        iteration: undefined,
-    };
-}
+export const narrator_character = "Narrator" as const;
 
 export const iterations = [
     "154373",
@@ -36,19 +12,6 @@ export const iterations = [
 ];
 export type Iteration = typeof iterations[number];
 
-export function get_iteration_sigil(iteration: string): string | undefined {
-    switch (iteration) {
-        case "154373": return "⎊";
-        case "209151": return "◇";
-        case "265404": return "△";
-        case "768220": return "⧉";
-        case "768221": return "⬡";
-        case "auzoan": return "∂";
-        case "event": return "⌘";
-        case "0": return "∅";
-    }
-}
-
 export function get_iteration_color(iteration: string | undefined): string {
     switch (iteration) {
         case "154373": return "#FFF8D1";
@@ -58,9 +21,9 @@ export function get_iteration_color(iteration: string | undefined): string {
         case "768221": return "#E84CDB";
         case "auzoan": return "#4CE84C";
         case "event": return "#EA0042";
+        default:
         case "0": return "#888888";
     }
-    return "#888888";
 }
 
 // TODO maybe(?) this should be handled by the character API,

@@ -3,8 +3,7 @@
     import {onMount} from "svelte";
 
     import * as Api from "../../../api";
-    import * as Record from "../../../descriptors/record";
-    import * as Episodic from "../../../descriptors/episodic";
+    import * as RecordHelpers from "../../../helpers/record";
 
     export let record: Api.RecordTextResponse;
     export let line: Api.RecordLine;
@@ -13,7 +12,7 @@
     export let requested_line_index: number | undefined;
 
     const should_show_speaker = line.character 
-        && line.character !== Record.narrator_character
+        && line.character !== RecordHelpers.narrator_character
         && line.character !== last_line?.character;
 
     const is_continuation_line = last_line?.type === "Inline"
@@ -22,13 +21,13 @@
 
     const should_show_language = line.language 
         && line.language !== last_line?.language
-        && line.character !== Record.narrator_character
+        && line.character !== RecordHelpers.narrator_character
         && last_line?.type !== "Sabre";
 
     function emphasize_keywords(text: string): string {
         let emphasized_text = text;
 
-        for (const keyword of Episodic.mnemonic_keywords) {
+        for (const keyword of RecordHelpers.mnemonic_keywords) {
             emphasized_text = emphasized_text.replaceAll(keyword, `\`${keyword}\``);
         }
 

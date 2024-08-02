@@ -1,6 +1,6 @@
 import Config from "../config";
 
-import * as Store from "./_store";
+import * as Store from "../stores/_store";
 import * as Filesystem from "../filesystem";
 import * as News from "../descriptors/news";
 

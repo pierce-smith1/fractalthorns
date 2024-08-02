@@ -8,10 +8,10 @@
     import SubprojectButton from "./domain/subproject_button.svelte";
     import Keynav from "./views/keynav.svelte";
 
+    import * as RecordHelpers from "../../helpers/record";
     import * as GenericUtil from "../../genericutil";
     import * as PrivateDomain from "../../descriptors/domain";
     import * as Subproject from "../../descriptors/subproject";
-    import * as Episodic from "../../descriptors/episodic";
     import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {
@@ -34,7 +34,7 @@
         $nav_state.search_results
         : $nav_state.nav_results;
 
-    $: available_iterations = new Set(Episodic.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter)));
+    $: available_iterations = new Set(RecordHelpers.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter)));
 
     $: items_to_show = $nav_state.item_filters.reduce((acc, filter) => acc.filter(filter.fn), nav_items);
 
