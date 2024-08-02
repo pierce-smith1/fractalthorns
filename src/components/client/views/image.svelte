@@ -3,7 +3,7 @@
 
     import {layout_state} from "../page";
     import * as Episodic from "../../../descriptors/episodic";
-    import * as Image from "../../../descriptors/image";
+    import * as ImageHelpers from "../../../helpers/image";
     import * as Fetchers from "../../../fetchers";
     import * as Nav from "../nav";
 
@@ -25,7 +25,7 @@
             parts.push(`<img class="iteration-sigil" src=/assets/images/common/iteration-${image.canon}.png />`);
         }
 
-        parts.push(Image.get_date_string(image.date));
+        parts.push(ImageHelpers.get_date_string(image.date));
 
         if (image.speedpaint_video_url) {
             parts.push(`<a href="${image.speedpaint_video_url}">speedpaint</a>`);

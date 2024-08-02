@@ -2,7 +2,6 @@ import Config from "../config";
 
 import * as Record from "../descriptors/record";
 import * as Filesystem from "../filesystem";
-import { pipeline } from "../pipeline";
 
 export async function get(name: string, chapter: string): Promise<Record.Model> {
     const record_path = `${Config.authorland_root}/records/chapter-${chapter}/${name}.txt`;
@@ -20,13 +19,17 @@ export function parse_from(record_contents: string): Record.Model {
     const parsed_header = parse_header(header);
     const parsed_lines = parse_body(body);
 
-    const characters = pipeline.start(parsed_lines)
-        .then(lines => lines.map(line => line.character))
-        .then(chars => chars.filter(x => x) as Array<string>)
-        .then(chars => chars.toSorted())
-        .then(chars => [...new Set(chars)])
-        .done();
+    const characters = (() => {
+        const chars = parsed_lines
+            .map(line => line.character)
+            .filter(x => x) as Array<string>;
+        
+        const sorted = chars.toSorted();
+        const unique = [...new Set(sorted)];
 
+        return unique;
+    })();
+    
     const record = {...parsed_header, characters, lines: parsed_lines};
     record.lines = assign_missing_languages(record.lines, record.languages);
     record.languages = record_missing_languages(record.lines, record.languages);
@@ -45,22 +48,18 @@ function get_parts(lines: Array<string>): {header: Array<string>, body: Array<st
 }
 
 function parse_options(options: string): Record.Model["options"] {
-    const options_object = pipeline.start(options)
-        .then(line => line.substring(2, line.length - 2))
-        .then(line => line.split(","))
-        .then(pairs => pairs.map(pair => pair.split("=")))
-        .then(entries => Object.fromEntries(entries) as Record.Model["options"])
-        .done();
+    const pairs_list = options.substring(2, options.length - 2);
+    const pairs = pairs_list.split(",");
+    const entries = pairs.map(pair => pair.split("="));
+    const object = Object.fromEntries(entries) as Record.Model["options"];
 
-    return options_object;
+    return object;
 }
 
 function parse_languages(header_lines: Array<string>): Array<string> {
     const language_def_regex = /iteration\[.+\]\..+\.(.+) ->/;
-    const languages = pipeline.start(header_lines)
-        .then(lines => lines.filter(line => line.match(language_def_regex)))
-        .then(lines => lines.map(line => line.match(language_def_regex)![1]))
-        .done();
+    const language_lines = header_lines.filter(line => line.match(language_def_regex));
+    const languages = language_lines.map(line => line.match(language_def_regex)![1]);
     
     return languages;
 }

@@ -1,6 +1,7 @@
 ---
-    import * as Image from "../descriptors/image";
-    import * as ImageLoader from "../loaders/image";
+    import Images from "../stores/image";
+    import * as ImageTransformers from "../transformers/image";
+    import * as ImageHelpers from "../helpers/image";
 
     import Default from "./default.astro";
     import Background from "../components/client/background.svelte";
@@ -14,12 +15,17 @@
     const {domain, path} = Astro.params;
 
     const url = `${domain}/${path ?? ""}`;
-    const embed = await (async () => {
+    const embed = (() => {
         if (domain === "image" && path) {
             const name = path;
-            const image = await ImageLoader.get(name);
+            const image = Images.get().find(image => image.name === name);
+            const image_object = image && ImageTransformers.to_api_object(image);
 
-            return {url, image_url: image?.image_url ?? "", descr: `${image?.title ?? "unknown"} · ${Image.get_date_string(image?.date ?? new Date())}`};
+            return {
+                url, 
+                image_url: image_object?.image_url ?? "", 
+                descr: `${image?.title ?? "unknown"} · ${ImageHelpers.get_date_string(image?.date ?? new Date())}`
+            };
         }
     })();
 ---

@@ -3,13 +3,13 @@ import * as Fs from "fs/promises";
 import { type APIRoute } from "astro";
 import sharp from "sharp";
 
-import * as Image from "../../../loaders/image";
+import Images from "../../../stores/image";
 import Config from "../../../config";
 
 const image_thumbnail_width = 300;
 const image_thumbnail_height = 60;
 
-const thumbnail_cache:{[key: string]: Buffer} = {};
+const thumbnail_cache: {[key: string]: Buffer} = {};
 
 export const GET: APIRoute = async context => {
     const name = context.params.name ?? "";
@@ -18,7 +18,7 @@ export const GET: APIRoute = async context => {
         return new Response(thumbnail_cache[name], {headers: {"Content-Type": "image/png"}});
     }
 
-    const image_model = await Image.get(name);
+    const image_model = Images.get().find(image => image.name === name);
 
     if (!image_model) {
         return new Response(null, {status: 404});

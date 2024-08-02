@@ -1,11 +1,13 @@
-import * as ImageLoader from "../../../loaders/image";
-import * as Image from "../../../descriptors/image";
+import Images from "../../../stores/image";
+import * as ImageTranformers from "../../../transformers/image";
 import * as Endpoint from "../../../endpoint";
 
 export const GET = Endpoint.use_get_handler<"all_images">(async (request, override) => {
-    const images = await ImageLoader.get_all();
+    const images = Images.get();
 
-    const client_images = images.map(image => Image.to_public_model(image));
+    const client_images = images
+        .toSorted((a, b) => b.date.valueOf() - a.date.valueOf())
+        .map(image => ImageTranformers.to_api_object(image));
 
     return {images: client_images};
 });

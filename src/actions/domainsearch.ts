@@ -1,9 +1,9 @@
 import * as Domain from "../descriptors/domain";
 import * as Episodic from "../descriptors/episodic";
-import * as PublicImage from "../descriptors/image";
+import Images from "../stores/image";
+import * as ImageTransformers from "../transformers/image";
 import * as GenericUtil from "../genericutil";
 import * as EpisodicLoader from "../loaders/episodic";
-import * as ImageLoader from "../loaders/image";
 import * as Search from "./search";
 
 export async function find_items(term: string, type: Domain.SearchItemType): Promise<Array<Domain.Item>> {
@@ -22,7 +22,7 @@ export async function find_items(term: string, type: Domain.SearchItemType): Pro
 }
 
 export async function find_image_items(term: string): ReturnType<typeof find_items> {
-    const images = await ImageLoader.get_all();
+    const images = Images.get();
     const matching_images = images
         .filter(image => 
             image.name.includes(term) || 
@@ -32,7 +32,7 @@ export async function find_image_items(term: string): ReturnType<typeof find_ite
 
     const image_items = matching_images.map(image => ({
         domain: "image" as const, 
-        image: PublicImage.to_public_model(image),
+        image: ImageTransformers.to_api_object(image),
     }));
     return image_items;
 }

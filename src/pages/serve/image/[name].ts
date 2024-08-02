@@ -1,13 +1,13 @@
 import * as Fs from "fs/promises";
 
 import { type APIRoute } from "astro";
-import * as Image from "../../../loaders/image";
+import Images from "../../../stores/image";
 
 import Config from "../../../config";
 
 export const GET: APIRoute = async context => {
     const name = context.params.name ?? "";
-    const image_model = await Image.get(name);
+    const image_model = Images.get().find(image => image.name === name);
     
     if (!image_model) {
         return new Response(null, {status: 404});

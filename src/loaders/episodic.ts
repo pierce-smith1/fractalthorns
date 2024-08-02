@@ -1,27 +1,24 @@
 import Config from "../config";
 import * as Episodic from "../descriptors/episodic";
 import * as Filesystem from "../filesystem";
-import { pipeline } from "../pipeline";
 
 export async function get(): Promise<Episodic.Model> {
     const story_file_path = `${Config.authorland_root}/records/story.json`;
     const solved_records_file_path = `${Config.readerland_root}/story/solved.json`;
     
-    const solved_records = pipeline.start(await Filesystem.read(solved_records_file_path))
-        .then(content => JSON.parse(content) as Array<string>)
-        .done();
+    const solved_records_content = await Filesystem.read(solved_records_file_path);
+    const solved_records = JSON.parse(solved_records_content) as Array<string>; 
 
-    const episodic = pipeline.start(await Filesystem.read(story_file_path))
-        .then(content => JSON.parse(content) as Array<{chapter_name: string, records: Array<[string, string]>}>)
-        .then(chapters => chapters.flatMap(chapter => chapter.records.map(([iteration, title]) => ({
-            name: title.replaceAll(" ", "-"),
-            title,
-            chapter: chapter.chapter_name,
-            solved: solved_records.includes(title),
-            iteration,
-        }))))
-        .then(records => ({records}))
-        .done();
+    const story_file_contents = await Filesystem.read(story_file_path);
+    const story_chapters = JSON.parse(story_file_contents) as Array<{chapter_name: string, records: Array<[string, string]>}>;
+    const story_records = story_chapters.flatMap(chapter => chapter.records.map(([iteration, title]) => ({
+        name: title.replaceAll(" ", "-"),
+        title,
+        chapter: chapter.chapter_name,
+        solved: solved_records.includes(title),
+        iteration,
+    })));
+    const episodic = {records: story_records};
 
     return episodic;
 }
@@ -31,23 +28,21 @@ export async function get_by_chapter(): Promise<RecordEntriesByChapter> {
     const story_file_path = `${Config.authorland_root}/records/story.json`;
     const solved_records_file_path = `${Config.readerland_root}/story/solved.json`;
     
-    const solved_records = pipeline.start(await Filesystem.read(solved_records_file_path))
-        .then(content => JSON.parse(content) as Array<string>)
-        .done();
+    const solved_records_content = await Filesystem.read(solved_records_file_path);
+    const solved_records = JSON.parse(solved_records_content) as Array<string>; 
 
-    const episodic = pipeline.start(await Filesystem.read(story_file_path))
-        .then(content => JSON.parse(content) as Array<{chapter_name: string, records: Array<[string, string]>}>)
-        .then(chapters => chapters.map(chapter => ({
+    const story_file_contents = await Filesystem.read(story_file_path);
+    const story_chapters = JSON.parse(story_file_contents) as Array<{chapter_name: string, records: Array<[string, string]>}>;
+    const episodic = story_chapters.map(chapter => ({
+        chapter: chapter.chapter_name,
+        records: chapter.records.map(([iteration, title]) => ({
+            name: title.replaceAll(" ", "-"),
+            title,
             chapter: chapter.chapter_name,
-            records: chapter.records.map(([iteration, title]) => ({
-                name: title.replaceAll(" ", "-"),
-                title,
-                chapter: chapter.chapter_name,
-                solved: solved_records.includes(title),
-                iteration,
-            })),
-        })))
-        .done();
+            solved: solved_records.includes(title),
+            iteration,
+        })),
+    }));
 
     return episodic;
 }

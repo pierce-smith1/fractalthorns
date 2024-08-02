@@ -15,6 +15,14 @@ export type FieldTypes = {[key in keyof typeof fields]: typeof fields[key] exten
     ReturnType<typeof fields[key]>
 : typeof fields[key]}[keyof typeof fields];
 
+export function field_is_optional(field: FieldTypes): boolean {
+    if (typeof field === "string") {
+        return field.includes("optional");
+    }
+
+    return field[0].includes("optional");
+}
+
 export type ObjectSchema = Record<string, {type: any, description?: string}>
 
 export type TypeFromSchemaField<SchemaField> =
@@ -35,7 +43,7 @@ export type TypeFromSchemaField<SchemaField> =
     : SchemaField extends readonly ["required_array", infer InnerType] ?
         Array<TypeFromSchemaField<InnerType>>
     : SchemaField extends readonly ["optional_object", infer InnerType] ?
-        (InnerType extends ObjectSchema ? TypeFromSchema<InnerType> : never) | undefined
+        InnerType extends ObjectSchema ? TypeFromSchema<InnerType> | undefined : never
     : SchemaField extends readonly ["required_object", infer InnerType] ?
         InnerType extends ObjectSchema ? TypeFromSchema<InnerType> : never
     : never;
