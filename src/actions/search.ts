@@ -1,4 +1,5 @@
 import Records, * as RecordStore from "../stores/record";
+import * as GenericUtil from "../genericutil";
 
 type Invertible<T> = {value: T, not?: boolean};
 export type SearchOptions = {
@@ -33,10 +34,24 @@ function option_is_satisfied_by<T>(option?: Invertible<T>, value?: T) {
 export async function search(options: SearchOptions, regex_string: string): Promise<SearchResult> {
     const records = Records.get();
 
+    const matches_so_far: Array<SearchMatch> = [];
+    const limit = options.limit ?? 20;
     let matches = await Promise.all(records.map(async record => {
-        return [record.name, await search_in_record(record, options, regex_string)] as [string, Array<SearchMatch>];
+        let matches_in_record = await search_in_record(record, options, regex_string);
+
+        matches_in_record = GenericUtil.unique_by(matches_in_record, (a, b) => a.line_index === b.line_index);
+
+        matches_so_far.push(...matches_in_record);
+        if (matches_so_far.length >= limit) {
+            const results_to_ignore = matches_so_far.length - limit;
+            const slice_end = matches_in_record.length - results_to_ignore;
+            matches_in_record = matches_in_record.slice(0, slice_end >= 0 ? slice_end : 0);
+        }
+        
+        return [record.name, matches_in_record] as [string, Array<SearchMatch>];
     }));
-    matches = matches.filter(match => match[1].length > 0)
+    matches = matches.filter(match => match[1].length > 0);
+
     const matches_by_record = Object.fromEntries(matches);
 
     return matches_by_record;
@@ -70,10 +85,6 @@ export async function search_in_record(record: RecordStore.Record, options: Sear
         let regex_match;
         while ((regex_match = search_regex.exec(line.text)) !== null) {
             matches.push({line, line_index: i, start_index: regex_match.index, matched_text: regex_match[0]});
-
-            if (matches.length >= (options.limit ?? 20)) {
-                break enumerate_lines;
-            }
         }
     };
 

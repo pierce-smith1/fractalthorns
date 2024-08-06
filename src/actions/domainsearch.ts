@@ -77,6 +77,5 @@ export async function find_episodic_lines(term: string): ReturnType<typeof find_
                 matched_text: match.matched_text,
             }))
         );
-    const unique_lines = GenericUtil.unique_by(lines, (a, b) => a.record_name === b.record_name && a.line_index === b.line_index);
-    return unique_lines;
+    return lines;
 }
