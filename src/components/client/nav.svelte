@@ -6,34 +6,44 @@
     import NavButton from "./nav_button.svelte";
     import News from "./news.svelte";
     import NavItemsList from "./nav_items_list.svelte";
+    import ExtrasWidget from "./extras_widget.svelte";
 </script>
 
-<nav>
-    <div class="nav-sticky"> 
-        <div class="domain-buttons">
-            <NavButton domain={"home"} />
-            <NavButton domain={"image"} />
-            <NavButton domain={"episodic"} />
-            <NavButton domain={"subproject"} />
+<div class="nav-container">
+    <nav>
+        <div class="nav-sticky"> 
+            <div class="domain-buttons">
+                <NavButton domain={"home"} />
+                <NavButton domain={"image"} />
+                <NavButton domain={"episodic"} />
+                <NavButton domain={"subproject"} />
+            </div>
+            <div class="domain-search">
+                <DomainSearch />
+            </div>
         </div>
-        <div class="domain-search">
-            <DomainSearch />
-        </div>
-    </div>
 
-    {#if $nav_state.viewing_search_results || $nav_state.search_waiting}
-        <NavItemsList />
-    {:else if $current.domain === "home"}
-        <News />
-    {:else}
-        <NavItemsList />
-    {/if}
+        {#if $nav_state.viewing_search_results || $nav_state.search_waiting}
+            <NavItemsList />
+        {:else if $current.domain === "home"}
+            <News />
+        {:else}
+            <NavItemsList />
+        {/if}
 
-    <div class="nav-spacer"></div>
-</nav>
+        <div class="nav-spacer"></div>
+    </nav>
+    <ExtrasWidget />
+</div>
 
 <style>
-    nav {
+    .nav-container {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 10px;
+    }
+
+    nav, .widget {
         position: relative;
         display: flex;
         flex-flow: column nowrap;
@@ -47,10 +57,15 @@
         -webkit-backdrop-filter: blur(10px);
         min-width: 300px;
         max-width: 300px;
-        max-height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
         scrollbar-width: none;
+    }
+
+    .widget {
+        min-height: 30px;
+        justify-content: center;
+        align-items: center;
     }
 
     .nav-sticky {
@@ -78,6 +93,21 @@
         top: 0;
         left: 0;
         gap: 10px;
+    }
+
+    .widget-expand-button {
+        background: none;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        width: 100%;
+        height: 100%;
+        transition: background-color 0.2s ease-out, color 0.2s ease-out;
+    }
+
+    .widget-expand-button:hover {
+        color: black;
+        background-color: white;
     }
 
     @media (width <= 1200px) {
