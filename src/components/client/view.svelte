@@ -14,6 +14,7 @@
     export let page: Domain.Page | undefined = undefined;
 
     $: current_page = page ?? $current;
+    $: clear_bg = current_page.domain === "home" || current_page.domain === "episodic";
 
     let news_promise = Fetchers.get.all_news({});
 </script>
@@ -21,8 +22,8 @@
 {#await news_promise}
     <Loading />
 {:then news}
-    <div class="view-container" class:clear={current_page.domain === "home"} class:reading-mode={current_page.domain === "episodic"}>
-        <GlassPane title={`fractalthorns.com / ${news.items[0].version}`}>
+    <div class="view-container" class:reading-mode={current_page.domain === "episodic"}>
+        <GlassPane --background-color={clear_bg ? "none" : undefined} title={`fractalthorns.com / ${news.items[0].version}`}>
             {#if current_page.domain === "home"}
                 <HomeView />
             {:else if current_page.domain === "image"}
@@ -41,6 +42,7 @@
 <style>
     .view-container {
         flex-grow: 2;
+        height: 100%;
     }
 
     .reading-mode {

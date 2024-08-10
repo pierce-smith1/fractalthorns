@@ -11,7 +11,7 @@
 </script>
 
 <div class="nav-container">
-    <GlassPane>
+    <GlassPane title_bar={false}>
         <nav>
             <div class="nav-sticky"> 
                 <div class="domain-buttons">

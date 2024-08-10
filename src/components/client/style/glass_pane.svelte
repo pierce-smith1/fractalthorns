@@ -21,6 +21,8 @@
         display: flex;
         flex-flow: column nowrap;
         min-height: 0;
+        height: 100%;
+        max-height: 100%;
     }
 
     .pane-titlebar {
@@ -35,9 +37,10 @@
     }
 
     .pane-contents {
+        flex-grow: 1;
         border: 1px solid white;
         border-radius: 0 0 5px 5px;
-        background-color: rgba(0 0 0 / 50%);
+        background-color: var(--background-color, rgba(0 0 0 / 50%));
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         overflow-y: scroll;
