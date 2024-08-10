@@ -18,7 +18,9 @@
 
 <style>
     .pane-container {
-        max-height: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+        min-height: 0;
     }
 
     .pane-titlebar {

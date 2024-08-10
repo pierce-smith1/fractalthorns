@@ -11,7 +11,7 @@
 </script>
 
 <div class="nav-container">
-    <GlassPane title_bar={false}>
+    <GlassPane>
         <nav>
             <div class="nav-sticky"> 
                 <div class="domain-buttons">
@@ -41,10 +41,9 @@
 
 <style>
     .nav-container {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
+        display: flex;
+        flex-flow: column nowrap;
         gap: 10px;
-        max-height: 100%;
     }
 
     nav {
@@ -57,7 +56,6 @@
         border-radius: 5px;
         min-width: 300px;
         max-width: 300px;
-        min-height: 0;
     }
 
     .nav-sticky {
