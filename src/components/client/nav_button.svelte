@@ -7,6 +7,7 @@
 
     import PageLink from "./page_link.svelte";
     import Loading from "./loading.svelte";
+    import Tooltip from "./style/tooltip.svelte";
 
     export let domain: PrivateDomain.Page["domain"];
 
@@ -44,6 +45,8 @@
     function on_click() {
         hide_search();
     }
+
+    $: selected = $current?.domain === domain;
 </script>
 
 {#await destination_promise}
@@ -51,9 +54,11 @@
 {:then destination}
     <div class="domain-button-container">
         <PageLink dest={destination}>
-            <button data-tooltip={tooltip_text} type="button" class="domain-button" class:selected={$current?.domain === domain} on:click={on_click}>
-            <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
-            </button>
+            <Tooltip text={tooltip_text} --color={selected ? "black" : "white"} --background={selected ? "white" : "black"}>
+                <button type="button" class="domain-button" class:selected on:click={on_click}>
+                    <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
+                </button>
+            </Tooltip>
         </PageLink>
     </div>
 {/await}
@@ -71,23 +76,6 @@
         justify-content: center;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-    }
-
-    .domain-button:hover:after {
-        content: attr(data-tooltip);
-        position: absolute;
-        top: -0.5rem;
-        border: 1px solid rgba(255 255 255 / 50%);
-        border-radius: 5px;
-        font-size: 1rem;
-        color: white;
-        background: black;
-        padding: 0 5px 0 5px;
-    }
-
-    .domain-button.selected:hover:after {
-        color: black;
-        background: white;
     }
 
     .button-background {

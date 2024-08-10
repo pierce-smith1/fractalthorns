@@ -54,6 +54,7 @@
 
     .container {
         display: flex;
+        flex-flow: row nowrap;
         gap: 20px;
         width: 95vw;
         height: 95vh;

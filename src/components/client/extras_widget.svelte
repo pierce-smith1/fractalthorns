@@ -2,6 +2,8 @@
     import {current} from "./page.ts";
     import * as Domain from "../../helpers/domain";
 
+    import GlassPane from "./style/glass_pane.svelte";
+
     let expanded = false;
 
     function toggle_expanded() {
@@ -17,48 +19,46 @@
 </script>
 
 {#if page_has_extras($current)}
-    <div class="widget" class:expanded={expanded}>
+    <div class="widget-container">
         {#if expanded}
-            <div class="spacer"></div>
-            {#if $current.domain === "image"}
-                <button class="image-download-button" type="button">↓ download art</button>
-            {/if}
-            <hr>
+            <GlassPane title="extras">
+                <div class="widget-controls-container">
+                    <div class="spacer"></div>
+                    {#if $current.domain === "image"}
+                        <div class="control-container">
+                            <div class="control-description">
+                                <p>package all art pieces into a zip for download</p>
+                                <p>respects the current filters</p>
+                            </div>
+                            <button class="image-download-button" type="button">download</button>
+                        </div>
+                    {/if}
+                    <hr>
+                    <button class="widget-expand-button" type="button" on:click={toggle_expanded}>close</button>
+                </div>
+            </GlassPane>
+        {:else}
+            <GlassPane title_bar={false}>
+                <button class="widget-expand-button" type="button" on:click={toggle_expanded}>...</button>
+            </GlassPane>
         {/if}
-        <button class="widget-expand-button" type="button" on:click={toggle_expanded}>...</button>
     </div>
 {/if}
 
 <style>
+    .widget-container {
+        max-width: 300px;
+    }
+
     hr {
         width: 90%;
         color: rgba(0 0 0 / 50%);
         margin: 0;
     }
 
-    .widget {
-        position: relative;
-        display: flex;
-        gap: 10px;
-        flex-flow: column nowrap;
-        color: white;
-        border: 1px solid white;
-        border-radius: 5px;
-        background-color: rgba(0 0 0 / 50%);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        min-width: 300px;
-        max-width: 300px;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .widget.expanded {
-        border-top-width: 10px;
-    }
-
     button {
         display: flex;
+        cursor: pointer;
         justify-content: center;
         align-items: center;
         min-height: 30px;
@@ -78,8 +78,29 @@
 
     .widget-expand-button {
         border: none;
+        border-radius: 0;
         padding: 0;
         width: 100%;
         height: 100%;
+    }
+
+    .widget-controls-container {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .control-container {
+        width: 90%;
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 10px;
+    }
+
+    .control-description {
+        color: rgba(255 255 255 / 75%);
+        line-height: 1rem;
     }
 </style>
