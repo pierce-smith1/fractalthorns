@@ -51,14 +51,11 @@
         background-color: rgba(255 255 255 / 80%);
     }
 
-    .clear {
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-    }
-
     @media (width <= 1200px) {
         .view-container {
-            height: 200%;
+            flex-grow: 1;
+            height: auto;
+            min-height: 0;
         }
     }
 </style>

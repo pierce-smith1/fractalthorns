@@ -103,4 +103,10 @@
         color: rgba(255 255 255 / 75%);
         line-height: 1rem;
     }
+
+    @media (width <= 1200px) {
+        .widget-container {
+            display: none;
+        }
+    }
 </style>
