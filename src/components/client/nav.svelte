@@ -13,27 +13,31 @@
 <div class="nav-container">
     <GlassPane title_bar={false}>
         <nav>
-            <div class="nav-sticky"> 
+            <div class="nav-gutter">
                 <div class="domain-buttons">
                     <NavButton domain={"home"} />
                     <NavButton domain={"image"} />
                     <NavButton domain={"episodic"} />
                     <NavButton domain={"subproject"} />
                 </div>
-                <div class="domain-search">
-                    <DomainSearch />
-                </div>
             </div>
+            <div class="nav-contents">
+                <div class="nav-sticky"> 
+                    <div class="domain-search">
+                        <DomainSearch />
+                    </div>
+                </div>
 
-            {#if $nav_state.viewing_search_results || $nav_state.search_waiting}
-                <NavItemsList />
-            {:else if $current.domain === "home"}
-                <News />
-            {:else}
-                <NavItemsList />
-            {/if}
+                {#if $nav_state.viewing_search_results || $nav_state.search_waiting}
+                    <NavItemsList />
+                {:else if $current.domain === "home"}
+                    <News />
+                {:else}
+                    <NavItemsList />
+                {/if}
 
-            <div class="nav-spacer"></div>
+                <div class="nav-spacer"></div>
+            </div>
         </nav>
     </GlassPane>
     <ExtrasWidget />
@@ -44,18 +48,33 @@
         display: flex;
         flex-flow: column nowrap;
         gap: 10px;
+        min-width: 360px;
+        max-width: 360px;
     }
 
     nav {
         position: relative;
         display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
+        flex-flow: row nowrap;
+        align-items: flex-start;
         justify-content: flex-start;
         color: white;
         border-radius: 5px;
-        min-width: 300px;
-        max-width: 300px;
+    }
+
+    .nav-gutter {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        position: sticky;
+        top: 0;
+        padding: 10px 0 0 10px;
+        min-height: 100%;
+    }
+
+    .nav-contents {
+        display: flex;
+        flex-flow: column nowrap;
     }
 
     .nav-sticky {
@@ -68,7 +87,7 @@
         left: 0;
         width: 90%;
         gap: 10px;
-        padding: 10px;
+        padding: 15px;
         z-index: 1000;
     }
 
@@ -78,10 +97,8 @@
 
     .domain-buttons {
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: column nowrap;
         justify-content: space-around;
-        top: 0;
-        left: 0;
         gap: 10px;
     }
 
