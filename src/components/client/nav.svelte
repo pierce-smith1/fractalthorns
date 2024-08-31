@@ -17,6 +17,7 @@
                 <div class="domain-buttons">
                     <NavButton domain={"home"} />
                     <NavButton domain={"image"} />
+                    <NavButton domain={"sketch"} minor={true} />
                     <NavButton domain={"episodic"} />
                     <NavButton domain={"subproject"} />
                 </div>
@@ -99,6 +100,7 @@
         display: flex;
         flex-flow: column nowrap;
         justify-content: space-around;
+        align-items: center;
         gap: 10px;
     }
 

@@ -10,6 +10,7 @@
     import Tooltip from "./style/tooltip.svelte";
 
     export let domain: PrivateDomain.Page["domain"];
+    export let minor: boolean = false;
 
     const destination_promise: Promise<PrivateDomain.Page> = (async () => {
         switch (domain) {
@@ -17,12 +18,12 @@
             case "image": {
                 const latest_image = await Fetchers.get.single_image({name: undefined});
                 return {domain, name: latest_image.name};
-            }
-            case "episodic": {
+            } case "sketch": {
+                return {domain, name: "?"};
+            } case "episodic": {
                 const episodic = await Fetchers.get.full_episodic({});
                 return {domain, record_name: episodic.chapters[0].records[0].name!};
-            }
-            case "subproject": return {domain};
+            } case "subproject": return {domain};
         }
     })();
 
@@ -30,6 +31,7 @@
         switch (domain) {
             case "home": return "home";
             case "image": return "art";
+            case "sketch": return "sketches";
             case "episodic": return "story";
             case "subproject": return "other";
         }
@@ -54,8 +56,8 @@
 {:then destination}
     <div class="domain-button-container">
         <PageLink dest={destination}>
-            <Tooltip text={tooltip_text} --color={selected ? "black" : "white"} --background={selected ? "white" : "black"}>
-                <button type="button" class="domain-button" class:selected on:click={on_click}>
+            <Tooltip text={tooltip_text} --color={selected ? "black" : "white"} --background={selected ? "white" : "black"} --font-size={minor ? "0.8rem" : "1rem"}>
+                <button type="button" class="domain-button" class:selected class:minor on:click={on_click}>
                     <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
                 </button>
             </Tooltip>
@@ -88,6 +90,11 @@
     .selected {
         color: black;
         background-color: white;
+    }
+
+    .minor {
+        max-width: 30px;
+        max-height: 30px;
     }
 
     .selected .button-background {

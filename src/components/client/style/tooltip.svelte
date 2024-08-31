@@ -11,6 +11,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
     }
 
     .tooltip-container:hover:after {
@@ -19,7 +20,7 @@
         top: 0.2rem;
         border: 1px solid rgba(255 255 255 / 50%);
         border-radius: 5px;
-        font-size: 1rem;
+        font-size: var(--font-size, 1rem); 
         color: var(--color, white);
         background: var(--background, black);
         padding: 0 5px 0 5px;

@@ -2,6 +2,7 @@ import * as Api from "../api";
 
 export const domains = [
     "image",
+    "sketch",
     "episodic",
     "home",
     "subproject",
@@ -11,6 +12,7 @@ export type Domain = typeof domains[number];
 
 export type Page =
     | {domain: "image", name: string}
+    | {domain: "sketch", name: string}
     | {domain: "episodic", record_name: string, line_index?: number}
     | {domain: "home"}
     | {domain: "subproject", name?: string}
