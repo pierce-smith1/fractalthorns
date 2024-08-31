@@ -3,6 +3,7 @@
     import * as Domain from "../../helpers/domain";
 
     import GlassPane from "./style/glass_pane.svelte";
+    import ImagesExtras from "./domain/extras/images.svelte";
 
     let expanded = false;
 
@@ -25,13 +26,7 @@
                 <div class="widget-controls-container">
                     <div class="spacer"></div>
                     {#if $current.domain === "image"}
-                        <div class="control-container">
-                            <div class="control-description">
-                                <p>package all art pieces into a zip for download</p>
-                                <p>respects the current filters</p>
-                            </div>
-                            <button class="image-download-button" type="button">download</button>
-                        </div>
+                        <ImagesExtras />
                     {/if}
                     <hr>
                     <button class="widget-expand-button" type="button" on:click={toggle_expanded}>close</button>
@@ -90,18 +85,6 @@
         justify-content: center;
         align-items: center;
         gap: 10px;
-    }
-
-    .control-container {
-        width: 90%;
-        display: flex;
-        flex-flow: row nowrap;
-        gap: 10px;
-    }
-
-    .control-description {
-        color: rgba(255 255 255 / 75%);
-        line-height: 1rem;
     }
 
     @media (width <= 1200px) {

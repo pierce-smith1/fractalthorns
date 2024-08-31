@@ -25,6 +25,19 @@ export const nav_state = Store.writable<NavState>({
     viewing_search_results: false,
 });
 
+export function get_items(state: NavState) {
+    const items = state.viewing_search_results || state.search_waiting
+        ? state.search_results
+        : state.nav_results;
+    return items;
+}
+
+export function get_visible_items(state: NavState) {
+    const items = get_items(state);
+    const visible_items = state.item_filters.reduce((acc, filter) => acc.filter(filter.fn), items);
+    return visible_items;
+}
+
 export function register_filter(filter: NavItemFilter) {
     nav_state.update(state => ({...state, item_filters: [...state.item_filters, filter]}));
 }

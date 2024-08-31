@@ -1,6 +1,6 @@
 <script lang="ts">
     import {current} from "./page.ts";
-    import {nav_state} from "./nav.ts";
+    import {nav_state, get_items, get_visible_items} from "./nav.ts";
 
     import ImageButton from "./domain/image_button.svelte";
     import IterationFilterButtons from "./domain/iteration_filter_buttons.svelte";
@@ -30,15 +30,13 @@
         return Subproject.subprojects.find(subproject => subproject.name === name)!;
     }
 
-    $: nav_items = $nav_state.viewing_search_results || $nav_state.search_waiting ?
-        $nav_state.search_results
-        : $nav_state.nav_results;
+    $: nav_items = get_items($nav_state);
 
     $: available_iterations = new Set(RecordHelpers.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter)));
 
-    $: items_to_show = $nav_state.item_filters.reduce((acc, filter) => acc.filter(filter.fn), nav_items);
+    $: visible_items = get_visible_items($nav_state);
 
-    $: current_page_index = items_to_show.findIndex(item =>
+    $: current_page_index = visible_items.findIndex(item =>
         (item.domain === "image" && $current.domain === "image" && item.image.name === $current.name) ||
         (item.domain === "episodic-item" && $current.domain === "episodic" && item.record.name == $current.record_name) ||
         (item.domain === "episodic-line" && $current.domain === "episodic" && item.record.name == $current.record_name && item.line_index == $current.line_index) ||
@@ -50,7 +48,7 @@
         current_item_element?.scrollIntoView({behavior: "smooth", block: "center"});
     }
 
-    $: neighbor_pages = GenericUtil.neighbors(current_page_index, items_to_show);
+    $: neighbor_pages = GenericUtil.neighbors(current_page_index, visible_items);
 </script>
 
 <div class="nav-items-list">
@@ -61,17 +59,17 @@
         {/if}
     </div>
     <div class="items-list">
-        {#each items_to_show as item, i}
+        {#each visible_items as item, i}
             <div id={`item-${i}`}>
                 {#if item.domain === "image"}
                     <ImageButton image={item.image} />
                 {:else if item.domain === "episodic-item"}
                     <EpisodicButton record={item.record} 
-                        prev_neighbor={get_neighbor(i, items_to_show, "prev")} 
+                        prev_neighbor={get_neighbor(i, visible_items, "prev")} 
                     />
                 {:else if item.domain === "episodic-line"}
                     <EpisodicButton record={item.record} 
-                        prev_neighbor={get_neighbor(i, items_to_show, "prev")} 
+                        prev_neighbor={get_neighbor(i, visible_items, "prev")} 
                         preview_matched_text={item.matched_text}
                         preview_line_index={item.line_index}
                     />
@@ -82,7 +80,7 @@
         {/each}
         {#if $nav_state.search_waiting}
             <p class="nothing-warning"><em>searching...</em></p>
-        {:else if items_to_show.length === 0 && $nav_state.viewing_search_results}
+        {:else if visible_items.length === 0 && $nav_state.viewing_search_results}
             <p class="nothing-warning"><em>nothing was found</em></p>
         {/if}
     </div>
