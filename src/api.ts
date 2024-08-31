@@ -157,6 +157,10 @@ export const sketch_object_schema = {
         type: Interfaces.fields.required_string,
         description: "The identifying name of the sketch.",
     },
+    title: {
+        type: Interfaces.fields.required_string,
+        description: "The sketch's display title.",
+    },
     sketch_image_url: {
         type: Interfaces.fields.required_string,
         description: "The URL (relative to the root of the server) the image data can be requested from.",
@@ -173,7 +177,7 @@ export const all_sketches_request_schema = {
 
 export const all_sketches_response_schema = {
     sketches: {
-        type: Interfaces.fields.required_array(sketch_object_schema),
+        type: Interfaces.fields.required_array(Interfaces.fields.required_object(sketch_object_schema)),
         description: "A list of all sketches, from newest to oldest."
     },
 } as const;
