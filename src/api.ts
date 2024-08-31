@@ -32,7 +32,7 @@ export const all_news_response_schema = {
     }
 } as const;
 
-const all_news_endpoint = {
+export const all_news_endpoint = {
     description: "Get the news items that show up on the front page. These are usually but not always site updates.",
     request: all_news_request_schema,
     response: all_news_response_schema,
@@ -102,7 +102,7 @@ export const single_image_request_schema = {
     },
 } as const;
 
-const single_image_endpoint = {
+export const single_image_endpoint = {
     description: "Get metadata for a single image.",
     request: single_image_request_schema,
     response: image_object_schema,
@@ -119,7 +119,7 @@ export const all_images_response_schema = {
     },
 } as const;
 
-const all_images_endpoint = {
+export const all_images_endpoint = {
     description: "Get metadata for all images.",
     request: all_images_request_schema,
     response: all_images_response_schema,
@@ -139,7 +139,7 @@ export const image_description_response_schema = {
     }
 } as const;
 
-const image_description_endpoint = {
+export const image_description_endpoint = {
     description: "Get the description for an image.",
     request: named_image_request_schema,
     response: image_description_response_schema,
@@ -149,6 +149,44 @@ export type ImageObject = Interfaces.TypeFromSchema<typeof image_object_schema>;
 export type SingleImageRequest = Interfaces.TypeFromSchema<typeof single_image_request_schema>;
 export type NamedImageRequest = Interfaces.TypeFromSchema<typeof named_image_request_schema>;
 export type AllImagesRequest = Interfaces.TypeFromSchema<typeof all_images_request_schema>;
+
+// sketches
+
+export const sketch_object_schema = {
+    name: {
+        type: Interfaces.fields.required_string,
+        description: "The identifying name of the sketch.",
+    },
+    sketch_image_url: {
+        type: Interfaces.fields.required_string,
+        description: "The URL (relative to the root of the server) the image data can be requested from.",
+    },
+    sketch_thumb_url: {
+        type: Interfaces.fields.required_string,
+        description: "The URL (relative to the root of the server) the thumbnail data can be requested from.",
+    },
+} as const;
+
+export const all_sketches_request_schema = {
+    
+} as const;
+
+export const all_sketches_response_schema = {
+    sketches: {
+        type: Interfaces.fields.required_array(sketch_object_schema),
+        description: "A list of all sketches, from newest to oldest."
+    },
+} as const;
+
+export const all_sketches_endpoint = {
+    description: "Get info for all sketches.",
+    request: all_sketches_request_schema,
+    response: all_sketches_response_schema,
+};
+
+export type SketchObject = Interfaces.TypeFromSchema<typeof sketch_object_schema>;
+export type AllSketchesRequest = Interfaces.TypeFromSchema<typeof all_sketches_request_schema>;
+export type AllSketchesResponse = Interfaces.TypeFromSchema<typeof all_sketches_response_schema>;
 
 // episodic
 
@@ -197,7 +235,7 @@ export const full_episodic_response_schema = {
     },
 } as const;
 
-const full_episodic_endpoint = {
+export const full_episodic_endpoint = {
     description: "Get metadata about the story.",
     request: full_episodic_request_schema,
     response: full_episodic_response_schema,
@@ -210,7 +248,7 @@ export const single_record_request_schema = {
     },
 } as const;
 
-const single_record_endpoint = {
+export const single_record_endpoint = {
     description: "Get metadata about a single record.",
     request: single_record_request_schema,
     response: redactable_record_entry_schema,
@@ -270,7 +308,7 @@ export const record_text_response_schema = {
     },
 } as const;
 
-const record_text_endpoint = {
+export const record_text_endpoint = {
     description: "Get the parsed contents of a single record.",
     request: single_record_request_schema,
     response: record_text_response_schema,
@@ -325,7 +363,7 @@ export const domain_search_response_schema = {
     },
 } as const;
 
-const domain_search_endpoint = {
+export const domain_search_endpoint = {
     description: "Perform a search over images or records.",
     request: domain_search_request_schema,
     response: domain_search_response_schema,
@@ -339,6 +377,7 @@ export const endpoints = {
     single_image: single_image_endpoint,
     image_description: image_description_endpoint,
     all_images: all_images_endpoint,
+    all_sketches: all_sketches_endpoint,
     full_episodic: full_episodic_endpoint,
     single_record: single_record_endpoint,
     record_text: record_text_endpoint,
