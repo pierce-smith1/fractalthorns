@@ -14,7 +14,7 @@
 <div class="sketch_button">
     <PageLink dest={{domain: "sketch", name: sketch.name}} cause_layout_switch>
         <div class="button-image" class:selected>
-            <ViewportDeferredImage image_url={sketch.sketch_thumb_url} />
+            <ViewportDeferredImage image_url={sketch.thumb_url} />
         </div>
     </PageLink>
 </div>

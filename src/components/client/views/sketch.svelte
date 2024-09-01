@@ -8,7 +8,7 @@
 </script>
 
 <div class="container">
-    <img src={this_sketch.sketch_image_url}>
+    <img src={this_sketch.image_url}>
 </div>
 <Keynav 
     page_left={{domain: "subproject"}}

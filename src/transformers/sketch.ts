@@ -5,8 +5,8 @@ export function to_api_object(sketch_item: Sketches.Sketch): Api.SketchObject {
     const object = {
         name: sketch_item.name,
         title: sketch_item.name.replaceAll(/[-_]/g, " "),
-        sketch_image_url: `/serve/sketch_image/${sketch_item.name}`,
-        sketch_thumb_url: `/serve/sketch_thumb/${sketch_item.name}`,
+        image_url: `/serve/sketch_image/${sketch_item.name}`,
+        thumb_url: `/serve/sketch_thumb/${sketch_item.name}`,
     };
 
     return object;

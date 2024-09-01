@@ -155,17 +155,17 @@ export type AllImagesRequest = Interfaces.TypeFromSchema<typeof all_images_reque
 export const sketch_object_schema = {
     name: {
         type: Interfaces.fields.required_string,
-        description: "The identifying name of the sketch.",
+        description: "The sketch's name for identification purposes, such as for URLs.",
     },
     title: {
         type: Interfaces.fields.required_string,
-        description: "The sketch's display title.",
+        description: "The sketch's name for display purposes. Currently unused on the site.",
     },
-    sketch_image_url: {
+    image_url: {
         type: Interfaces.fields.required_string,
         description: "The URL (relative to the root of the server) the image data can be requested from.",
     },
-    sketch_thumb_url: {
+    thumb_url: {
         type: Interfaces.fields.required_string,
         description: "The URL (relative to the root of the server) the thumbnail data can be requested from.",
     },
