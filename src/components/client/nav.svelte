@@ -15,11 +15,19 @@
         <nav>
             <div class="nav-gutter">
                 <div class="domain-buttons">
-                    <NavButton domain={"home"} />
-                    <NavButton domain={"image"} />
-                    <NavButton domain={"episodic"} />
-                    <NavButton domain={"subproject"} />
-                    <NavButton domain={"sketch"} minor={true} />
+                    <div class="domain-button-group">
+                        <NavButton domain={"home"} />
+                    </div>
+                    <div class="domain-button-group">
+                        <NavButton domain={"image"} />
+                        <NavButton domain={"sketch"} minor={true} />
+                    </div>
+                    <div class="domain-button-group">
+                        <NavButton domain={"episodic"} />
+                    </div>
+                    <div class="domain-button-group">
+                        <NavButton domain={"subproject"} />
+                    </div>
                 </div>
             </div>
             <div class="nav-contents">
@@ -49,8 +57,8 @@
         display: flex;
         flex-flow: column nowrap;
         gap: 10px;
-        min-width: 360px;
-        max-width: 360px;
+        min-width: 374px;
+        max-width: 374px;
     }
 
     nav {
@@ -102,6 +110,15 @@
         justify-content: space-around;
         align-items: center;
         gap: 10px;
+    }
+
+    .domain-button-group {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 7px;
+        border-radius: 5px;
+        border: 1px solid rgba(255 255 255 / 25%);
+        padding: 7px;
     }
 
     @media (width <= 1200px) {

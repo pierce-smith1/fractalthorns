@@ -4,6 +4,6 @@ export function speedpaint_id_to_url(id: string) {
 
 export function get_date_string(image_date: string | Date) {
     const date = new Date(image_date);
-    const formatted_date = `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()}`;
+    const formatted_date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     return formatted_date;
 }

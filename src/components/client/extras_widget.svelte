@@ -42,8 +42,8 @@
 
 <style>
     .widget-container {
-        min-width: 360px;
-        max-width: 360px;
+        min-width: 374px;
+        max-width: 374px;
     }
 
     hr {

@@ -84,7 +84,6 @@
     }
 
     .button-background {
-        background-size: contain;
         background-position: center;
         width: 100%;
         height: 100%;
@@ -96,8 +95,8 @@
     }
 
     .minor {
-        max-width: 30px;
-        max-height: 30px;
+        max-width: 36px;
+        max-height: 36px;
     }
 
     .selected .button-background {
