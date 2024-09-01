@@ -33,6 +33,7 @@
         min-width: 82px;
         border-radius: 5px;
         transition: 0.3s background-color ease-out;
+        border: 1px solid rgba(255 255 255 / 0%);
     }
 
     .button-image :global(.deferred-image) {
@@ -42,6 +43,7 @@
     }
 
     .selected, .button-image:hover {
-        background-color: rgba(255 255 255 / 50%);
+        background-color: rgba(255 255 255 / 25%);
+        border: 1px solid rgba(255 255 255 / 50%);
     }
 </style>
