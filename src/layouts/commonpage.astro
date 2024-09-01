@@ -1,6 +1,8 @@
 ---
     import Images from "../stores/image";
+    import Sketches from "../stores/sketch";
     import * as ImageTransformers from "../transformers/image";
+    import * as SketchTransformers from "../transformers/sketch";
     import * as ImageHelpers from "../helpers/image";
 
     import Default from "./default.astro";
@@ -24,7 +26,17 @@
             return {
                 url, 
                 image_url: image_object?.image_url ?? "", 
-                descr: `${image?.title ?? "unknown"} · ${ImageHelpers.get_date_string(image?.date ?? new Date())}`
+                descr: `${image?.title ?? "unknown"} · ${ImageHelpers.get_date_string(image?.date ?? new Date())}`,
+            };
+        } else if (domain === "sketch" && path) {
+            const name = path;
+            const sketch = Sketches.get().find(sketch => sketch.name === name);
+            const sketch_object = sketch && SketchTransformers.to_api_object(sketch);
+
+            return {
+                url, 
+                image_url: sketch_object?.sketch_image_url ?? "", 
+                descr: sketch_object?.title ?? "unknown",
             };
         }
     })();

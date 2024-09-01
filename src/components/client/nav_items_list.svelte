@@ -13,6 +13,7 @@
     import * as PrivateDomain from "../../helpers/domain.ts";
     import * as Subproject from "../../helpers/subproject.ts";
     import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
+    import SketchButton from "./domain/sketch_button.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {
         const neighbor = GenericUtil.neighbors(index, items)[direction === "prev" ? 0 : 1];
@@ -38,6 +39,7 @@
 
     $: current_page_index = visible_items.findIndex(item =>
         (item.domain === "image" && $current.domain === "image" && item.image.name === $current.name) ||
+        (item.domain === "sketch" && $current.domain === "sketch" && item.sketch.name === $current.name) ||
         (item.domain === "episodic-item" && $current.domain === "episodic" && item.record.name == $current.record_name) ||
         (item.domain === "episodic-line" && $current.domain === "episodic" && item.record.name == $current.record_name && item.line_index == $current.line_index) ||
         (item.domain === "subproject" && $current.domain === "subproject" && item.name == $current.name)
@@ -58,6 +60,17 @@
             <ImageDescriptionFilterButton />
         {/if}
     </div>
+
+    <!-- TODO: dumbass hack for sketches... items should be grouped in a way 
+         that lets them decide how to render their container -->
+    {#if $current.domain === "sketch"}
+        <div class="sketch-items-list">
+            {#each visible_items.filter(item => item.domain === "sketch") as sketch_item}
+                <SketchButton sketch={sketch_item.sketch} />
+            {/each}
+        </div>
+    {/if}
+
     <div class="items-list">
         {#each visible_items as item, i}
             <div id={`item-${i}`}>
@@ -112,6 +125,15 @@
         flex-flow: column nowrap;
         gap: 0.3rem;
         margin: 1rem 0 1rem 0;
+    }
+
+    /* HACK KILL THIS PLEASE */
+    .sketch-items-list {
+        width: 90%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        gap: 10px;
     }
 
     .nothing-warning {

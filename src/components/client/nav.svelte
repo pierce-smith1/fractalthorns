@@ -17,9 +17,9 @@
                 <div class="domain-buttons">
                     <NavButton domain={"home"} />
                     <NavButton domain={"image"} />
-                    <NavButton domain={"sketch"} minor={true} />
                     <NavButton domain={"episodic"} />
                     <NavButton domain={"subproject"} />
+                    <NavButton domain={"sketch"} minor={true} />
                 </div>
             </div>
             <div class="nav-contents">

@@ -16,10 +16,12 @@
         switch (domain) {
             case "home": return {domain};
             case "image": {
-                const latest_image = await Fetchers.get.single_image({name: undefined});
+                const latest_image = await Fetchers.get.single_image({});
                 return {domain, name: latest_image.name};
             } case "sketch": {
-                return {domain, name: "?"};
+                const all_sketches = await Fetchers.get.all_sketches({});
+                const latest_sketch = all_sketches.sketches[0];
+                return {domain, name: latest_sketch.name};
             } case "episodic": {
                 const episodic = await Fetchers.get.full_episodic({});
                 return {domain, record_name: episodic.chapters[0].records[0].name!};

@@ -21,10 +21,11 @@
         <Yokscr />
     {/if}
 </div>
-{#await Fetchers.get.full_episodic({})}
-{:then episodic}
+{#await Promise.all([Fetchers.get.full_episodic({}), Fetchers.get.all_sketches({})])}
+{:then [episodic, sketches]}
     <Keynav 
         page_left={{domain: "episodic", record_name: episodic.chapters[0].records[0].name ?? ""}}
+        page_right={{domain: "sketch", name: sketches.sketches[0].name}}
     />
 {/await}
 

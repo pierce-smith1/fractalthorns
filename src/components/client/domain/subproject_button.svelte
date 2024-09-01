@@ -41,10 +41,6 @@
         background-color: rgba(255 255 255 / 25%);
     }
 
-    .subproject-icon-container {
-
-    }
-
     .subproject-text-container {
         display: flex;
         flex-flow: column nowrap;

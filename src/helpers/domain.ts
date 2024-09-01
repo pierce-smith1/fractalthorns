@@ -19,6 +19,7 @@ export type Page =
 
 export type Item = 
     | {domain: "image", image: Exclude<Api.DomainSearchResult["image"], undefined>}
+    | {domain: "sketch", sketch: Api.SketchObject}
     | {domain: "episodic-item", record: Exclude<Api.DomainSearchResult["record"], undefined>}
     | {
         domain: "episodic-line", 
@@ -58,6 +59,7 @@ export function item_to_result(item: Item): Api.DomainSearchResult {
 export function canonical_domain_of(item: Item): Domain {
     switch (item.domain) {
         case "image": return "image"
+        case "sketch": return "sketch";
         case "episodic-item":
         case "episodic-line": return "episodic";
         case "subproject": return "subproject";
@@ -67,6 +69,7 @@ export function canonical_domain_of(item: Item): Domain {
 export function item_to_page(item: Item): Page {
     switch (item.domain) {
         case "image": return {domain: "image", name: item.image.name};
+        case "sketch": return {domain: "sketch", name: item.sketch.name};
         case "episodic-item": return {domain: "episodic", record_name: item.record.name ?? ""};
         case "episodic-line": return {domain: "episodic", record_name: item.record.name ?? "", line_index: item.line_index};
         case "subproject": return item;
@@ -98,6 +101,7 @@ export function page_to_path(page: Page) {
     const item_suffix = (() => {
         switch (page.domain) {
             case "image": return page.name;
+            case "sketch": return page.name;
             case "episodic": return `${page.record_name ?? ""}/${page.line_index ?? ""}`;
             case "home": return;
             case "subproject": return page.name;
@@ -115,6 +119,7 @@ export function path_to_page(path: string): Page {
     const page = (() => {
         switch (domain) {
             case "image": return {domain, name: path_parts[1]};
+            case "sketch": return {domain, name: path_parts[1]};
             case "episodic": return {domain, record_name: path_parts[1], line_id: path_parts[2]};
             case "home": return {domain};
             case "subproject": return {domain, name: path_parts[1]};

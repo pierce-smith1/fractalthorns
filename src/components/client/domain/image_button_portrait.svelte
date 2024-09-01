@@ -1,28 +1,17 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-
     import * as Api from "../../../api";
 
-    export let image: Api.ImageObject;
+    import ViewportDeferredImage from "../style/viewport_deferred_image.svelte";
 
-    let visible = false;
-    let portrait_element: Element;
-    onMount(() => {
-        let scroll_observer = new IntersectionObserver(entries => {
-            for (const entry of entries) {
-                if (entry.isIntersecting) {
-                    visible = true;
-                }
-            }
-        });
-        scroll_observer.observe(portrait_element);
-    });
+    export let image: Api.ImageObject;
 </script>
 
-<div class="portrait" bind:this={portrait_element} style:background-image={visible ? `url(${image.thumb_url})` : ""}></div>
+<div class="portrait">
+    <ViewportDeferredImage image_url={image.thumb_url} />
+</div>
 
 <style>
-    .portrait {
+    .portrait :global(.deferred-image) {
         display: block;
         box-sizing: border-box;
         min-width: 97%;
@@ -35,7 +24,7 @@
     }
 
     @media (width <= 1200px) {
-        .portrait {
+        .portrait :global(.deferred-image) {
             background-color: rgba(0 0 0 / 50%);
         }
     }

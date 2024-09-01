@@ -53,6 +53,10 @@ export function set_domain_items(domain: Domain.Domain) {
                 const {images} = await Fetchers.get.all_images({});
                 return images.map(image => ({domain, image}));
 
+            case "sketch": 
+                const {sketches} = await Fetchers.get.all_sketches({});
+                return sketches.map(sketch => ({domain, sketch}));
+
             case "episodic":
                 const {chapters} = await Fetchers.get.full_episodic({});
                 return chapters.flatMap(chapter => chapter.records.map(record => ({

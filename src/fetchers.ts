@@ -28,6 +28,7 @@ function define_get_fetcher<
 export const get = {
     all_news: define_get_fetcher<"all_news">("all_news"),
     all_images: define_get_fetcher<"all_images">("all_images"),
+    all_sketches: define_get_fetcher<"all_sketches">("all_sketches"),
     image_description: define_get_fetcher<"image_description">("image_description"),
     full_episodic: define_get_fetcher<"full_episodic">("full_episodic"),
     single_image: define_get_fetcher<"single_image">("single_image"),

@@ -6,8 +6,8 @@ import sharp from "sharp";
 import Sketches from "../../../stores/sketch";
 import Config from "../../../config";
 
-const image_thumbnail_width = 100;
-const image_thumbnail_height = 100;
+const image_thumbnail_width = 72;
+const image_thumbnail_height = 72;
 
 const thumbnail_cache: {[key: string]: Buffer} = {};
 

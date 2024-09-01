@@ -5,7 +5,7 @@
     import {current} from "../page.ts";
 
     import PageLink from "../page_link.svelte";
-    import Portrait from "./image_button_portrait.svelte";
+    import ImageButtonPortrait from "./image_button_portrait.svelte";
 
     export let image: Api.ImageObject;
 </script>
@@ -13,7 +13,7 @@
 <div class="image-portrait">
     <PageLink dest={{domain: "image", name: image.name}} cause_layout_switch>
         <div class="portrait-block" style:border-color={RecordHelpers.get_iteration_color(image.canon ?? "")} class:selected={$current.domain === "image" && $current.name === image.name}>
-            <Portrait {image} />
+            <ImageButtonPortrait {image} />
         </div>
     </PageLink>
 </div>
