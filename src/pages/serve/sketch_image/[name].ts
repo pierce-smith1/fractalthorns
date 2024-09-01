@@ -13,7 +13,7 @@ export const GET: APIRoute = async context => {
         return new Response(null, {status: 404});
     }
 
-    const png_path = `${Config.authorland_root}/sketches/${name}.png`;
+    const png_path = `${Config.authorland_root}/sketches/${sketch.prefix}.${name}.png`;
     const png_data = await Fs.readFile(png_path);
 
     const response = new Response(png_data, {headers: {"Content-Type": "image/png"}});
