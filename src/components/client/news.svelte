@@ -59,7 +59,7 @@
         align-items: center;
         height: 100%;
         width: 100%;
-        padding: 10px;
+        padding: 0;
     }
 
     .news-title {
