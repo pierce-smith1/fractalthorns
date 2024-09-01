@@ -47,7 +47,11 @@
 
     $: {
         const current_item_element = document.querySelector<HTMLDivElement>(`#item-${current_page_index}`);
-        current_item_element?.scrollIntoView({behavior: "smooth", block: "center"});
+
+        // TODO more dumbass hack for sketches :(
+        if ($current.domain !== "sketch") {
+            current_item_element?.scrollIntoView({behavior: "smooth", block: "center"});
+        }
     }
 
     $: neighbor_pages = GenericUtil.neighbors(current_page_index, visible_items);
@@ -71,32 +75,34 @@
         </div>
     {/if}
 
-    <div class="items-list">
-        {#each visible_items as item, i}
-            <div id={`item-${i}`}>
-                {#if item.domain === "image"}
-                    <ImageButton image={item.image} />
-                {:else if item.domain === "episodic-item"}
-                    <EpisodicButton record={item.record} 
-                        prev_neighbor={get_neighbor(i, visible_items, "prev")} 
-                    />
-                {:else if item.domain === "episodic-line"}
-                    <EpisodicButton record={item.record} 
-                        prev_neighbor={get_neighbor(i, visible_items, "prev")} 
-                        preview_matched_text={item.matched_text}
-                        preview_line_index={item.line_index}
-                    />
-                {:else if item.domain === "subproject"}
-                    <SubprojectButton subproject={get_subproject(item.name ?? "")} />
-                {/if}
-            </div>
-        {/each}
-        {#if $nav_state.search_waiting}
-            <p class="nothing-warning"><em>searching...</em></p>
-        {:else if visible_items.length === 0 && $nav_state.viewing_search_results}
-            <p class="nothing-warning"><em>nothing was found</em></p>
-        {/if}
-    </div>
+    {#if $current.domain !== "sketch"}
+        <div class="items-list">
+            {#each visible_items as item, i}
+                <div id={`item-${i}`}>
+                    {#if item.domain === "image"}
+                        <ImageButton image={item.image} />
+                    {:else if item.domain === "episodic-item"}
+                        <EpisodicButton record={item.record} 
+                            prev_neighbor={get_neighbor(i, visible_items, "prev")} 
+                        />
+                    {:else if item.domain === "episodic-line"}
+                        <EpisodicButton record={item.record} 
+                            prev_neighbor={get_neighbor(i, visible_items, "prev")} 
+                            preview_matched_text={item.matched_text}
+                            preview_line_index={item.line_index}
+                        />
+                    {:else if item.domain === "subproject"}
+                        <SubprojectButton subproject={get_subproject(item.name ?? "")} />
+                    {/if}
+                </div>
+            {/each}
+            {#if $nav_state.search_waiting}
+                <p class="nothing-warning"><em>searching...</em></p>
+            {:else if visible_items.length === 0 && $nav_state.viewing_search_results}
+                <p class="nothing-warning"><em>nothing was found</em></p>
+            {/if}
+        </div>
+    {/if}
 </div>
 <Keynav
     page_up={neighbor_pages[0] ? PrivateDomain.item_to_page(neighbor_pages[0]) : undefined}
@@ -133,7 +139,7 @@
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
-        gap: 10px;
+        gap: 5px;
     }
 
     .nothing-warning {

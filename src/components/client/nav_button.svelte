@@ -80,10 +80,11 @@
         justify-content: center;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
+        padding: 0;
     }
 
     .button-background {
-        background-size: cover;
+        background-size: contain;
         background-position: center;
         width: 100%;
         height: 100%;
