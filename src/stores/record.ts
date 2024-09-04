@@ -184,8 +184,8 @@ export class RecordStore extends Store.Store<Record> {
             if (label_match) {
                 const [, character, modifier_1, modifier_2, inline_text] = label_match;
 
-                const language = [modifier_1, modifier_2].find(modifier => modifier?.startsWith("in"))?.substring(3);
-                const emphasis = [modifier_1, modifier_2].find(modifier => modifier && !modifier.startsWith("in"));
+                const language = [modifier_1, modifier_2].find(modifier => modifier?.startsWith("in "))?.substring(3);
+                const emphasis = [modifier_1, modifier_2].find(modifier => modifier && !modifier.startsWith("in "));
                 const is_inline = !!inline_text;
 
                 commit_line();
