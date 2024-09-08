@@ -77,13 +77,14 @@ function base_points_of(tier: Tier) {
         case "s": return 6;
         case "a": return 4;
         case "b": return 1;
-        case "c": return -3;
-        case "f": return -6;
+        case "c": return -2;
+        case "f": return -4;
     }
 }
 
 function adjust_points_by_crowdedness(points: number, tier_crowdedness: number) {
-    return points * (4 / (tier_crowdedness + 3));
+    const new_points = points * (1 + (6 / (tier_crowdedness + 5)));
+    return new_points;
 }
 
 type Points = {points: Array<{tier: Tier, points: number}>, average: number};
@@ -140,6 +141,8 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
                 <img class="winner-portrait" src={`/assets/images/tier-portraits/${p.character}.png`}>
             )}
         </div>
+
+        <h1>VIBRA</h1>
 
         <hr>
 
