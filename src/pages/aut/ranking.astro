@@ -142,7 +142,11 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
             )}
         </div>
 
-        <h1>VIBRA</h1>
+        <div class="winner-bigtitle-container">
+            <img class="screamouette" src="/assets/images/tier-portraits/screamouette.png">
+            <h1>VIBRA</h1>
+            <img class="screamouette" src="/assets/images/tier-portraits/screamouette2.png">
+        </div>
 
         <hr>
 
@@ -158,6 +162,8 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
         </ol>
 
         <h2>the tier lists</h2>
+
+        <hr>
 
         {Object.entries(all_placements).map(([player, placements]) => 
             <div class="tier-list-container">
@@ -198,6 +204,8 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
         )}
 
         <h2>how were these scores computed?</h2>
+
+        <hr>
 
         <p>The exact details are sort of long and boring and I already forgot them, but generally the way it works is:</p>
 
@@ -310,6 +318,24 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
     .row-b { border-color: gold; }
     .row-c { border-color: greenyellow; }
     .row-f { border-color: aquamarine; }
+
+    .winner-bigtitle-container {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-around;
+        width: 200px;
+        margin: auto;
+    }
+
+    .screamouette {
+        display: inline;
+        max-width: 42px;
+        min-width: 42px;
+        max-height: 42px;
+        min-height: 42px;
+        filter: invert();
+    }
 
     .container {
         width: 800px;
