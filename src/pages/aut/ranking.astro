@@ -1,0 +1,358 @@
+---
+
+import Default from "../../layouts/default.astro";
+
+const characters = [
+    "aemil",
+    "alba",
+    "aurak",
+    "casei",
+    "chasnah",
+    "dejil",
+    "ember",
+    "evjar",
+    "gimel",
+    "iglas",
+    "ellai",
+    "jaela",
+    "jergh",
+    "kirii",
+    "kraza",
+    "lotus",
+    "loxxe",
+    "malda",
+    "meazs",
+    "metis",
+    "netre",
+    "nyxem",
+    "romal",
+    "sabre",
+    "selte",
+    "sillh",
+    "verce",
+    "verde",
+    "vette",
+    "vibra",
+    "xera",
+    "zehal",
+    "zsung"
+] as const;
+type Character = typeof characters[number];
+
+const tiers = [
+    "s",
+    "a",
+    "b",
+    "c",
+    "f",
+] as const;
+type Tier = typeof tiers[number];
+
+const all_placements: {[player: string]: {[tier in Tier]: Array<Character>}} = {
+    caps: {
+        s: ["aemil", "casei", "chasnah", "dejil", "ember", "evjar", "lotus", "loxxe", "vibra", "nyxem"],
+        a: ["alba", "aurak", "jergh", "gimel", "meazs", "malda", "romal", "vette"],
+        b: ["kirii", "kraza", "zsung", "jaela", "verde"],
+        c: ["metis", "selte", "sillh", "verce"],
+        f: [],
+    } as const,
+    dorian: {
+        s: ["sabre", "vibra", "lotus", "casei", "zehal", "evjar", "romal", "chasnah", "alba", "nyxem", "iglas"],
+        a: ["ember", "loxxe", "sillh", "jaela", "malda", "verde", "meazs", "verce"],
+        b: ["zsung", "aemil", "ellai", "dejil"],
+        c: ["aurak", "jergh", "kirii", "metis", "vette"],
+        f: [],
+    } as const,
+    ridley: {
+        s: ["gimel", "selte", "vibra", "zehal"],
+        a: ["casei", "dejil", "jergh", "kirii", "lotus", "sabre", "vette", "zsung", "ellai", "malda"],
+        b: ["aemil", "chasnah", "jaela", "meazs", "sillh", "romal", "verce"],
+        c: ["aurak", "evjar", "iglas", "kraza", "loxxe", "metis", "verde"],
+        f: ["nyxem"],
+    } as const,
+} as const;
+
+function base_points_of(tier: Tier) {
+    switch (tier) {
+        case "s": return 6;
+        case "a": return 4;
+        case "b": return 1;
+        case "c": return -3;
+        case "f": return -6;
+    }
+}
+
+function adjust_points_by_crowdedness(points: number, tier_crowdedness: number) {
+    return points * (4 / (tier_crowdedness + 3));
+}
+
+type Points = {points: Array<{tier: Tier, points: number}>, average: number};
+const averaged_placements: {[character in Character]?: Points} = {};
+
+for (const [player, placements] of Object.entries(all_placements)) {
+    for (const [tier, characters] of Object.entries(placements)) {
+        for (const character of characters) {
+            averaged_placements[character] ??= {points: [], average: 0};
+            averaged_placements[character].points.push({tier: tier as Tier, points: adjust_points_by_crowdedness(base_points_of(tier as Tier), characters.length)});
+            averaged_placements[character].average = averaged_placements[character].points.reduce((acc, p) => acc + p.points, 0);
+        }
+    }
+}
+
+function bonus_points_of(tier: Tier) {
+    switch (tier) {
+        case "s": return 2;
+        case "a": return 1;
+        case "b": return 0;
+        case "c": return -1;
+        case "f": return -2;
+    }
+}
+
+const boosted_placements = {...averaged_placements};
+for (const [character, points] of Object.entries(averaged_placements)) {
+    const bonus_multiplier = points.points.reduce((acc, {tier}) => acc + bonus_points_of(tier), 0);
+    const adjusted_multiplier = 1 + (bonus_multiplier * 0.2);
+    boosted_placements[character as Character]!.average *= adjusted_multiplier;
+}
+
+const positions_descending = Object.entries(boosted_placements)
+    .map(([character, points]) => ({character, average: points.average}))
+    .toSorted((a, b) => b.average - a.average);
+
+const grouped_positions = positions_descending.map(x => [x]);
+let i = -1;
+while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[i + 1]?.[0].average)) !== -1) {
+    grouped_positions[i] = [...grouped_positions[i], ...grouped_positions[i + 1]];
+    grouped_positions.splice(i + 1, 1);
+}
+
+---
+
+<Default>
+    <div class="container">
+        <h1>the best fractalthorns character is...</h1>
+        <div class="winner-image-container">
+            <div class="winner-background">
+                <canvas class="winner-deco-canvas"></canvas>
+            </div>
+            {grouped_positions[0].map(p => 
+                <img class="winner-portrait" src={`/assets/images/tier-portraits/${p.character}.png`}>
+            )}
+        </div>
+
+        <hr>
+
+        <ol>
+            {grouped_positions.map(positions => 
+                <li class="tier-item">
+                    {positions.map(p =>
+                        <img class="inline-tier-portrait" src={`/assets/images/tier-portraits/${p.character}.png`}>
+                    )}
+                    <strong>{positions.map(p => p.character).join(" & ")}</strong> <span class="score">{positions[0].average.toFixed(2)}</span>
+                </li>
+            )}
+        </ol>
+
+        <h2>the tier lists</h2>
+
+        {Object.entries(all_placements).map(([player, placements]) => 
+            <div class="tier-list-container">
+                <h3>{player}</h3>
+                <div class="tier-list">
+                    <div class="tier-list-row">
+                        <div class="tier-row-name row-s">S</div>
+                        {placements.s.map(character => 
+                            <img class="tier-list-tier-portrait" src={`/assets/images/tier-portraits/${character}.png`}>
+                        )}
+                    </div>
+                    <div class="tier-list-row">
+                        <div class="tier-row-name row-a">A</div>
+                        {placements.a.map(character => 
+                            <img class="tier-list-tier-portrait" src={`/assets/images/tier-portraits/${character}.png`}>
+                        )}
+                    </div>
+                    <div class="tier-list-row">
+                        <div class="tier-row-name row-b">B</div>
+                        {placements.b.map(character => 
+                            <img class="tier-list-tier-portrait" src={`/assets/images/tier-portraits/${character}.png`}>
+                        )}
+                    </div>
+                    <div class="tier-list-row">
+                        <div class="tier-row-name row-c">C</div>
+                        {placements.c.map(character => 
+                            <img class="tier-list-tier-portrait" src={`/assets/images/tier-portraits/${character}.png`}>
+                        )}
+                    </div>
+                    <div class="tier-list-row">
+                        <div class="tier-row-name row-f">F</div>
+                        {placements.f.map(character => 
+                            <img class="tier-list-tier-portrait" src={`/assets/images/tier-portraits/${character}.png`}>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )}
+
+        <h2>how were these scores computed?</h2>
+
+        <p>The exact details are sort of long and boring and I already forgot them, but generally the way it works is:</p>
+
+        <ul>
+            <li>Each placement in a tier gives the character a certain number of points, higher tiers giving more</li>
+            <li>A placement is weighted more heavily the <em>fewer</em> characters are in the same tier</li>
+            <li>The final score is based on the arithmetic mean of the character's points over all tier lists</li>
+            <li>These averages are given extra weight for how consistent the character's overall ranking is (e.g., a character placed in S tier three times has a higher score than one placed in S tier twice and in the unranked tier once)</li>
+        </ul>
+
+        <p>These factors together reward characters that were not just ranked highly, but consistently and uniquely ranked highly.</p>
+    </div>
+</Default>
+
+<style>
+    :global(body) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(20 20 20 / 100%);
+    }
+
+    .winner-text {
+        color: red;
+    }
+
+    .winner-image-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .winner-portrait {
+        z-index: 1000;
+        min-width: 128px;
+        max-width: 128px;
+        min-height: 128px;
+        max-height: 128px;
+    }
+    
+    .winner-deco-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    * {
+        font-family: lekton;
+        color: white;
+    }
+
+    hr {
+        color: gray;
+    }
+
+    .inline-tier-portrait {
+        display: inline;
+        position: relative;
+        top: 10px;
+        min-width: 32px;
+        max-width: 32px;
+        min-height: 32px;
+        max-height: 32px;
+    }
+
+    .tier-list-tier-portrait {
+        min-width: 64px;
+        max-width: 64px;
+        min-height: 64px;
+        max-height: 64px;
+    }
+
+    .score {
+        position: relative;
+        color: gray;
+        bottom: 8px;
+    }
+
+    .tier-list {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+
+    .tier-list-row {
+        display: flex;
+        flex-flow: row nowrap;
+    }
+
+    .tier-row-name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        border: 1px solid;
+        min-width: 60px;
+        max-width: 60px;
+        min-height: 60px;
+        max-height: 60px;
+        margin: 2px;
+    }
+
+    .row-s { border-color: red; }
+    .row-a { border-color: orange; }
+    .row-b { border-color: gold; }
+    .row-c { border-color: greenyellow; }
+    .row-f { border-color: aquamarine; }
+
+    .container {
+        width: 800px;
+    }
+</style>
+
+<script>
+    import p5 from "p5";
+
+    new p5((p5: p5) => {
+        p5.setup = () => {
+            const canvas = document.querySelector(".winner-background canvas");
+
+            p5.createCanvas(800, 128, p5.P2D, canvas!);
+
+            p5.windowResized();
+        };
+
+        p5.draw = () => {
+            p5.background(20);
+
+            p5.translate(p5.width / 2, p5.height / 2);
+
+            for (let i = 0; i < 30; i++) {
+                p5.push();
+
+                p5.rotate((p5.TWO_PI / 30) * i + (p5.frameCount / 500));
+
+                p5.strokeWeight(10);
+                p5.stroke(p5.color(230, 0, 55));
+                p5.line(0, 0, 200, 0);
+
+                p5.pop();
+            }
+
+            p5.rectMode(p5.CENTER);
+            p5.fill(20);
+            p5.rect(0, 0, 150, 150);
+        };
+
+        p5.windowResized = () => {
+            if (p5.windowWidth < 800) {
+                p5.resizeCanvas(p5.windowWidth, 128);
+            } else {
+                p5.resizeCanvas(800, 128);
+            }
+        }
+    });
+</script>
