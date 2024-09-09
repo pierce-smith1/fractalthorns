@@ -70,6 +70,13 @@ const all_placements: {[player: string]: {[tier in Tier]: Array<Character>}} = {
         c: ["aurak", "evjar", "iglas", "kraza", "loxxe", "metis", "verde"],
         f: ["nyxem"],
     } as const,
+    prrrki: {
+        s: ["chasnah", "sillh", "loxxe", "malda"],
+        a: ["romal", "lotus", "ember", "jaela", "casei", "jergh", "evjar", "zsung", "verce", "nyxem", "vibra"],
+        b: ["sabre", "alba", "verde", "meazs", "vette", "aemil", "ellai", "kirii", "metis", "selte", "netre"],
+        c: ["zehal", "iglas", "aurak"],
+        f: [],
+    } as const
 } as const;
 
 function base_points_of(tier: Tier) {
@@ -144,7 +151,7 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
 
         <div class="winner-bigtitle-container">
             <img class="screamouette" src="/assets/images/tier-portraits/screamouette.png">
-            <h1>VIBRA</h1>
+            <h1 class="winner-bigtitle">VIBRA</h1>
             <img class="screamouette" src="/assets/images/tier-portraits/screamouette2.png">
         </div>
 
@@ -160,6 +167,8 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
                 </li>
             )}
         </ol>
+
+        <em>xera was never ranked and thus he has no position :(</em>
 
         <h2>the tier lists</h2>
 
@@ -207,12 +216,12 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
 
         <hr>
 
-        <p>The exact details are sort of long and boring and I already forgot them, but generally the way it works is:</p>
+        <p>The exact details are long and boring and I already forgot them, but generally the way it works is:</p>
 
         <ul>
             <li>Each placement in a tier gives the character a certain number of points, higher tiers giving more</li>
             <li>A placement is weighted more heavily the <em>fewer</em> characters are in the same tier</li>
-            <li>The final score is based on the arithmetic mean of the character's points over all tier lists</li>
+            <li>The final score is based on the average of the character's points over all tier lists</li>
             <li>These averages are given extra weight for how consistent the character's overall ranking is (e.g., a character placed in S tier three times has a higher score than one placed in S tier twice and in the unranked tier once)</li>
         </ul>
 
@@ -226,6 +235,7 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
         justify-content: center;
         align-items: center;
         background-color: rgba(20 20 20 / 100%);
+        background-image: url("/assets/images/tier-portraits/bg.png");
     }
 
     .winner-text {
@@ -328,6 +338,10 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
         margin: auto;
     }
 
+    .winner-bigtitle {
+        line-height: 10px;
+    }
+
     .screamouette {
         display: inline;
         max-width: 42px;
@@ -355,7 +369,7 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
         };
 
         p5.draw = () => {
-            p5.background(20);
+            p5.clear();
 
             p5.translate(p5.width / 2, p5.height / 2);
 
@@ -372,7 +386,8 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
             }
 
             p5.rectMode(p5.CENTER);
-            p5.fill(20);
+            p5.noStroke();
+            p5.fill(35);
             p5.rect(0, 0, 150, 150);
         };
 
