@@ -76,7 +76,21 @@ const all_placements: {[player: string]: {[tier in Tier]: Array<Character>}} = {
         b: ["sabre", "alba", "verde", "meazs", "vette", "aemil", "ellai", "kirii", "metis", "selte", "netre"],
         c: ["zehal", "iglas", "aurak"],
         f: [],
-    } as const
+    } as const,
+    "mi-28n": {
+        s: ["evjar", "aemil", "casei", "meazs", "vibra", "vette", "sabre"],
+        a: ["romal", "malda", "lotus", "nyxem", "netre"],
+        b: ["verde", "verce", "ember", "jaela", "sillh"],
+        c: ["ellai", "zehal", "chasnah", "zsung", "gimel", "dejil", "kraza", "iglas"],
+        f: ["kirii", "metis", "aurak", "jergh", "loxxe"],
+    } as const,
+    "mcawesome": {
+        s: ["casei"],
+        a: ["aemil", "alba", "chasnah", "gimel", "lotus", "loxxe", "meazs", "netre", "romal", "sabre", "zehal", "verde", "xera"],
+        b: ["dejil", "evjar", "iglas", "ellai", "kraza", "nyxem", "selte", "verce", "vette", "vibra", "zsung", "malda", "jergh"],
+        c: ["aurak", "ember", "kirii", "metis", "sillh"],
+        f: ["jaela"],
+    } as const,
 } as const;
 
 function base_points_of(tier: Tier) {
@@ -101,8 +115,8 @@ for (const [player, placements] of Object.entries(all_placements)) {
     for (const [tier, characters] of Object.entries(placements)) {
         for (const character of characters) {
             averaged_placements[character] ??= {points: [], average: 0};
-            averaged_placements[character].points.push({tier: tier as Tier, points: adjust_points_by_crowdedness(base_points_of(tier as Tier), characters.length)});
-            averaged_placements[character].average = averaged_placements[character].points.reduce((acc, p) => acc + p.points, 0);
+            averaged_placements[character]!.points.push({tier: tier as Tier, points: adjust_points_by_crowdedness(base_points_of(tier as Tier), characters.length)});
+            averaged_placements[character]!.average = averaged_placements[character]!.points.reduce((acc, p) => acc + p.points, 0);
         }
     }
 }
@@ -112,8 +126,8 @@ function bonus_points_of(tier: Tier) {
         case "s": return 2;
         case "a": return 1;
         case "b": return 0;
-        case "c": return -1;
-        case "f": return -2;
+        case "c": return 1;
+        case "f": return 2;
     }
 }
 
@@ -151,7 +165,7 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
 
         <div class="winner-bigtitle-container">
             <img class="screamouette" src="/assets/images/tier-portraits/screamouette.png">
-            <h1 class="winner-bigtitle">VIBRA</h1>
+            <h1 class="winner-bigtitle">{grouped_positions[0][0].character.toUpperCase()}</h1>
             <img class="screamouette" src="/assets/images/tier-portraits/screamouette2.png">
         </div>
 
@@ -167,8 +181,6 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
                 </li>
             )}
         </ol>
-
-        <em>xera was never ranked and thus he has no position :(</em>
 
         <h2>the tier lists</h2>
 
@@ -222,7 +234,7 @@ while ((i = grouped_positions.findIndex((p, i, array) => p[0].average === array[
             <li>Each placement in a tier gives the character a certain number of points, higher tiers giving more</li>
             <li>A placement is weighted more heavily the <em>fewer</em> characters are in the same tier</li>
             <li>The final score is based on the average of the character's points over all tier lists</li>
-            <li>These averages are given extra weight for how consistent the character's overall ranking is (e.g., a character placed in S tier three times has a higher score than one placed in S tier twice and in the unranked tier once)</li>
+            <li>These averages are given extra weight for how consistent the character's overall ranking is (e.g., a character placed in S tier in three tierlists has a higher score than one placed in S tier in two tierlists but omitted from the third one)</li>
         </ul>
 
         <p>These factors together reward characters that were not just ranked highly, but consistently and uniquely ranked highly.</p>
