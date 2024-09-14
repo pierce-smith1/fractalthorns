@@ -12,6 +12,8 @@
     const no_description_placeholder = "🛠 *something indistinct echoes from the future...* 🛠";
 
     export let name: string;
+    
+    let full_image_view = false;
 
     $: image_promise = Fetchers.get.single_image({name});
     $: description_promise = Fetchers.get.image_description({name});
@@ -53,6 +55,10 @@
             $layout_state = "only-nav";
         }
     }
+
+    function toggle_full_view() {
+        full_image_view = !full_image_view;
+    }
 </script>
 
 <div class="container">
@@ -62,7 +68,7 @@
         <div class="smallscreen-image-container">
             <img src={image.image_url}>
         </div>
-        <div class="image-info-container" use:setup_scroll_hint_observer>
+        <div class="image-info-container" class:fullview={full_image_view} use:setup_scroll_hint_observer>
             <div class="image-title-container">
                 <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
@@ -84,8 +90,10 @@
             </div>
             <div class="scroll-hint">...</div>
         </div>
-        <div class="image-container">
-            <a href={image.image_url} class="image-link"><img src={image.image_url}></a>
+        <div class="image-container" class:fullview={full_image_view}>
+            <button type="button" class="image-link" on:click={toggle_full_view}>
+                <img src={image.image_url}>
+            </button>
         </div>
     {/await}
 </div>
@@ -122,6 +130,14 @@
         padding: 40px;
         max-width: 40%;
         min-width: 40%;
+        transition: max-width 0.2s ease-out, min-width 0.2s ease-out, opacity 0.2s ease-out, padding 0.2s ease-out;
+    }
+
+    .image-info-container.fullview {
+        max-width: 0%;
+        min-width: 0%;
+        opacity: 0;
+        padding: 0;
     }
 
     .image-info-container :global(a) {
@@ -144,6 +160,11 @@
         padding: 0 20px 0 20px;
     }
 
+    .image-container.fullview {
+        min-width: 100%;
+        padding: 0;
+    }
+
     .smallscreen-image-container {
         display: none;
     }
@@ -154,6 +175,13 @@
         align-items: center;
         height: 100%;
         width: 100%;
+        background: none;
+        border: none;
+        transition: background 0.2s ease-out;
+    }
+
+    .image-link:hover {
+        background: rgba(255 255 255 / 20%);
     }
 
     .image-description-container {
