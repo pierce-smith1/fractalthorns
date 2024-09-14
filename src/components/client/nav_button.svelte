@@ -73,7 +73,8 @@
         max-width: 48px;
         height: 48px;
         max-height: 48px;
-        border: 1px solid rgba(255 255 255 / 50%);
+        border: none;
+        background-color: rgba(0 0 0 / 75%);
         border-radius: 5px;
         display: flex;
         align-items: center;

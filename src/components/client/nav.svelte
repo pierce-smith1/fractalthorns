@@ -77,8 +77,9 @@
         justify-content: flex-start;
         position: sticky;
         top: 0;
-        padding: 10px 0 0 10px;
-        min-height: 100%;
+        padding: 10px 10px 0 10px;
+        background: rgba(255 255 255 / 25%);
+        min-height: 100vh;
     }
 
     .nav-contents {
@@ -117,8 +118,8 @@
         flex-flow: column nowrap;
         gap: 7px;
         border-radius: 5px;
-        border: 1px solid rgba(255 255 255 / 25%);
-        padding: 7px;
+        border: 1px solid rgba(255 255 255 / 50%);
+        padding: 5px;
     }
 
     @media (width <= 1200px) {

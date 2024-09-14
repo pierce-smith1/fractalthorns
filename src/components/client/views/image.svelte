@@ -130,7 +130,7 @@
         padding: 40px;
         max-width: 40%;
         min-width: 40%;
-        transition: max-width 0.2s ease-out, min-width 0.2s ease-out, opacity 0.2s ease-out, padding 0.2s ease-out;
+        transition: max-width 0.1s ease-out, min-width 0.1s ease-out, opacity 0.1s ease-out, padding 0.1s ease-out;
     }
 
     .image-info-container.fullview {
@@ -158,10 +158,11 @@
         height: 100%;
         margin: 0;
         padding: 0 20px 0 20px;
+        transition: width 0.1s ease-out, padding 0.1s ease-out;
     }
 
     .image-container.fullview {
-        min-width: 100%;
+        width: 100%;
         padding: 0;
     }
 
