@@ -101,7 +101,7 @@
     .container {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: space-evenly;
+        justify-content: space-between;
         align-items: stretch;
         max-height: 100%;
         height: 100%;
@@ -109,7 +109,7 @@
     }
 
     .container > * {
-        margin: 20px;
+        margin: 0;
     }
 
     .image-info-container {
@@ -118,11 +118,10 @@
         position: relative;
         color: white;
         border-right: 2px solid rgba(255 255 255 / 50%);
-        max-width: 30%;
-        width: 30%;
-        height: 90%;
         overflow: hidden;
-        padding: 10px;
+        padding: 40px;
+        max-width: 40%;
+        min-width: 40%;
     }
 
     .image-info-container :global(a) {
@@ -141,8 +140,8 @@
         align-items: center;
         max-height: 100%;
         height: 100%;
-        max-width: 70%;
         margin: 0;
+        padding: 0 20px 0 20px;
     }
 
     .smallscreen-image-container {
@@ -155,12 +154,10 @@
         align-items: center;
         height: 100%;
         width: 100%;
-        padding-right: 15px;
     }
 
     .image-description-container {
         border-top: 2px solid rgba(255 255 255 / 50%);
-        padding-top: 8px;
         overflow-y: auto;
         scrollbar-width: none;
     }
