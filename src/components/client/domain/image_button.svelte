@@ -20,7 +20,7 @@
 
 <style>
     .portrait-block {
-        width: 100%;
+        width: 95%;
         border-right: 5px solid rgb(255 255 255 / 50%);
         transition: border-right 0.2s ease-out;
     }

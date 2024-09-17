@@ -25,7 +25,7 @@
     <Loading />
 {:then [news, sketches]}
     <div class="view-container" class:reading-mode={current_page.domain === "episodic"}>
-        <GlassPane --background-color={clear_bg ? "none" : undefined} title={`fractalthorns.com / ${news.items[0].version}`}>
+        <GlassPane --background-color={clear_bg ? "none" : undefined} title={`fractalthorns.com / ${news.items.filter(item => item.version)[0].version}`}>
             {#if current_page.domain === "home"}
                 <HomeView />
             {:else if current_page.domain === "image"}
