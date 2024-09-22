@@ -1,6 +1,6 @@
 ---
     import * as ImageLoader from "../stores/image";
-    import Sketches from "../stores/sketch";
+    import * as SketchLoader from "../stores/sketch";
     import * as ImageTransformers from "../transformers/image";
     import * as SketchTransformers from "../transformers/sketch";
     import * as ImageHelpers from "../helpers/image";
@@ -8,6 +8,7 @@
     import Default from "./default.astro";
     import Background from "../components/client/background.svelte";
     import Page from "../components/client/page.svelte";
+import { S } from "../../dist/client/_astro/background.svelte_svelte_type_style_lang.Cxy1bbGf";
 
     export interface Props {
         domain: string | undefined, 
@@ -30,7 +31,7 @@
             };
         } else if (domain === "sketch" && path) {
             const name = path;
-            const sketch = Sketches.get().find(sketch => sketch.name === name);
+            const sketch = (await SketchLoader.load_all()).find(sketch => sketch.name === name);
             const sketch_object = sketch && SketchTransformers.to_api_object(sketch);
 
             return {
