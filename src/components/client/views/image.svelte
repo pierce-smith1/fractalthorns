@@ -196,6 +196,10 @@
         font-size: 1em;
     }
 
+    .image-description-container :global(pre) {
+        white-space: pre-wrap;
+    }
+
     .scroll-hint {
         position: absolute;
         bottom: 0;
