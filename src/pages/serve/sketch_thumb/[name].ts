@@ -3,7 +3,7 @@ import * as Fs from "fs/promises";
 import { type APIRoute } from "astro";
 import sharp from "sharp";
 
-import Sketches from "../../../stores/sketch";
+import * as SketchLoader from "../../../stores/sketch";
 import Config from "../../../config";
 
 const image_thumbnail_width = 72;
@@ -18,7 +18,7 @@ export const GET: APIRoute = async context => {
         return new Response(thumbnail_cache[name], {headers: {"Content-Type": "image/png"}});
     }
 
-    const sketch = Sketches.get().find(sketch => sketch.name === name);
+    const sketch = (await SketchLoader.load_all()).find(sketch => sketch.name === name);
 
     if (!sketch) {
         return new Response(null, {status: 404});

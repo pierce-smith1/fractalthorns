@@ -1,13 +1,13 @@
 import * as Fs from "fs/promises";
 
 import { type APIRoute } from "astro";
-import Sketches from "../../../stores/sketch";
+import * as SketchLoader from "../../../stores/sketch";
 
 import Config from "../../../config";
 
 export const GET: APIRoute = async context => {
     const name = context.params.name ?? "";
-    const sketch = Sketches.get().find(sketch => sketch.name === name);
+    const sketch = (await SketchLoader.load_all()).find(sketch => sketch.name === name);
 
     if (!sketch) {
         return new Response(null, {status: 404});
