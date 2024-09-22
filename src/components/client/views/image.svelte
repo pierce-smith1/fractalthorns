@@ -70,7 +70,7 @@
         </div>
         <div class="image-info-container" class:fullview={full_image_view} use:setup_scroll_hint_observer>
             <div class="image-title-container">
-                <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
+                <h1 class="title">{image.title}</h1>
                 <h2 class="subtitle">{@html format_subtitle(image)}</h2>
                 {#if image.characters}
                     <div class="characters">

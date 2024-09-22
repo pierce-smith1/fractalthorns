@@ -7,7 +7,7 @@ export function to_api_object(image: Images.Image): Api.ImageObject {
         name: image.name,
         title: image.title,
         date: image.date.toISOString().split("T")[0],
-        ordinal: image.ordinal,
+        ordinal: 0,
         image_url: `/serve/image/${image.name}`,
         thumb_url: `/serve/thumb/${image.name}`,
         has_description: !!image.description,

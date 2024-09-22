@@ -20,7 +20,6 @@ export type ImageInfo = {
     canon?: string,
     characters?: Array<string>,
     speedpaint_video_id?: string,
-    ordinal: number,
 };
 
 export type Image = Omit<ImageInfo, "date"> & {
@@ -28,11 +27,11 @@ export type Image = Omit<ImageInfo, "date"> & {
     date: Date,
     colors: DominantColors,
     description?: string,
-    ordinal: number,
 };
 
 const info_file_name = "info.json";
 const description_file_name = "descr.md";
+const latest_file_name = "_latest.txt";
 
 export async function load_all() {
     const images_root_path = `${Config.authorland_root}/images`;
@@ -42,7 +41,7 @@ export async function load_all() {
 
     const images = await (async () => {
         const image_objects = await Promise.all(image_entries.map(async entry => (await load_one(entry.name))!));
-        const by_date = image_objects.toSorted((a, b) => b.ordinal - a.ordinal);
+        const by_date = image_objects.toSorted((a, b) => b.date.valueOf() - a.date.valueOf());
         const with_ordinals = by_date.map((image, i, images) => ({...image, ordinal: images.length - i}));
         return with_ordinals;
     })();
@@ -73,6 +72,14 @@ export async function load_one(name: string): Promise<Image | undefined> {
     };
 
     return private_image;
+}
+
+export async function load_latest(): Promise<Image | undefined> {
+    const latest_filename = `${Config.authorland_root}/images/${latest_file_name}`;
+    
+    const latest_name = (await Filesystem.read(latest_filename)).trim();
+
+    return load_one(latest_name);
 }
 
 export async function load_dominant_colors(name: string) {

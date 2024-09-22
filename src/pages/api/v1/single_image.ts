@@ -7,7 +7,7 @@ export const GET = Endpoint.use_get_handler<"single_image">(async (request, over
 
     const image = name
         ? await ImageLoader.load_one(name)
-        : (await ImageLoader.load_all())[0];
+        : await ImageLoader.load_latest();
 
     if (!image) {
         return override(new Response(null, {status: 404}));
