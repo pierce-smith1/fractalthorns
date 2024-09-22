@@ -5,5 +5,6 @@
         "x": 270,
         "y": 192
     },
-    "canon": "event"
+    "canon": "event",
+	"ordinal": 3
 }

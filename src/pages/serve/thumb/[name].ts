@@ -3,7 +3,7 @@ import * as Fs from "fs/promises";
 import { type APIRoute } from "astro";
 import sharp from "sharp";
 
-import Images from "../../../stores/image";
+import * as ImageLoader from "../../../stores/image";
 import Config from "../../../config";
 
 const image_thumbnail_width = 300;
@@ -18,7 +18,7 @@ export const GET: APIRoute = async context => {
         return new Response(thumbnail_cache[name], {headers: {"Content-Type": "image/png"}});
     }
 
-    const image_model = Images.get().find(image => image.name === name);
+    const image_model = await ImageLoader.load_one(name);
 
     if (!image_model) {
         return new Response(null, {status: 404});

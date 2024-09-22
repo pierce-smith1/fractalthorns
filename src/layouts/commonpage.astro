@@ -1,5 +1,5 @@
 ---
-    import Images from "../stores/image";
+    import * as ImageLoader from "../stores/image";
     import Sketches from "../stores/sketch";
     import * as ImageTransformers from "../transformers/image";
     import * as SketchTransformers from "../transformers/sketch";
@@ -17,10 +17,10 @@
     const {domain, path} = Astro.params;
 
     const url = `${domain}/${path ?? ""}`;
-    const embed = (() => {
+    const embed = await (async () => {
         if (domain === "image" && path) {
             const name = path;
-            const image = Images.get().find(image => image.name === name);
+            const image = await ImageLoader.load_one(name);
             const image_object = image && ImageTransformers.to_api_object(image);
 
             return {
