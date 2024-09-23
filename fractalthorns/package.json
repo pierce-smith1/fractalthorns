@@ -1,0 +1,39 @@
+{
+  "name": "rva",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "env-cmd -f rvaenv astro dev",
+    "start": "env-cmd -f rvaenv astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.3.3",
+    "@astrojs/node": "^8.2.3",
+    "@astrojs/svelte": "^5.0.3",
+    "@graphql-tools/merge": "^9.0.1",
+    "@types/node": "^20.10.5",
+    "@types/p5": "^1.7.6",
+    "astro": "^4.0.7",
+    "base-64": "^1.0.0",
+    "env-cmd": "^10.1.0",
+    "fast-png": "^6.2.0",
+    "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
+    "graphql-yoga": "^5.0.2",
+    "js-base64": "^3.7.7",
+    "jszip": "^3.10.1",
+    "marked": "^12.0.2",
+    "p5": "^1.9.0",
+    "sharp": "^0.33.1",
+    "svelte": "^4.2.19",
+    "typescript": "^5.3.3",
+    "vitest": "^1.6.0"
+  },
+  "devDependencies": {
+    "sass": "^1.70.0"
+  }
+}
