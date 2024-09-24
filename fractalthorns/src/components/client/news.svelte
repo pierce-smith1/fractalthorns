@@ -106,13 +106,15 @@
         font-size: 0.7em;
     }
 
-    h4, p, span, :global(p) {
+    h4, p, span {
         padding: 0;
         margin: 0;
     }
 
     /* Gets around markdown adding line breaks where I don't want them because of added <p> tags */
-    :global(p) {
+    .news-items :global(p) {
+        margin: 0;
+        padding: 0;
         display: inline;
     }
 
