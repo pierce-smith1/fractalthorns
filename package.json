@@ -3,6 +3,7 @@
     "type": "module",
     "dependencies": {
         "apicache": "^1.6.3",
-        "express": "^4.21.0"
+        "express": "^4.21.0",
+        "zeromq": "^6.0.4"
     }
 }

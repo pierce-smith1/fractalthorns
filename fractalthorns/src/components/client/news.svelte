@@ -1,8 +1,11 @@
 <script lang="ts">
     import * as Fetchers from "../../fetchers";
     import * as ImageHelpers from "../../helpers/image";
+    import * as Admin from "./admin";
 
     import Loading from "./loading.svelte";
+
+    import {marked} from "marked";
 
     const news_promise = Fetchers.get.all_news({});
 
@@ -20,6 +23,23 @@
 
         return {type: subitem_type, text: subitem_text};
     }
+
+    async function broadcast_notification() {
+        const admin_key = Admin.get_stored_key();
+        if (!admin_key) {
+            return;
+        }
+
+        const latest_item = (await news_promise).items[0];
+
+        fetch("/notifications", {
+            method: "POST",
+            headers: {
+                "ft-admin-key": admin_key,
+            },
+            body: `news_update/${JSON.stringify(latest_item)}`,
+        });
+    }
 </script>
 
 <div class="news-container">
@@ -27,6 +47,9 @@
     {#await news_promise}
         <Loading />
     {:then news} 
+        {#if Admin.get_stored_key()}
+            <button type="button" class="admin-notify-button" on:click={broadcast_notification}>notify</button>
+        {/if}
         <div class="news-items">
             {#each news.items as item}
                 <div class="news-item">
@@ -37,7 +60,7 @@
                             {#each item.items ?? [] as subitem}
                                 <li>
                                     <strong>{extract_subitem_parts(subitem).type ?? ""}</strong>
-                                    {@html extract_subitem_parts(subitem).text}
+                                    {@html marked.parse(extract_subitem_parts(subitem).text)}
                                 </li>
                             {/each}
                         </ul>
@@ -83,9 +106,14 @@
         font-size: 0.7em;
     }
 
-    h4, p, span {
+    h4, p, span, :global(p) {
         padding: 0;
         margin: 0;
+    }
+
+    /* Gets around markdown adding line breaks where I don't want them because of added <p> tags */
+    :global(p) {
+        display: inline;
     }
 
     ul {
@@ -100,5 +128,19 @@
 
     li :global(a) {
         text-decoration: underline;
+    }
+
+    .admin-notify-button {
+        width: 80%;
+        border: 1px solid orangered;
+        border-radius: 5px;
+        background: none;
+        color: white;
+        transition: background 0.2s ease-out, color 0.2s ease-out;
+    }
+
+    .admin-notify-button:hover {
+        background: orangered;
+        color: black;
     }
 </style>

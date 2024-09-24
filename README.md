@@ -15,5 +15,3 @@ Sure! I have no specific requirements for process or anything like that, just go
 ### How do I get set up locally?
 
 *This section is out of date and needs to be re-written.*
-
-

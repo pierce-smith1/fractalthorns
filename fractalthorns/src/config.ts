@@ -4,5 +4,5 @@ export default {
     authorland_root: process.env.RVA_AUTHORLAND_ROOT!,
     readerland_root: process.env.RVA_READERLAND_ROOT!,
 
-    private_api_key: process.env.PRIVATE_API_KEY!,
+    admin_key: process.env.RVA_ADMIN_KEY!,
 };
