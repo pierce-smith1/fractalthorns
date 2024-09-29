@@ -1,4 +1,4 @@
-import * as News from "../stores/news";
+import * as News from "../loaders/news";
 import * as Api from "../api";
 
 export function to_api_object(news_item: News.NewsItem): Api.NewsItem {

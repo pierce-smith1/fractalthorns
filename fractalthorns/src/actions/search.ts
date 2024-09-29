@@ -1,4 +1,4 @@
-import * as RecordLoader from "../stores/record";
+import * as RecordLoader from "../loaders/record";
 import * as GenericUtil from "../genericutil";
 
 type Invertible<T> = {value: T, not?: boolean};

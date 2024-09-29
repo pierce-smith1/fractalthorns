@@ -1,7 +1,7 @@
 import * as Fs from "fs/promises";
 
 import { type APIRoute } from "astro";
-import * as SketchLoader from "../../../stores/sketch";
+import * as SketchLoader from "../../../loaders/sketch";
 
 import Config from "../../../config";
 

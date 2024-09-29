@@ -3,7 +3,7 @@ import * as Fs from "fs/promises";
 import { type APIRoute } from "astro";
 import sharp from "sharp";
 
-import * as SketchLoader from "../../../stores/sketch";
+import * as SketchLoader from "../../../loaders/sketch";
 import Config from "../../../config";
 
 const image_thumbnail_width = 72;

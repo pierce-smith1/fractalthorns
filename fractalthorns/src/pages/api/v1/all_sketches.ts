@@ -1,5 +1,5 @@
 import * as Endpoint from "../../../endpoint";
-import * as SketchLoader from "../../../stores/sketch";
+import * as SketchLoader from "../../../loaders/sketch";
 import * as SketchTransformers from "../../../transformers/sketch";
 
 export const GET = Endpoint.use_get_handler<"all_sketches">(async (request, override) => {

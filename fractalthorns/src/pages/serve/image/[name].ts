@@ -1,7 +1,7 @@
 import * as Fs from "fs/promises";
 
 import { type APIRoute } from "astro";
-import * as ImageLoader from "../../../stores/image";
+import * as ImageLoader from "../../../loaders/image";
 
 import Config from "../../../config";
 

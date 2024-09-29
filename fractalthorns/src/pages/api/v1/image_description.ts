@@ -1,4 +1,4 @@
-import * as ImageLoader from "../../../stores/image";
+import * as ImageLoader from "../../../loaders/image";
 import * as Endpoint from "../../../endpoint";
 
 export const GET = Endpoint.use_get_handler<"image_description">(async (request, override) => {

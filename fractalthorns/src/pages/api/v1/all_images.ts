@@ -1,4 +1,4 @@
-import * as ImageLoader from "../../../stores/image";
+import * as ImageLoader from "../../../loaders/image";
 import * as ImageTranformers from "../../../transformers/image";
 import * as Endpoint from "../../../endpoint";
 

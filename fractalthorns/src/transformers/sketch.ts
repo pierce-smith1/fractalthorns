@@ -1,4 +1,4 @@
-import * as Sketches from "../stores/sketch";
+import * as Sketches from "../loaders/sketch";
 import * as Api from "../api";
 
 export function to_api_object(sketch_item: Sketches.Sketch): Api.SketchObject {

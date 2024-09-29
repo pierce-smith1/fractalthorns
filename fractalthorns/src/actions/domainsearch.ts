@@ -1,7 +1,7 @@
 import * as Domain from "../helpers/domain";
-import * as ImageLoader from "../stores/image";
+import * as ImageLoader from "../loaders/image";
 import * as ImageTransformers from "../transformers/image";
-import * as RecordLoader from "../stores/record";
+import * as RecordLoader from "../loaders/record";
 import * as RecordTransformers from "../transformers/record";
 import * as Search from "./search";
 

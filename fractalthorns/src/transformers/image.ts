@@ -1,4 +1,4 @@
-import * as Images from "../stores/image";
+import * as Images from "../loaders/image";
 import * as ImageHelpers from "../helpers/image";
 import * as Api from "../api";
 

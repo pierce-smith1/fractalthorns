@@ -1,4 +1,4 @@
-import * as Records from "../stores/record";
+import * as Records from "../loaders/record";
 import * as Api from "../api";
 
 export function to_redactable_entry(record: Records.Record): Api.RedactableRecordEntry {

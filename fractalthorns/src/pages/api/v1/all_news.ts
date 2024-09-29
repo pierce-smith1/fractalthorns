@@ -1,5 +1,5 @@
 import * as Endpoint from "../../../endpoint";
-import * as NewsLoader from "../../../stores/news";
+import * as NewsLoader from "../../../loaders/news";
 import * as NewsTransformers from "../../../transformers/news";
 
 export const GET = Endpoint.use_get_handler<"all_news">(async (request, override) => {
