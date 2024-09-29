@@ -106,7 +106,7 @@
         font-size: 0.7em;
     }
 
-    h4, p, span {
+    h4, p {
         padding: 0;
         margin: 0;
     }
