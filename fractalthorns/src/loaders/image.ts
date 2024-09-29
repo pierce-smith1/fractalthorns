@@ -3,6 +3,7 @@ import sharp from "sharp";
 import Config from "../config";
 
 import * as Filesystem from "../filesystem";
+import * as Cache from "./_cache";
 
 export type DominantColors = {
     primary?: string,
@@ -47,29 +48,31 @@ export async function load_all() {
     return images;
 }
 
-export async function load_one(name: string): Promise<Image | undefined> {
-    const info_path = `${Config.authorland_root}/images/${name}/${info_file_name}`;
+export const load_one = async (name: string): Promise<Image | undefined> => {
+    return Cache.global.cache_results(async () => {
+        const info_path = `${Config.authorland_root}/images/${name}/${info_file_name}`;
 
-    if (!await Filesystem.exists(info_path)) {
-        return undefined;
-    }
+        if (!await Filesystem.exists(info_path)) {
+            return undefined;
+        }
 
-    const info_file_contents = await Filesystem.read(info_path);
-    const info = JSON.parse(info_file_contents) as ImageInfo;
+        const info_file_contents = await Filesystem.read(info_path);
+        const info = JSON.parse(info_file_contents) as ImageInfo;
 
-    const description_path = `${Config.authorland_root}/images/${name}/${description_file_name}`;
-    const description = await Filesystem.exists(description_path)
-        ? await Filesystem.read(description_path)
-        : undefined;
+        const description_path = `${Config.authorland_root}/images/${name}/${description_file_name}`;
+        const description = await Filesystem.exists(description_path)
+            ? await Filesystem.read(description_path)
+            : undefined;
 
-    const private_image = {...info,
-        name,
-        description,
-        date: new Date(info.date),
-        colors: await load_dominant_colors(name),
-    };
+        const private_image = {...info,
+            name,
+            description,
+            date: new Date(info.date),
+            colors: await load_dominant_colors(name),
+        };
 
-    return private_image;
+        return private_image;
+    }, () => name);
 }
 
 export async function load_latest(): Promise<Image | undefined> {

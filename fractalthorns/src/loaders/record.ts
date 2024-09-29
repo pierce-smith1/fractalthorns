@@ -2,6 +2,7 @@ import Config from "../config";
 
 import * as Filesystem from "../filesystem";
 import * as RecordHelpers from "../helpers/record";
+import * as Cache from "./_cache";
 
 export type Line = {
     type: "Block" | "Inline" | "Sabre",
@@ -53,34 +54,36 @@ export async function load_all() {
     return records;
 }
 
-export async function load_one(name: string): Promise<Record | undefined> {
-    const story_file_path = `${Config.authorland_root}/records/story.json`;
-    const story_file_contents = await Filesystem.read(story_file_path);
-    const story_definition = JSON.parse(story_file_contents) as Array<{chapter_name: string, records: Array<[string, string]>}>;
+export const load_one = async (name: string): Promise<Record | undefined> => {
+    return Cache.global.cache_results(async () => {
+        const story_file_path = `${Config.authorland_root}/records/story.json`;
+        const story_file_contents = await Filesystem.read(story_file_path);
+        const story_definition = JSON.parse(story_file_contents) as Array<{chapter_name: string, records: Array<[string, string]>}>;
 
-    const solved_records_file_path = `${Config.readerland_root}/story/solved.json`;
-    const solved_records_content = await Filesystem.read(solved_records_file_path);
-    const solved_titles = JSON.parse(solved_records_content) as Array<string>; 
+        const solved_records_file_path = `${Config.readerland_root}/story/solved.json`;
+        const solved_records_content = await Filesystem.read(solved_records_file_path);
+        const solved_titles = JSON.parse(solved_records_content) as Array<string>; 
 
-    const [record_def] = story_definition.flatMap(chapter => chapter.records.flatMap(([iteration, title]) => {
-        const record_name = title.replaceAll(" ", "-");
-        return record_name === name
-            ? [{chapter: chapter.chapter_name, iteration, title}]
-            : [];
-    }));
+        const [record_def] = story_definition.flatMap(chapter => chapter.records.flatMap(([iteration, title]) => {
+            const record_name = title.replaceAll(" ", "-");
+            return record_name === name
+                ? [{chapter: chapter.chapter_name, iteration, title}]
+                : [];
+        }));
 
-    if (!record_def) {
-        return undefined;
-    }
+        if (!record_def) {
+            return undefined;
+        }
 
-    const record = await load_partial(name, record_def.chapter);
+        const record = await load_partial(name, record_def.chapter);
 
-    const full_record = {...record,
-        solved: solved_titles.includes(record_def.title),
-        iteration: record_def.iteration,
-        title: record_def.title,
-    };
-    return full_record;
+        const full_record = {...record,
+            solved: solved_titles.includes(record_def.title),
+            iteration: record_def.iteration,
+            title: record_def.title,
+        };
+        return full_record;
+    }, () => name);
 }
 
 export async function load_partial(name: string, chapter: string): Promise<IdentifiableRecord> {
