@@ -12,6 +12,8 @@ class MemoryCache {
     }
 
     async cache_results<T>(producer: () => Promise<T>, key_producer: () => string): Promise<T> {
+        //await new Promise(resolve => setTimeout(resolve, 100000));
+
         const key = key_producer();
         if (key in this.items) {
             return this.get(key) as T;

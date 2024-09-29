@@ -14,6 +14,7 @@
     import * as Subproject from "../../helpers/subproject.ts";
     import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
     import SketchButton from "./domain/sketch_button.svelte";
+    import Loading from "./loading.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {
         const neighbor = GenericUtil.neighbors(index, items)[direction === "prev" ? 0 : 1];
@@ -97,7 +98,7 @@
                 </div>
             {/each}
             {#if $nav_state.search_waiting}
-                <p class="nothing-warning"><em>searching...</em></p>
+                <Loading />
             {:else if visible_items.length === 0 && $nav_state.viewing_search_results}
                 <p class="nothing-warning"><em>nothing was found</em></p>
             {/if}
