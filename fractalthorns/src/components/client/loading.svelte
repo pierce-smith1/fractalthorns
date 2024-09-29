@@ -25,6 +25,18 @@
         z-index: 100;
         width: 64px;
         height: 70px;
+        opacity: 0%;
+        animation: 0.2s linear 0.3s fadein forwards;
+    }
+
+    @keyframes fadein {
+        from {
+            opacity: 0%;
+        }
+
+        to {
+            opacity: 100%;
+        }
     }
 
     .spinner-container {
