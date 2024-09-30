@@ -1,13 +1,8 @@
 import express from "express";
-import apicache from "apicache";
 import {handler as fractalthorns_handler} from "./fractalthorns/dist/server/entry.mjs";
 
 const NOTIFICATIONS_ROUTE = "/notifications";
 const ADMIN_KEY = process.env.RVA_ADMIN_KEY;
-
-const ft_api_cache = apicache.middleware("1 day", (req, res) => 
-    req.url.startsWith("/api") || req.url.startsWith("/serve")
-);
 
 let clients = {};
 function register_sse_client_connection(endpoint_name, req, res) {
@@ -73,7 +68,6 @@ function run_express_app() {
     const app = express();
 
     app.use(express.text());
-    app.use(ft_api_cache);
     app.use("/", express.static("./fractalthorns/dist/client/"));
     app.use((req, res, next) => {
         const is_for_notifications_route = req.url.startsWith(NOTIFICATIONS_ROUTE);
