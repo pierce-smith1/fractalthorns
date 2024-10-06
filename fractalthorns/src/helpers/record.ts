@@ -22,9 +22,23 @@ export function get_iteration_color(iteration: string | undefined): string {
         case "768221": return "#E84CDB";
         case "auzoan": return "#4CE84C";
         case "event": return "#EA0042";
-        case "rhodon": return "#009977";
+        case "rhodon": return "#FF3300";
         default:
         case "0": return "#888888";
+    }
+}
+
+export function get_display_name(iteration: Iteration): string {
+    switch (iteration) {
+        case "154373": return "the eclipse's shadow";
+        case "209151": return "the lightbloom constellation";
+        case "265404": return "the surface";
+        case "768220": return "the web";
+        case "768221": return "the last universe";
+        case "auzoan": return "auzoa";
+        case "0": return "the grove";
+        case "event": return "a special occasion";
+        default: return iteration;
     }
 }
 

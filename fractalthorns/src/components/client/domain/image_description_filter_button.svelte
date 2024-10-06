@@ -7,6 +7,9 @@
 
     let descriptions_only = false;
 
+    export let mouseover_handler: () => void = () => {};
+    export let mouseout_handler: () => void = () => {};
+
     const filter_fn = (item: Domain.Item) => {
         if (item.domain !== "image") {
             return true;
@@ -31,7 +34,15 @@
 </script>
 
 <div class="description-filter-button-container">
-    <button type="button" class="description-filter-button" on:click={toggle_filter}>
+    <button 
+        type="button" 
+        class="description-filter-button" 
+        on:click={toggle_filter}
+        on:mouseover={mouseover_handler} 
+        on:mouseout={mouseout_handler}
+        on:focus={mouseover_handler} 
+        on:blur={mouseout_handler}
+    >
         <div class="sigil" style:background-image={`url(/assets/images/common/alpha.png)`}></div>
         <div class="button-background" style:background-color={"white"} style:border-color={"white"} class:selected={descriptions_only}></div>
     </button>

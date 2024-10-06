@@ -3,18 +3,17 @@
     import {nav_state, get_items, get_visible_items} from "./nav.ts";
 
     import ImageButton from "./domain/image_button.svelte";
-    import IterationFilterButtons from "./domain/iteration_filter_buttons.svelte";
     import EpisodicButton from "./domain/episodic_button.svelte";
     import SubprojectButton from "./domain/subproject_button.svelte";
     import Keynav from "./views/keynav.svelte";
 
-    import * as RecordHelpers from "../../helpers/record";
     import * as GenericUtil from "../../genericutil";
     import * as PrivateDomain from "../../helpers/domain.ts";
     import * as Subproject from "../../helpers/subproject.ts";
-    import ImageDescriptionFilterButton from "./domain/image_description_filter_button.svelte";
+
     import SketchButton from "./domain/sketch_button.svelte";
     import Loading from "./loading.svelte";
+    import ItemFilterButtons from "./domain/item_filter_buttons.svelte";
 
     function get_neighbor(index: number, items: Array<PrivateDomain.Item>, direction: "prev" | "next") {
         const neighbor = GenericUtil.neighbors(index, items)[direction === "prev" ? 0 : 1];
@@ -31,11 +30,6 @@
     function get_subproject(name: string) {
         return Subproject.subprojects.find(subproject => subproject.name === name)!;
     }
-
-    $: nav_items = get_items($nav_state);
-
-    $: available_iterations = new Set(RecordHelpers.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter)));
-
     $: visible_items = get_visible_items($nav_state);
 
     $: current_page_index = visible_items.findIndex(item =>
@@ -59,12 +53,7 @@
 </script>
 
 <div class="nav-items-list">
-    <div class="filter-buttons">
-        <IterationFilterButtons {available_iterations} />
-        {#if $current.domain === "image"}
-            <ImageDescriptionFilterButton />
-        {/if}
-    </div>
+    <ItemFilterButtons />
 
     <!-- TODO: dumbass hack for sketches... items should be grouped in a way 
          that lets them decide how to render their container -->
@@ -116,14 +105,6 @@
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-    }
-
-    .filter-buttons {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
     }
 
     .items-list {

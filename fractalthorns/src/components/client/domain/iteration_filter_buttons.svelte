@@ -8,6 +8,8 @@
     import * as Domain from "../../../helpers/domain";
 
     export let available_iterations: Set<RecordHelpers.Iteration>;
+    export let mouseover_handler: (iteration: RecordHelpers.Iteration) => void = () => {};
+    export let mouseout_handler: (iteration: RecordHelpers.Iteration) => void = () => {};
 
     let selected_iterations = new Set<RecordHelpers.Iteration>();
     
@@ -52,7 +54,15 @@
 
 <div class="iteration-buttons">
     {#each new Set([...available_iterations, ...selected_iterations]) as iteration}
-        <button type="button" class="iteration-button" on:click={() => toggle_iteration(iteration)}>
+        <button 
+            type="button" 
+            class="iteration-button" 
+            on:click={() => toggle_iteration(iteration)} 
+            on:mouseover={() => mouseover_handler(iteration)} 
+            on:mouseout={() => mouseout_handler(iteration)}
+            on:focus={() => mouseover_handler(iteration)} 
+            on:blur={() => mouseout_handler(iteration)}
+        >
             <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
             <div class="button-background" style:background-color={RecordHelpers.get_iteration_color(iteration)} style:border-color={RecordHelpers.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
         </button>
@@ -62,8 +72,9 @@
 <style>
     .iteration-buttons {
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: row wrap;
         gap: 5px;
+        justify-content: center;
     }
 
     .iteration-button {
