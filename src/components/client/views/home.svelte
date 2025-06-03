@@ -112,6 +112,10 @@
     <div class="canvas-container">
         <Canvas {artist} bind:ctx={artist_ctx} />
     </div>
+
+    <a class="repo-link" href="https://github.com/pierce-smith1/fractalthorns">
+        <img src="/assets/images/common/socials-github.png" />
+    </a>
 </div>
 {#await Fetchers.get.single_image({name: undefined})}
 {:then image}
@@ -134,6 +138,14 @@
 
     .canvas-container {
         position: fixed;
+    }
+
+    .repo-link {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 10px;
+        opacity: 50%;
     }
 
     * {
