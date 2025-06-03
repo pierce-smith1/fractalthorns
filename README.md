@@ -1,6 +1,6 @@
 # fractalthorns
 
-![thorns](https://github.com/pierce-smith1/fractalthorns/assets/50504215/884c35c6-7640-4a78-b1d2-5e430c4fa6aa)
+![image](https://github.com/user-attachments/assets/e45a2c7a-0ee4-460a-b2d6-aa3031f53160)
 
 [Visit the live site!](https://fractalthorns.com/)
 
