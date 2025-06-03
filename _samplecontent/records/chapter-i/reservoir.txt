@@ -1,0 +1,181 @@
+{{iter=265404}}
+Record ordered on behalf of the NSIrP
+
+<                                                                     >
+< sabre                                                               >
+<                                                                     >
+< currently translating                                               >
+< iteration[265404].chevrin.goaxal -> iteration[197420].human.english >
+<                                                                     >
+< [ note                                                              >
+< [ multiple words are untranslatable                                 >
+< [ untranslatable words have been replaced with MNEMONICS            >
+<                                                                     >
+
+MEFET : Your attention, Children! AURAK's presence honors us today!
+MEFET : Rise now for our King!
+
+AURAK : Yes, yes, thank you. Be seated, everyone, we have a lot to discuss.
+
+YANIS : Of course.
+YANIS : Our Lord, MEFET is telling me interesting (and, frankly, concerning)
+        things about your plans. Do tell, what is on your mind?
+
+AURAK : Gentlemen, I would like to put into action the largest and most
+        spectacular display of faith ever constructed by our kind.
+AURAK : MEFET has spoken to me and deemed my ideas doable, but I need more
+        direction. So I have gathered you all here for guidance.
+AURAK : In short: I want to fill the Glaciercreek Reservoir with LLOKIN blood.
+
+YANIS : Indeed. Now I remember why I was concerned.
+
+AURAK : Trust me, I understand. MEFET and I have done the math, and the result
+        is dissapointing.
+
+MEFET : On average, a LLOKIN contains one-point-two litres of blood. The
+        Reservoir can hold about 193 billion litres. This would require the
+        apprehension and killing of about 160 billion LLOKIN. 
+MEFET : As I understand, TARAN, this is far beyond the current estimate of how
+        many of these creatures even exist on the Surface of the World.
+
+TARAN : Far beyond?
+TARAN : MEFET, reports from surveys have me unconvinced the current number can
+        be any larger than 350 thousand. This is absolutely NOT doable.
+
+IGLAS : We can always take them and let them repopulate.
+
+TARAN : IGLAS, that limit of 350 thousand is not based on their current
+        population, rather off of geographical data. There is simply not enough
+        space on the Surface that is habitable to them. The Terminator is a
+        surprisingly small ring.
+TARAN : Say we were to let them grow to their limit, then capture all but two
+        and let them renumerate to 350 thousand again. It would take about 551
+        thousand cycles of this before the reservoir was full.
+TARAN : Moreover, say the LLOKIN population doubles every 10 years until it
+        reaches this cap of 350 thousand. This is itself a generous estimate,
+        and even then, it would take about 55 years for the cap to be reached
+        each time.
+TARAN : Our Focus will fizzle out well before we could complete this. 
+
+IGLAS : How far could we get?
+
+TARAN : I think you've just missed the point I tried to make.
+
+AURAK : No, IGLAS, I like how you're thinking. 
+AURAK : The importance of this project might not be so much that we actually
+        fill the reservoir, just that we had a system in place to do it, and we
+        spent such incredible energy building it.
+AURAK : It'd be an unprecedented campaign of death and suffering. Imagine the
+        display for a moment, would you?
+AURAK : They'd be in a constant cycle of massacre... nearly to extinction, then
+        returned to health, and slaughtered again, the bodies of the dead
+        piling to the stars and their blood spilling over the World...
+
+TARAN : Our Lord, contain yourself, please.
+TARAN : A more effective display is one we will complete, no? I think doing
+        otherwise sends the wrong message. We must not only dream for NYXEM, we
+        must accomplish.
+
+IGLAS : May I suggest... a smaller pool.
+
+TARAN : I agree. 
+TARAN : Reduce to scope to something we can finish in 200, 300 years.
+
+MEFET : Our Lord, I am in agreement with TARAN and IGLAS. Perhaps we should
+        consider an artificially limited timeframe and determine how much
+        blood we could acquire during that time.
+MEFET : I would like to shift the discussion - what would we need to do to
+        maximize progress towards this goal?
+
+TARAN : As I mentioned, geography is a huge limiting factor. If we had more
+        livable space, we could easily make more LLOKIN.
+TARAN : IGLAS, how reasonable would it be to create housing for them past
+        the Terminator?
+
+IGLAS : Hmm...
+IGLAS : Could we not just pack them, like, really tightly in the Caldera? Is
+        that 350 thousand number based on how they live normally, or is that
+        assuming near max per square unit?
+
+TARAN : Trust me, 350 thousand is about the maximum you could possibly get.
+
+IGLAS : In that case... TARAN, I need to know, at an absolute minimum:
+        How warm does their housing need to be?
+        How much food do they need to subsist off of?
+        How long is it until they mature (stop growing)?
+        How quickly can they reproduce?
+
+TARAN : All of that actually depends. Technically, you could keep them in
+        torpor for nearly their entire lives by dropping them below 30 C.
+        They'll need much less food in that state, but still enough to let
+        them mature. It might slow the maturing process, I suppose.
+TARAN : Obviously, they'll grow fastest if we keep them around 39 C and feed
+        them enough. "Enough" still isn't very much. A meal once a week
+        might do. 
+TARAN : Honestly, you will have a harder time getting the right kind of food
+        for their diet. A constant supply of arbeast meat isn't going to cut it
+        for them, and we can't grow sandweed anywhere around here without what
+        I assume would be pretty destructive terraforming.
+
+AURAK : Are you two suggesting we breed them like animals?
+
+IGLAS : Honestly, TARAN, that doesn't sound impossible. And... yes, our Lord, I
+        believe we are.
+IGLAS : In fact, we might be able to do this mostly in the Caldera. Isn't a
+        large portion of the Caldera consumed by ocean?
+
+TARAN : Yes, quite a large part.
+
+IGLAS : Picture this, then - floating settlements.
+
+WARES : Can I interject?
+WARES : Everything you're suggesting is completely impossible without total
+        military control of the Caldera. Can you tell the Children how they're
+        supposed to lead their crusaders into a 40 C environment, the most
+        hellish terrain on the Surface, against an enemy we know tactically
+        nothing about, and claim a decisive victory?
+
+NERAN : Two words: Gravity bombs. Focus-assisted gravity warheads.
+
+WARES : That technology doesn't exist, and it never will, NERAN.
+
+NERAN : No heart, WARES! I dislike your lack of faith.
+NERAN : The science behind this isn't as unreasonable as you think. The
+        warheads simply need to be launched high enough to enter freefall
+        above the Caldera, then navigated around the Focus with some kind of
+        control system as they fall. 
+
+WARES : I need to talk to you about this, NERAN. Your delusions of grandeur
+        are unhelpful.
+WARES : This has been tried numerous times before. The level of precision
+        needed to cause the warheads to enter freefall is absolutely
+        unreasonable. You either bombard the other side of the Surface or they
+        drop directly back down on us.
+WARES : And a control system? Fins and rudders aren't magic, you know.
+
+AURAK : Enough, WARES, I've heard this conversation too many times. If it gives 
+        us a chance, we have to take that chance! I'm tired of waiting for the
+        perfect plan, the optimal chance of success, the dissent to progress.
+        We will miss our shot if we don't take it.
+AURAK : TARAN and IGLAS; I like this farm idea. I want you to get started on
+        it. Gather your workforce.
+AURAK : NERAN; get together with MEFET and push forward with the gravity
+        warhead. I want progress on this.
+AURAK : WARES; prepare your forces for an invasion of the Caldera.
+
+IGLAS : Do we, uh, start in the Caldera, our Lord?
+
+AURAK : Self-organize! Maybe you do, maybe you don't. Either way, I'm not a
+        part of that conversation. Get together and decide what's reasonable.
+AURAK : Gentlemen, this is a time for action. The Focus was not created to burn
+        finitely so we could waste its gifts.
+AURAK : If we do not prove to NYXEM soon that we are worthy of Ascension, we
+        will still be here when the Surface collapses.
+AURAK : We must finish His work. All I want from you is one thing.
+AURAK : Show me your faith.
+
+
+YANIS : For the record, I'm still concerned.
+
+< record ends >
+

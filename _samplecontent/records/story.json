@@ -1,0 +1,54 @@
+[
+    { 
+        "chapter_name": "i", 
+        "records": [
+            {
+                "iteration": "265404", 
+                "title": "reservoir"
+            },
+            {
+                "iteration": "768221", 
+                "title": "the commencement"
+            },
+            {
+                "iteration": "265404", 
+                "title": "discovery"
+            }
+        ]
+    },
+    {
+        "chapter_name": "vi",
+        "records": [
+            {
+                "iteration": "209151", 
+                "title": "revolutionary discovery"
+            },
+            {
+                "iteration": "209151", 
+                "title": "endless night"
+            }
+        ]
+    },
+	{
+        "chapter_name": "xvii",
+        "records": [
+            {
+                "iteration": "768220", 
+                "title": "kindling"
+            }
+        ]
+    },
+	{
+        "chapter_name": "xix",
+        "records": [
+            {
+                "iteration": "768221", 
+                "title": "the beast wakes"
+            },
+			{
+				"iteration": "0", 
+                "title": "dreams and reality"
+			}
+        ]
+    }
+]

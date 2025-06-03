@@ -1,0 +1,11 @@
+dist/
+.astro/
+.idea/
+_content/
+node_modules/
+drizzle/
+.git-old/
+rvaenv
+deploy*
+*.sqlite
+*.sqlite-journal

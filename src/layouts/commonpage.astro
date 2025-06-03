@@ -1,0 +1,83 @@
+---
+    import Db from "../data/db";
+    import * as Schema from "../data/schema/schema";
+    import * as Exp from "drizzle-orm/sqlite-core/expressions";
+
+    import * as ImageHelpers from "../helpers/image";
+    import * as ImageQueries from "../queries/image";
+    import * as SketchQueries from "../queries/sketch";
+
+    import Default from "./default.astro";
+    import Background from "../components/client/background.svelte";
+    import Page from "../components/client/page.svelte";
+
+    import Config from "../config";
+
+    export interface Props {
+        domain: string | undefined, 
+        path: string | undefined,
+    }
+
+    const {domain, path} = Astro.params;
+    const env = Config.env;
+
+    const url = `${domain}/${path ?? ""}`;
+    const embed = await (async () => {
+        if (domain === "image" && path) {
+            const name = path;
+
+            const image = await ImageQueries.get_one(name);
+
+            return {
+                url, 
+                image_url: image ? ImageHelpers.get_image_url(name) : "",
+                descr: `${image?.title ?? "unknown"} · ${ImageHelpers.get_date_string(image?.date ?? new Date())}`,
+            };
+        } else if (domain === "sketch" && path) {
+            const name = path;
+
+            const sketch = await SketchQueries.get_one(name);
+
+            return {
+                url, 
+                image_url: sketch?.image_url ?? "", 
+                descr: sketch?.name ?? "unknown",
+            };
+        }
+    })();
+---
+
+<Default embed_url={embed?.url} embed_image_url={embed?.image_url} embed_descr={embed?.descr}>
+	<div class="page-body" data-domain={domain ?? "home"} data-path={path} data-env={env === "prod" ? undefined : env}>
+        <Background client:only="svelte" />
+        <Page client:only="svelte" />
+    </div>
+</Default>
+
+<style>
+    :global(*) {
+        font-family: "lekton";
+    }
+</style>
+
+<script>
+    import * as Domain from "../helpers/domain";
+    import * as Nav from "../components/client/nav";
+    import * as ClientPage from "../components/client/page";
+
+    const body = document.querySelector(".page-body");
+
+    // @ts-ignore
+    const domain = body?.dataset["domain"];
+    // @ts-ignore
+    const path = body?.dataset["path"];
+    // @ts-ignore
+    const env = body?.dataset["env"] ?? "prod";
+
+    const page = Domain.path_to_page(`${domain}/${path ?? ""}`);
+    ClientPage.current.set(page);
+    ClientPage.env.set(env);
+
+    window.history.replaceState(page, "");
+    Nav.set_domain_items(domain);
+</script>

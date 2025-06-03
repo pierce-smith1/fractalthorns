@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "lmmono";
+    src: url("/assets/fonts/lmmono10-regular-webfont.woff");
+}
+
+@font-face {
+    font-family: "eczar";
+    src: url("/assets/fonts/Eczar-Regular-webfont.woff");
+}
+
+@font-face {
+    font-family: "lekton";
+    src: url("/assets/fonts/Lekton-Regular.ttf");
+}
+
+@font-face {
+    font-family: "agave";
+    src: url("/assets/fonts/Agave-Regular.ttf");
+}
+
+@font-face {
+    font-family: "saira";
+    src: url("/assets/fonts/SairaCondensed-Light.ttf");
+}
+
+body { 
+    margin: 0;
+    padding: 0;
+}

@@ -1,0 +1,21 @@
+[
+    {
+        "chapter": "xix",
+        "puzzles": [
+            {
+                "name": "simple-i",
+                "solve_behavior": {"type": "increment"},
+				"solve_code": "solve-me",
+				"primary_color": "#0026f",
+				"secondary_color": "#57007f"
+            },
+            {
+                "name": "simple-ii",
+                "solve_behavior": {"type": "increment"},
+				"solve_code": "solve-me",
+				"primary_color": "#ff6a00",
+				"secondary_color": "#ffd800"
+            }
+        ]
+    }
+]
