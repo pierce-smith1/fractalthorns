@@ -3,7 +3,7 @@ import * as Sqlite from "drizzle-orm/sqlite-core";
 
 export const image = Sqlite.sqliteTable("image", {
     id: Sqlite.integer().primaryKey(),
-    name: Sqlite.text().notNull(),
+    name: Sqlite.text().notNull().unique(),
     title: Sqlite.text().notNull(),
     date: Sqlite.text().notNull(),
     canon: Sqlite.text(),

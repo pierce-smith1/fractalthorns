@@ -35,6 +35,11 @@ export async function replace(path: string, contents: string): Promise<void> {
     await Fs.writeFile(path, contents);
 }
 
+export async function get_modified_ms(path: string): Promise<number> {
+    const stats = await Fs.stat(path);
+    return stats.mtimeMs;
+}
+
 export type DirEntry = {name: string, type: "File" | "Directory"};
 export async function enumerate(path: string): Promise<Array<DirEntry>> {
     const entries = await Fs.readdir(path, {withFileTypes: true});

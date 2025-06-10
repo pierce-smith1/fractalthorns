@@ -1,5 +1,6 @@
 import Db from "./db";
-import * as ImageLoader from "./loaders/image";
+import * as DirectoryLoader from "./loaders/directory";
+import * as ImageDirectory from "./directory/image";
 import * as NewsLoader from "./loaders/news";
 import * as RecordLoader from "./loaders/record";
 import * as SketchLoader from "./loaders/sketch";
@@ -8,8 +9,9 @@ import * as RuneLoader from "./loaders/rune";
 import * as Schema from "./schema/schema";
 
 export async function repopulate() {
+    /*
     await Promise.all([
-        Db.delete(Schema.image),
+        //Db.delete(Schema.image),
         Db.delete(Schema.news),
         Db.delete(Schema.news_item),
         Db.delete(Schema.sketch),
@@ -24,13 +26,18 @@ export async function repopulate() {
     ]);
 
     await Promise.all([
-        ImageLoader.populate(),
+        //ImageLoader.populate(),
         SketchLoader.populate(),
         NewsLoader.populate(),
         RecordLoader.populate(),
         PuzzleLoader.populate(),
         RuneLoader.populate(),
     ]);
+    */
+
+    await ImageDirectory.run_load_operations();
+
+    await DirectoryLoader.repopulate();
 }
 
 await repopulate();

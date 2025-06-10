@@ -1,3 +1,5 @@
+import * as Drizzle from "drizzle-orm";
+import * as Exp from "drizzle-orm/sqlite-core/expressions";
 import sharp from "sharp";
 
 import Config from "../../config";
@@ -6,8 +8,9 @@ import Db from "../db";
 import * as Schema from "../schema/schema";
 import * as LoaderUtil from "./util";
 
-const info_file_name = "info.json";
-const description_file_name = "descr.md";
+export const info_file_name = "info.json";
+export const description_file_name = "descr.md";
+export const image_file_name = "img.png";
 
 type ImageInfo = {
     title: string,
@@ -21,61 +24,108 @@ type ImageInfo = {
     speedpaint_video_id?: string,
 };
 
-export async function populate() {
+type OrdinalInformation = {
+    [name: string]: number,
+};
+export async function compute_ordinals(): Promise<OrdinalInformation> {
     const images_root_path = `${Config.content_root}/images`;
 
-    const image_entries = (await Filesystem.enumerate(images_root_path))
-        .filter(entry => entry.type === "Directory");
+    const images = await Promise.all((await Filesystem.enumerate(images_root_path))
+        .filter(entry => entry.type === "Directory")
+        .map(async entry => {
+            const info_path = `${images_root_path}/${entry.name}/${info_file_name}`;
+            const info = JSON.parse(await Filesystem.read(info_path)) as ImageInfo;
+            return {name: entry.name, date: new Date(info.date)};
+        })
+    );
 
-    const images = await Promise.all(image_entries.map(async ({name}) => {
-        const info_path = `${Config.content_root}/images/${name}/${info_file_name}`;
-        const info = JSON.parse(await Filesystem.read(info_path)) as ImageInfo;
+    images.sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
-        const description_path = `${Config.content_root}/images/${name}/${description_file_name}`;
-        const description = await Filesystem.exists(description_path)
-            ? await Filesystem.read(description_path)
-            : null;
-
-        const data_path = `${Config.content_root}/images/${name}/img.png`;
-        const data = await Filesystem.read_binary(data_path);
-
-        const dominant_colors = await load_dominant_colors(data);
-        const thumbnail_data = await generate_image_thumbnail(data, info.center);
-
-        const date = new Date(info.date);
-
-        return {
-            name, info, description, data, dominant_colors, thumbnail_data, date,
-        };
+    const ordinals = Object.fromEntries(images.map((image, i) => {
+        return [image.name, i + 1];
     }));
+    return ordinals;
+}
 
-    images.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+export async function upsert_image(name: string, ordinals: OrdinalInformation) {
+    console.log(`Upserting image ${name}...`);
 
-    return Promise.all(images.map(async image => {
-        const file_id = await LoaderUtil.ensure_file(image.data);
-        const thumbnail_file_id = await LoaderUtil.ensure_file(image.thumbnail_data);
+    const root_path = `${Config.content_root}/images/${name}`;
 
-        const ordinal = images.length - images.findIndex(img => img.name === image.name);
-        const speedpaint_url = image.info.speedpaint_video_id 
-            ? `https://www.youtube.com/watch?v=${image.info.speedpaint_video_id}`
-            : null;
+    const info_path = `${root_path}/${info_file_name}`;
+    const info = JSON.parse(await Filesystem.read(info_path)) as ImageInfo;
 
-        return Db.insert(Schema.image).values({
-            name: image.name,
-            title: image.info.title,
-            date: new Date(image.info.date).toISOString(),
-            canon: image.info.canon,
-            speedpaint_url,
-            ordinal,
-            file_id,
-            thumbnail_file_id,
-            description: image.description,
-            characters: image.info.characters?.join(","),
-            primary_color: image.dominant_colors.primary,
-            secondary_color: image.dominant_colors.secondary,
-        }).returning()
-            .then(() => console.log(`Added image ${image.name}`));
-    }));
+    const description_path = `${root_path}/${description_file_name}`;
+    const description = await Filesystem.exists(description_path)
+        ? await Filesystem.read(description_path)
+        : null;
+
+    const data_path = `${root_path}/${image_file_name}`;
+    const data = await Filesystem.read_binary(data_path);
+
+    const dominant_colors = await load_dominant_colors(data);
+    const thumbnail_data = await generate_image_thumbnail(data, info.center);
+
+    const file_id = await LoaderUtil.ensure_file(data);
+    const thumbnail_file_id = await LoaderUtil.ensure_file(thumbnail_data);
+
+    const speedpaint_url = info.speedpaint_video_id 
+        ? `https://www.youtube.com/watch?v=${info.speedpaint_video_id}`
+        : null;
+
+    const new_row = {
+        name: name,
+        title: info.title,
+        date: new Date(info.date).toISOString(),
+        canon: info.canon,
+        speedpaint_url,
+        ordinal: ordinals[name],
+        file_id,
+        thumbnail_file_id,
+        description: description,
+        characters: info.characters?.join(","),
+        primary_color: dominant_colors.primary,
+        secondary_color: dominant_colors.secondary,
+    };
+
+    return Db.insert(Schema.image).values(new_row).onConflictDoUpdate({
+        target: Schema.image.name,
+        set: new_row,
+    }).then(() => console.log(`Added image ${name}`));
+}
+
+export async function delete_image(name: string) {
+    console.log(`Deleting image ${name}...`);
+
+    const [row] = await Db.select({
+        file_id: Schema.image.file_id,
+        thumbnail_id: Schema.image.thumbnail_file_id,
+        ordinal: Schema.image.ordinal
+    }).from(Schema.image)
+        .where(Exp.eq(Schema.image.name, name));
+
+    if (!row) {
+        return;
+    }
+
+    await Promise.all([
+        Db.delete(Schema.image).where(Exp.eq(Schema.image.name, name)),
+        Db.delete(Schema.file).where(Exp.inArray(Schema.file.id, [row.file_id, row.thumbnail_id])),
+    ]);
+
+    return Db.update(Schema.image).set({
+        ordinal: Drizzle.sql`${Schema.image.ordinal} - 1`,
+    }).where(Exp.gt(Schema.image.ordinal, row.ordinal))
+        .then(() => console.log(`Deleted image ${name}`));
+}
+
+export async function clear_image_description(name: string) {
+    console.log(`Clearing image description ${name}...`);
+
+    return Db.update(Schema.image).set({
+        description: null,
+    }).where(Exp.eq(Schema.image.name, name))
+        .then(() => console.log(`Cleared description for ${name}`));
 }
 
 export async function load_dominant_colors(data: Buffer) {

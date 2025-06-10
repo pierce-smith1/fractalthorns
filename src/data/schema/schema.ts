@@ -17,6 +17,12 @@ export const file = Sqlite.sqliteTable("file", {
     hash: Sqlite.text().notNull(),
 });
 
+export const directory = Sqlite.sqliteTable("directory", {
+    id: Sqlite.integer().primaryKey(),
+    path: Sqlite.text().notNull(),
+    modified_ms: Sqlite.integer().notNull(),
+});
+
 export const puzzle_linked_record_relation = Drizzle.relations(PuzzleSchema.puzzle_linked_record, ({one}) => ({
     puzzle: one(PuzzleSchema.puzzle, {
         fields: [PuzzleSchema.puzzle_linked_record.puzzle_id],
