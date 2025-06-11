@@ -2,10 +2,16 @@ import * as GenericUtil from "../../genericutil";
 import * as ImageLoader from "../loaders/image";
 import * as Directory from "./directory";
 
-export async function run_load_operations() {
+export async function detect_and_resolve_changes() {
+    const operations = await get_load_operations();
+    console.log(`Detected ${operations.length} image changes`);
+
+    if (operations.length === 0) {
+        return;
+    }
+
     const ordinals = await ImageLoader.compute_ordinals();
 
-    const operations = await get_load_operations();
     return Promise.all(operations.map(operation => {
         if (operation.type === "upsert") {
             return ImageLoader.upsert_image(operation.name, ordinals);
@@ -24,7 +30,6 @@ type LoadOperation =
 
 async function get_load_operations(): Promise<Array<LoadOperation>> {
     const directory_changes = await Directory.get_changes();
-    console.log(`Detected ${directory_changes.length} image changes`);
 
     const operations = directory_changes.flatMap<LoadOperation>(change => {
         const image_change = find_image_change(change);

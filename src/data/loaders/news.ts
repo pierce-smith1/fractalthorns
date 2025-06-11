@@ -10,7 +10,10 @@ type News = {
     version?: string,
 };
 
-export async function populate() {
+export async function repopulate() {
+    await Db.delete(Schema.news);
+    await Db.delete(Schema.news_item);
+
     const news_path = `${Config.content_root}/news.json`;
 
     const news = JSON.parse(await Filesystem.read(news_path)) as Array<News>;
