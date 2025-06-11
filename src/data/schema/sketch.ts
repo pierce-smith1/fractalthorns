@@ -3,7 +3,7 @@ import * as Sqlite from "drizzle-orm/sqlite-core";
 
 export const sketch = Sqlite.sqliteTable("sketch", {
     id: Sqlite.integer().primaryKey(),
-    name: Sqlite.text().notNull(),
+    name: Sqlite.text().notNull().unique(),
     ordinal: Sqlite.integer().notNull(),
     file_id: Sqlite.integer().notNull(),
     thumbnail_file_id: Sqlite.integer().notNull(),

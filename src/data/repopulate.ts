@@ -2,6 +2,7 @@ import Db from "./db";
 import * as DirectoryLoader from "./loaders/directory";
 import * as ImageDirectory from "./directory/image";
 import * as NewsDirectory from "./directory/news";
+import * as SketchDirectory from "./directory/sketch";
 import * as NewsLoader from "./loaders/news";
 import * as RecordLoader from "./loaders/record";
 import * as SketchLoader from "./loaders/sketch";
@@ -38,6 +39,7 @@ export async function repopulate() {
 
     await ImageDirectory.detect_and_resolve_changes();
     await NewsDirectory.detect_and_resolve_changes();
+    await SketchDirectory.detect_and_resolve_changes();
 
     await DirectoryLoader.repopulate();
 }

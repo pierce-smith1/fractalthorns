@@ -32,7 +32,7 @@ async function get_load_operations(): Promise<Array<LoadOperation>> {
     const directory_changes = await Directory.get_changes();
 
     const operations = directory_changes.flatMap<LoadOperation>(change => {
-        const image_change = find_image_change(change);
+        const image_change = extract_image_change(change);
         if (!image_change) {
             return [];
         }
@@ -49,7 +49,7 @@ async function get_load_operations(): Promise<Array<LoadOperation>> {
     return GenericUtil.unique_by_key(operations, operation => `${operation.name}:${operation.type}`);
 }
 
-function find_image_change(change: Directory.DirectoryChange): null | {name: string, type: "png" | "info" | "descr"} {
+function extract_image_change(change: Directory.DirectoryChange): null | {name: string, type: "png" | "info" | "descr"} {
     if (!change.path.startsWith("/image")) {
         return null;
     }
