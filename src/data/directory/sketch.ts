@@ -81,15 +81,12 @@ async function get_load_operations(): Promise<Array<LoadOperation>> {
     return operations;
 }
 
-function extract_sketch_change(change: Directory.DirectoryChange): null
+function extract_sketch_change(change: Directory.DirectoryChange)
+    : null
     | {type: "png", name: string, prefix: string}
     | {type: "info", name: string}
 {
     if (!change.path.startsWith("/sketches")) {
-        return null;
-    }
-
-    if (change.path.split("/").length !== 3) {
         return null;
     }
 

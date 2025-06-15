@@ -16,6 +16,13 @@ export type PuzzlesDefinition = Array<{
     }>,
 }>;
 
+export async function get_puzzles_definition(): Promise<PuzzlesDefinition> {
+    const puzzles_definition_path = `${Config.content_root}/puzzles/puzzles.json`;
+    const puzzles_definition = JSON.parse(await Filesystem.read(puzzles_definition_path)) as PuzzlesDefinition;
+
+    return puzzles_definition;
+}
+
 export async function populate() {
     const puzzles_definition_path = `${Config.content_root}/puzzles/puzzles.json`;
     const puzzles_definition = JSON.parse(await Filesystem.read(puzzles_definition_path)) as PuzzlesDefinition;

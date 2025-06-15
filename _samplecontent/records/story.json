@@ -4,15 +4,15 @@
         "records": [
             {
                 "iteration": "265404", 
-                "title": "reservoir"
+                "name": "reservoir"
             },
             {
                 "iteration": "768221", 
-                "title": "the commencement"
+                "name": "the-commencement"
             },
             {
                 "iteration": "265404", 
-                "title": "discovery"
+                "name": "discovery"
             }
         ]
     },
@@ -21,11 +21,11 @@
         "records": [
             {
                 "iteration": "209151", 
-                "title": "revolutionary discovery"
+                "name": "revolutionary-discovery"
             },
             {
                 "iteration": "209151", 
-                "title": "endless night"
+                "name": "endless-night"
             }
         ]
     },
@@ -34,7 +34,7 @@
         "records": [
             {
                 "iteration": "768220", 
-                "title": "kindling"
+                "name": "kindling"
             }
         ]
     },
@@ -43,11 +43,11 @@
         "records": [
             {
                 "iteration": "768221", 
-                "title": "the beast wakes"
+                "name": "the-beast-wakes"
             },
 			{
 				"iteration": "0", 
-                "title": "dreams and reality"
+                "name": "dreams-and-reality"
 			}
         ]
     }

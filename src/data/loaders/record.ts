@@ -1,3 +1,5 @@
+import * as Exp from "drizzle-orm/sqlite-core/expressions";
+
 import Config from "../../config";
 import * as Filesystem from "../../filesystem";
 import * as RecordHelpers from "../../helpers/record";
@@ -7,76 +9,143 @@ import * as PuzzleLoader from "./puzzle";
 
 type StoryDefinition = Array<{
     chapter_name: string,
-    records: Array<{
-        iteration: string,
-        title: string,
-    }>,
+    records: Array<Omit<RecordEntry, "chapter">>,
 }>;
 
-export async function populate() {
+type RecordEntry = {
+    iteration: string,
+    name: string,
+    chapter: string,
+};
+
+async function get_ordered_records(): Promise<Array<RecordEntry>> {
     const story_path = `${Config.content_root}/records/story.json`;
     const story_definition = JSON.parse(await Filesystem.read(story_path)) as StoryDefinition;
 
-    const chapter_entries = await Promise.all(story_definition.map(async ({chapter_name, records}) => {
-        const record_entries = await Promise.all(records.map(async ({iteration, title}) => {
-            const name = RecordHelpers.record_title_to_name(title);
+    const ordered_records = story_definition.flatMap(chapter_entry => chapter_entry.records.map(record => ({
+        ...record,
+        chapter: chapter_entry.chapter_name,
+    })));
 
-            const record_path = `${Config.content_root}/records/chapter-${chapter_name}/${name}.txt`;
-            const record_text = await Filesystem.read(record_path);
+    return ordered_records;
+}
 
-            const record = parse_from(record_text);
+export async function regenerate_story_outline() {
+    console.log("Regenerating story outline...");
 
-            return {iteration, title, name, record};
-        }));
-
-        return {chapter_name, record_entries};
-    }));
-
-    const ordered_records = story_definition.flatMap(chapter_entry => chapter_entry.records);
+    const ordered_records = await get_ordered_records();
 
     const puzzles_definition_path = `${Config.content_root}/puzzles/puzzles.json`;
     const puzzles_definition = JSON.parse(await Filesystem.read(puzzles_definition_path)) as PuzzleLoader.PuzzlesDefinition;
 
-    return Promise.all(chapter_entries.map(async chapter_entry => {
-        return Promise.all(chapter_entry.record_entries.map(async record_entry => {
-            const ordinal = ordered_records.findIndex(record => record.title === record_entry.title) + 1;
+    const records = await Promise.all(ordered_records.map(async ({iteration, name, chapter}) => {
+        const record_path = `${Config.content_root}/records/chapter-${chapter}/${name}.txt`;
+        const record_text = await Filesystem.read(record_path);
 
-            const [record_row] = await Db.insert(Schema.record).values({
-                name: record_entry.name,
-                title: record_entry.title,
-                canon: record_entry.iteration,
-                chapter: chapter_entry.chapter_name,
-                ordinal,
-                requested: record_entry.record.requested ? 1 : 0,
-                languages: record_entry.record.languages.join(","),
-                characters: record_entry.record.characters.join(","),
-                format: record_entry.record.options.fmt,
-                always_discovered: puzzles_definition.some(entry => entry.chapter === chapter_entry.chapter_name) ? 0 : 1,
-            }).returning();
+        const record_lines = parse_from(record_text);
 
-            const header_line_insert_promise = Promise.all(record_entry.record.header_lines.map(async header_line => 
-                Db.insert(Schema.record_header_line).values({
-                    record_id: record_row.id,
-                    text: header_line,
-                })
-            ));
-
-            const line_insert_promise = Promise.all(record_entry.record.lines.map(async (line, i) =>
-                Db.insert(Schema.record_line).values({
-                    record_id: record_row.id,
-                    type: line.type,
-                    character: line.character,
-                    language: line.language,
-                    emphasis: line.emphasis,
-                    text: line.text,
-                    ordinal: i + 1,
-                })
-            ));
-
-            return Promise.all([header_line_insert_promise, line_insert_promise])
-                .then(() => console.log(`Added record ${record_row.name}`));
-        }));
+        return {iteration, lines: record_lines, chapter, name};
     }));
+
+    await Db.delete(Schema.record);
+
+    return Promise.all(records.map(async record => {
+        return ensure_record_row(record.lines, {...record}, ordered_records, puzzles_definition);
+    })).then(() => console.log("Regenerated story outline"));
+}
+
+async function ensure_record_row(record: RecordBase, entry: RecordEntry, ordered_records: Array<RecordEntry>, puzzles_definition: PuzzleLoader.PuzzlesDefinition)
+    : Promise<typeof Schema.record.$inferSelect>
+{
+    const ordinal = ordered_records.findIndex(x => x.name === entry.name) + 1;
+    const iteration = ordered_records.find(x => x.name === entry.name)!.iteration;
+
+    const new_row = {
+        name: entry.name,
+        title: RecordHelpers.record_name_to_title(entry.name),
+        canon: iteration,
+        chapter: entry.chapter,
+        ordinal,
+        requested: record.requested ? 1 : 0,
+        languages: record.languages.join(","),
+        characters: record.characters.join(","),
+        format: record.options.fmt,
+        always_discovered: puzzles_definition.some(x => x.chapter === entry.chapter) ? 0 : 1,
+    };
+
+    const [row] = await Db.insert(Schema.record).values(new_row).onConflictDoUpdate({
+        target: Schema.record.name,
+        set: new_row,
+    }).returning();
+
+    return row;
+}
+
+export async function regenerate_record_lines(name: string, chapter: string) {
+    console.log(`Upserting record ${name}`);
+
+    const record_path = `${Config.content_root}/records/chapter-${chapter}/${name}.txt`;
+    const record_text = await Filesystem.read(record_path);
+
+    const record_lines = parse_from(record_text);
+
+    const [existing_record_row] = await Db.select().from(Schema.record)
+        .where(Exp.eq(Schema.record.name, name));
+
+    const record_row = existing_record_row
+        ?? await ensure_record_row(
+            record_lines, 
+            {
+                name, 
+                chapter, 
+                iteration: record_lines.options.iter
+            },
+            await get_ordered_records(),
+            await PuzzleLoader.get_puzzles_definition()
+        );
+
+    await Promise.all([
+        Db.delete(Schema.record_line).where(Exp.eq(Schema.record_line.record_id, record_row.id)),
+        Db.delete(Schema.record_header_line).where(Exp.eq(Schema.record_header_line.record_id, record_row.id)),
+    ]);
+
+    const header_line_insert_promise = Promise.all(record_lines.header_lines.map(async header_line => 
+        Db.insert(Schema.record_header_line).values({
+            record_id: record_row.id,
+            text: header_line,
+        })
+    ));
+
+    const line_insert_promise = Promise.all(record_lines.lines.map(async (line, i) =>
+        Db.insert(Schema.record_line).values({
+            record_id: record_row.id,
+            type: line.type,
+            character: line.character,
+            language: line.language,
+            emphasis: line.emphasis,
+            text: line.text,
+            ordinal: i + 1,
+        })
+    ));
+
+    return Promise.all([
+        header_line_insert_promise,
+        line_insert_promise
+    ]).then(() => console.log(`Regenerated lines for record ${name}`));
+}
+
+export async function delete_record_lines(name: string): Promise<void> {
+    console.log(`Deleting record ${name}`);
+
+    const [existing_record_row] = await Db.select().from(Schema.record)
+        .where(Exp.eq(Schema.record.name, name));
+
+    if (existing_record_row) {
+        return Promise.all([
+            Db.delete(Schema.record_line).where(Exp.eq(Schema.record_line.record_id, existing_record_row.id)),
+            Db.delete(Schema.record_header_line).where(Exp.eq(Schema.record_line.record_id, existing_record_row.id)),
+        ]).then(() => console.log(`Deleted record ${name}`));
+    }
 }
 
 export type Line = {

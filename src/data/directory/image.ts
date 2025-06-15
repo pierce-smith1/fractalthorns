@@ -54,10 +54,6 @@ function extract_image_change(change: Directory.DirectoryChange): null | {name: 
         return null;
     }
 
-    if (change.path.split("/").length !== 4) {
-        return null;
-    }
-
     const [, , name, file] = change.path.split("/");
 
     if (file === ImageLoader.image_file_name) {

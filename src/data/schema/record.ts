@@ -3,7 +3,7 @@ import * as Sqlite from "drizzle-orm/sqlite-core";
 
 export const record = Sqlite.sqliteTable("record", {
     id: Sqlite.integer().primaryKey(),
-    name: Sqlite.text().notNull(),
+    name: Sqlite.text().notNull().unique(),
     title: Sqlite.text().notNull(),
     canon: Sqlite.text().notNull(),
     chapter: Sqlite.text().notNull(),
