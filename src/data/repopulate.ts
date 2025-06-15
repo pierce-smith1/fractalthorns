@@ -1,4 +1,3 @@
-import Db from "./db";
 import * as ImageDirectory from "./directory/image";
 import * as NewsDirectory from "./directory/news";
 import * as PuzzlesDirectory from "./directory/puzzles";

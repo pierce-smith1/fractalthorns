@@ -47,8 +47,6 @@ export async function regenerate_story_outline() {
         return {iteration, lines: record_lines, chapter, name};
     }));
 
-    await Db.delete(Schema.record);
-
     return Promise.all(records.map(async record => {
         return ensure_record_row(record.lines, {...record}, ordered_records, puzzles_definition);
     })).then(() => console.log("Regenerated story outline"));

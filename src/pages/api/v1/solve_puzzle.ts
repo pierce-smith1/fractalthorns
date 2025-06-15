@@ -75,6 +75,7 @@ export async function solve_one(name: string, code: string): Promise<SolveResult
                 puzzle_solve: true,
             },
             where: Exp.eq(Schema.record.chapter, puzzle_row.chapter),
+            orderBy: Exp.asc(Schema.record.ordinal),
         });
 
         const [next_to_discover] = chapter_record_rows
