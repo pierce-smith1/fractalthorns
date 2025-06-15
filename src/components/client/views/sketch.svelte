@@ -3,12 +3,17 @@
 
     import Keynav from "./keynav.svelte";
 
-    export let sketch: Api.SketchObject | undefined;
-    $: this_sketch = sketch!;
+    export let sketch: Api.SketchObject;
 </script>
 
 <div class="container">
-    <img src={this_sketch.image_url}>
+    <div class="info-container">
+        <strong class="sketch-name">{sketch?.title}</strong>
+        <span class="sketch-date"></span>
+    </div>
+    <div class="sketch-container">
+        <img src={sketch.image_url}>
+    </div>
 </div>
 <Keynav 
     page_left={{domain: "subproject"}}
@@ -19,9 +24,30 @@
         height: 100%;
         width: 100%;
         display: flex;
-        flex-flow: column nowrap;
+        flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
+    }
+
+    .sketch-container {
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .info-container {
+        position: relative;
+        color: rgba(255 255 255 / 75%);
+        text-align: right;
+        height: 90%;
+        padding: 10px;
+    }
+
+    .sketch-name {
+        font-size: 2rem;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
     }
 
     img {
