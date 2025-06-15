@@ -96,4 +96,4 @@ To get set up locally:
   # Or, to specify a port (again, bash syntax):
   PORT=4321 node dist/server/entry.mjs
   ```
-* To regenerate the content database, run `npm run compile-content` (which you can even do while the server is running!):
+* To regenerate the content database, run `npm run compile-content` (which you can even do while the server is running!)
