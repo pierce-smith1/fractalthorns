@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "ensure-database": "env-cmd -f rvaenv drizzle-kit push",
-    "compile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts"
+    "compile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts",
+    "fully-recompile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts --fully-recreate"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.3",
