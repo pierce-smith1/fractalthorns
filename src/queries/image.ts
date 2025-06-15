@@ -51,6 +51,7 @@ export function to_api_object(row: typeof Schema.image.$inferSelect): Api.ImageO
         speedpaint_video_url: row.speedpaint_url ?? undefined,
         primary_color: row.primary_color ?? undefined,
         secondary_color: row.secondary_color ?? undefined,
+        is_latest: !!row.latest,
     };
 
     return image;

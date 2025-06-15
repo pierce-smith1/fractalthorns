@@ -1,24 +1,27 @@
 <script lang="ts">
     import * as Domain from "../../helpers/domain.ts";
+    import * as Nav from "./nav.ts";
     import {current, layout_state} from "./page.ts";
 
     export let dest: Domain.Page;
     export let cause_layout_switch: boolean = false;
 
-    import {set_domain_items} from "./nav.ts";
-
-    function navigate(event: MouseEvent) {
+    async function navigate(event: MouseEvent) {
         event.preventDefault();
 
         window.history.pushState(dest, "", Domain.page_to_path(dest));
 
-        $current = dest;
+        const actual_dest = Nav.is_incomplete_page(dest)
+            ? await Nav.get_landing_page(dest.domain)
+            : dest;
+
+        $current = actual_dest;
 
         if (cause_layout_switch && $layout_state !== "full") {
             $layout_state = "only-page";
         }
 
-        set_domain_items(dest.domain);
+        Nav.set_domain_items(dest.domain);
     }
 
     window.onpopstate = (event: PopStateEvent) => {

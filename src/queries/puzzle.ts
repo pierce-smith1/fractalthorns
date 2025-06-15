@@ -44,10 +44,30 @@ export async function get_one(name: string): Promise<Api.PuzzleObject | null> {
     return to_api_object(row);
 }
 
+export async function get_first_unsolved(): Promise<Api.PuzzleObject | null> {
+    const rows = await Db.query.puzzle.findMany({
+        ...base_query,
+        orderBy: Exp.asc(Schema.puzzle.ordinal),
+    });
+
+    const [first_unsolved] = rows.filter(x => !is_solved(x));
+    const puzzle = first_unsolved ?? rows[0];
+
+    if (!puzzle) {
+        return null;
+    }
+
+    return to_api_object(puzzle);
+}
+
+function is_solved(row: BaseQueryRow): boolean {
+    return row.puzzle_solve.length > 0;
+}
+
 function to_api_object(row: BaseQueryRow): Api.PuzzleObject {
     const puzzle = {
         name: row.name,
-        solved: row.puzzle_solve.length > 0 ? row.puzzle_solve.map(x => x.record.name) : undefined,
+        solved: is_solved(row) ? row.puzzle_solve.map(x => x.record.name) : undefined,
         chapter: row.chapter,
         solve_behavior: {
             type: row.solve_behavior,

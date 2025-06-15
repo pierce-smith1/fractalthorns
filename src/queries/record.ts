@@ -56,6 +56,19 @@ export async function get_one_entry(name: string): Promise<Api.RedactableRecordE
     return to_api_entry_object(row);
 }
 
+export async function get_first_entry(): Promise<Api.RedactableRecordEntry | null> {
+    const row = await Db.query.record.findFirst({
+        ...base_entry_query,
+        orderBy: Exp.asc(Schema.record.ordinal),
+    });
+
+    if (!row) {
+        return null;
+    }
+
+    return to_api_entry_object(row);
+}
+
 export async function get_one_text(name: string): Promise<Api.RecordTextResponse | null | "unsolved"> {
     const row = await Db.query.record.findFirst({
         ...base_text_query,
@@ -72,6 +85,23 @@ export async function get_one_text(name: string): Promise<Api.RecordTextResponse
 
     const record_text = to_api_text_object(row);
     return record_text;
+}
+
+export async function get_first_text(): Promise<Api.RecordTextResponse | null | "unsolved"> {
+    const row = await Db.query.record.findFirst({
+        ...base_text_query,
+        orderBy: Exp.asc(Schema.record.ordinal),
+    });
+
+    if (!row) {
+        return null;
+    }
+
+    if (!is_solved(row)) {
+        return "unsolved";
+    }
+
+    return to_api_text_object(row);
 }
 
 export async function get_all_text(): Promise<Array<{text: Api.RecordTextResponse, entry: Api.RedactableRecordEntry}>> {

@@ -70,8 +70,8 @@ export const all_puzzles_endpoint = {
 
 export const single_puzzle_request_schema = {
     name: {
-        type: Interfaces.fields.required_string,
-        description: "The identifying name of the puzzle (as acquired through the `all_puzzles` endpoint.)",
+        type: Interfaces.fields.optional_string,
+        description: "The identifying name of the puzzle (as acquired through the `all_puzzles` endpoint.) Defaults to the name of the first unsolved puzzle, or if they're all solved, the first puzzle overall.",
     },
 } as const;
 

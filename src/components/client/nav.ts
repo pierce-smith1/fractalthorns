@@ -46,6 +46,34 @@ export function unregister_filter(name: string) {
     nav_state.update(state => ({...state, item_filters: state.item_filters.filter(filter => filter.name !== name)}));
 }
 
+export function is_incomplete_page(page: Domain.Page): boolean {
+    if (page.domain === "home" || page.domain === "subproject") {
+        return false;
+    } else if (page.domain === "episodic") {
+        return !page.record_name;
+    } else {
+        return !page.name;
+    }
+}
+
+export async function get_landing_page(domain: Domain.Domain): Promise<Domain.Page> {
+    if (domain === "image") {
+        const latest = await Fetchers.get.single_image({});
+        return {domain: "image", name: latest.name};
+    } else if (domain === "sketch") {
+        const latest = await Fetchers.get.single_sketch({});
+        return {domain: "sketch", name: latest.name};
+    } else if (domain === "episodic") {
+        const latest = await Fetchers.get.single_record({});
+        return {domain: "episodic", record_name: latest.name};
+    } else if (domain === "discover") {
+        const latest = await Fetchers.get.single_puzzle({});
+        return {domain: "discover", name: latest.name};
+    } else {
+        return {domain};
+    }
+}
+
 export function set_domain_items(domain: Domain.Domain) {
     const new_items_promise: Promise<Array<Domain.Item>> = (async () => {
         switch (domain) {

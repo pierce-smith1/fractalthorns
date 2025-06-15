@@ -7,7 +7,7 @@ export const sketch_object_schema = {
     },
     title: {
         type: Interfaces.fields.required_string,
-        description: "The sketch's name for display purposes. Currently unused on the site.",
+        description: "The sketch's name for display purposes.",
     },
     characters: {
         type: Interfaces.fields.required_array(Interfaces.fields.required_string),
@@ -29,7 +29,24 @@ export const sketch_object_schema = {
         type: Interfaces.fields.optional_string,
         description: "An approximation of the second most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
     },
+    is_latest: {
+        type: Interfaces.fields.required_boolean,
+        description: "True if this is the most recent sketch, false otherwise.",
+    },
 } as const;
+
+export const single_sketch_request_schema = {
+    name: {
+        type: Interfaces.fields.optional_string,
+        description: "The name of the sketch to get info for. Defaults to the name of the latest sketch.",
+    },
+} as const;
+
+export const single_sketch_endpoint = {
+    description: "Get info for a single sketch.",
+    request: single_sketch_request_schema,
+    response: sketch_object_schema,
+};
 
 export const all_sketches_request_schema = {} as const;
 
@@ -47,5 +64,6 @@ export const all_sketches_endpoint = {
 };
 
 export type SketchObject = Interfaces.TypeFromSchema<typeof sketch_object_schema>;
+export type SingleSketchRequest = Interfaces.TypeFromSchema<typeof single_sketch_request_schema>;
 export type AllSketchesRequest = Interfaces.TypeFromSchema<typeof all_sketches_request_schema>;
 export type AllSketchesResponse = Interfaces.TypeFromSchema<typeof all_sketches_response_schema>;

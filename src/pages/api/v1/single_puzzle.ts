@@ -4,11 +4,9 @@ import * as PuzzleQueries from "../../../queries/puzzle";
 export const GET = Endpoint.make_handler<"single_puzzle">(async (request, override) => {
     const {name} = request;
 
-    if (!name) {
-        return override(new Response(null, {status: 400}));
-    }
-
-    const puzzle = await PuzzleQueries.get_one(name);
+    const puzzle = name
+        ? await PuzzleQueries.get_one(name)
+        : await PuzzleQueries.get_first_unsolved();
 
     if (!puzzle) {
         return override(new Response(null, {status: 404}));

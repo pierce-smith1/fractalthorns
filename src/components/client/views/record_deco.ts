@@ -78,7 +78,7 @@ function axial_to_cartesian(axial: AxialPoint, radius: number, q_angle: number, 
 }
 
 const tile_shapes = [
-     "floret",
+    "floret",
     "hexagon",
     "eq_triangle",
     "square",

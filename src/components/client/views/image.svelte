@@ -5,20 +5,19 @@
     import * as ImageHelpers from "../../../helpers/image";
     import * as Fetchers from "../../../fetchers";
     import * as Nav from "../nav";
+    import * as Api from "../../../api/api";
 
     import Loading from "../loading.svelte";
     import Keynav from './keynav.svelte';
 
     const no_description_placeholder = "🛠 *something indistinct echoes from the future...* 🛠";
 
-    export let name: string;
+    export let image: Api.ImageObject;
+    export let description: string | undefined;
     
     let full_image_view = false;
 
-    $: image_promise = Fetchers.get.single_image({name});
-    $: description_promise = Fetchers.get.image_description({name});
-    
-    function format_subtitle(image: Awaited<typeof image_promise>) {
+    function format_subtitle(image: Api.ImageObject) {
         const parts: Array<string> = [];
 
         if (image.canon) {
@@ -62,44 +61,36 @@
 </script>
 
 <div class="container">
-    {#await image_promise}
-        <Loading />
-    {:then image}
-        <div class="smallscreen-image-container">
+    <div class="smallscreen-image-container">
+        <img src={image.image_url}>
+    </div>
+    <div class="image-info-container" class:fullview={full_image_view} use:setup_scroll_hint_observer>
+        <div class="image-title-container">
+            <div class="title-container">
+                <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
+                {#if image.characters}
+                    <div class="characters">
+                        {#each image.characters as character}
+                            <button class="character-button" type="button" on:click={() => execute_character_search(character)}>
+                                <img class="runeword" src={`/serve/runeword/${character}`} alt={character}>
+                            </button>
+                        {/each}
+                    </div>
+                {/if}
+            </div>
+            <h2 class="subtitle">{@html format_subtitle(image)}</h2>
+        </div>
+        <div class="image-description-container">
+            {@html marked.parse(description ?? no_description_placeholder)}
+            <div class="scroll-marker"></div>
+        </div>
+        <div class="scroll-hint">...</div>
+    </div>
+    <div class="image-container" class:fullview={full_image_view}>
+        <button type="button" class="image-link" on:click={toggle_full_view}>
             <img src={image.image_url}>
-        </div>
-        <div class="image-info-container" class:fullview={full_image_view} use:setup_scroll_hint_observer>
-            <div class="image-title-container">
-                <div class="title-container">
-                    <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
-                    {#if image.characters}
-                        <div class="characters">
-                            {#each image.characters as character}
-                                <button class="character-button" type="button" on:click={() => execute_character_search(character)}>
-                                    <img class="runeword" src={`/serve/runeword/${character}`} alt={character}>
-                                </button>
-                            {/each}
-                        </div>
-                    {/if}
-                </div>
-                <h2 class="subtitle">{@html format_subtitle(image)}</h2>
-            </div>
-            <div class="image-description-container">
-                {#await description_promise}
-                    <Loading />
-                {:then {description}} 
-                    {@html marked.parse(description ?? no_description_placeholder)}
-                {/await}
-                <div class="scroll-marker"></div>
-            </div>
-            <div class="scroll-hint">...</div>
-        </div>
-        <div class="image-container" class:fullview={full_image_view}>
-            <button type="button" class="image-link" on:click={toggle_full_view}>
-                <img src={image.image_url}>
-            </button>
-        </div>
-    {/await}
+        </button>
+    </div>
 </div>
 {#await Fetchers.get.full_episodic({})}
 {:then episodic}

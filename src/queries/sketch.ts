@@ -16,6 +16,18 @@ export async function get_one(name: string): Promise<Api.SketchObject | null> {
     return to_api_object(row);
 }
 
+export async function get_latest(): Promise<Api.SketchObject | null> {
+    const row = await Db.query.sketch.findFirst({
+        orderBy: Exp.desc(Schema.sketch.ordinal),
+    });
+
+    if (!row) {
+        return null;
+    }
+
+    return to_api_object(row);
+}
+
 export async function get_all(): Promise<Array<Api.SketchObject>> {
     const rows = await Db.query.sketch.findMany({
         orderBy: Exp.desc(Schema.sketch.ordinal),
@@ -34,6 +46,7 @@ export function to_api_object(row: typeof Schema.sketch.$inferSelect): Api.Sketc
         thumb_url: `/serve/sketch_thumb/${row.name}`,
         primary_color: row.primary_color ?? undefined,
         secondary_color: row.secondary_color ?? undefined,
+        is_latest: !!row.latest,
     };
 
     return sketch;

@@ -1,36 +1,14 @@
 <script lang="ts">
     import * as PrivateDomain from "../../helpers/domain.ts";
-    import * as Fetchers from "../../fetchers";
 
     import {current} from "./page.ts";
     import {nav_state} from "./nav.ts";
 
     import PageLink from "./page_link.svelte";
-    import Loading from "./loading.svelte";
     import Tooltip from "./style/tooltip.svelte";
 
     export let domain: PrivateDomain.Page["domain"];
     export let minor: boolean = false;
-
-    const destination_promise: Promise<PrivateDomain.Page> = (async () => {
-        switch (domain) {
-            case "home": return {domain};
-            case "image": {
-                const latest_image = await Fetchers.get.single_image({});
-                return {domain, name: latest_image.name};
-            } case "sketch": {
-                const all_sketches = await Fetchers.get.all_sketches({});
-                const latest_sketch = all_sketches.sketches[0];
-                return {domain, name: latest_sketch.name};
-            } case "episodic": {
-                const episodic = await Fetchers.get.full_episodic({});
-                return {domain, record_name: episodic.chapters[0].records[0].name!};
-            } case "discover": {
-                const puzzles = await Fetchers.get.all_puzzles({});
-                return {domain, name: puzzles.chapters[0].puzzles[0].name};
-            } case "subproject": return {domain};
-        }
-    })();
 
     const tooltip_text = (() => {
         switch (domain) {
@@ -57,19 +35,15 @@
     $: selected = $current?.domain === domain;
 </script>
 
-{#await destination_promise}
-    <Loading />
-{:then destination}
-    <div class="domain-button-container">
-        <PageLink dest={destination}>
-            <Tooltip text={tooltip_text} --color={selected ? "black" : "white"} --background={selected ? "white" : "black"} --font-size={minor ? "0.8rem" : "1rem"}>
-                <button type="button" class="domain-button" class:selected class:minor on:click={on_click}>
-                    <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
-                </button>
-            </Tooltip>
-        </PageLink>
-    </div>
-{/await}
+<div class="domain-button-container">
+    <PageLink dest={{domain}}>
+        <Tooltip text={tooltip_text} --color={selected ? "black" : "white"} --background={selected ? "white" : "black"} --font-size={minor ? "0.8rem" : "1rem"}>
+            <button type="button" class="domain-button" class:selected class:minor on:click={on_click}>
+                <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
+            </button>
+        </Tooltip>
+    </PageLink>
+</div>
 
 <style>
     .domain-button {

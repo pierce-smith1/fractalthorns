@@ -11,6 +11,7 @@ export const endpoints = {
     single_image: ImageApi.single_image_endpoint,
     image_description: ImageApi.image_description_endpoint,
     all_images: ImageApi.all_images_endpoint,
+    single_sketch: SketchApi.single_sketch_endpoint,
     all_sketches: SketchApi.all_sketches_endpoint,
     full_episodic: EpisodicApi.full_episodic_endpoint,
     single_record: EpisodicApi.single_record_endpoint,

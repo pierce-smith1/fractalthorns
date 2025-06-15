@@ -55,8 +55,8 @@ export const full_episodic_endpoint = {
 
 export const single_record_request_schema = {
     name: {
-        type: Interfaces.fields.required_string,
-        description: "The name of the record to get info for. Use names gathered from the `name` field of the entries provided by `full_episodic`.",
+        type: Interfaces.fields.optional_string,
+        description: "The name of the record to get info for. Use names gathered from the `name` field of the entries provided by `full_episodic`. Defaults to the name of the first record in the story.",
     },
 } as const;
 

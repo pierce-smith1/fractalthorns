@@ -12,10 +12,10 @@ export const domains = [
 export type Domain = typeof domains[number];
 
 export type Page =
-    | {domain: "image", name: string}
-    | {domain: "sketch", name: string}
-    | {domain: "episodic", record_name: string, line_index?: number}
-    | {domain: "discover", name: string}
+    | {domain: "image", name?: string}
+    | {domain: "sketch", name?: string}
+    | {domain: "episodic", record_name?: string, line_index?: number}
+    | {domain: "discover", name?: string}
     | {domain: "home"}
     | {domain: "subproject", name?: string}
 
@@ -107,7 +107,7 @@ export function page_to_path(page: Page) {
     const item_suffix = (() => {
         switch (page.domain) {
             case "home": return;
-            case "episodic": return `${page.record_name ?? ""}/${page.line_index ?? ""}`;
+            case "episodic": return `${page.record_name ?? ""}${page.line_index ? `/${page.line_index}` : ""}`;
             case "image":
             case "sketch":
             case "discover":
@@ -115,7 +115,7 @@ export function page_to_path(page: Page) {
         }
     })();
 
-    const path = `/${page.domain}/${item_suffix ?? ""}`;
+    const path = `/${page.domain}${item_suffix ? `/${item_suffix}` : ""}`;
     return path;
 }
 

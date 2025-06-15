@@ -8,11 +8,17 @@
     import ImageButtonPortrait from "./image_button_portrait.svelte";
 
     export let image: Api.ImageObject;
+
+    $: selected = $current.domain === "image" && $current.name === image.name;
 </script>
 
 <div class="image-portrait">
     <PageLink dest={{domain: "image", name: image.name}} cause_layout_switch>
-        <div class="portrait-block" style:border-color={RecordHelpers.get_iteration_color(image.canon ?? "")} class:selected={$current.domain === "image" && $current.name === image.name}>
+        <div 
+            class="portrait-block" 
+            style:border-color={RecordHelpers.get_iteration_color(image.canon ?? "")} 
+            class:selected
+        >
             <ImageButtonPortrait {image} />
         </div>
     </PageLink>

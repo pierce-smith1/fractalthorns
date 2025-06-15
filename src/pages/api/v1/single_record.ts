@@ -4,11 +4,9 @@ import * as RecordQueries from "../../../queries/record";
 export const GET = Endpoint.make_handler<"single_record">(async (request, override) => {
     const {name} = request;
 
-    if (!name) {
-        return override(new Response(null, {status: 400}));
-    }
-
-    const record = await RecordQueries.get_one_entry(name);
+    const record = name
+        ? await RecordQueries.get_one_entry(name)
+        : await RecordQueries.get_first_entry();
 
     if (!record) {
         return override(new Response(null, {status: 404}));

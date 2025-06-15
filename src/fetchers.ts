@@ -44,6 +44,7 @@ export function invalidate_cache(endpoint_name: keyof Api.GetEndpoints) {
 export const get = {
     all_news: define_fetcher<"all_news">("all_news"),
     all_images: define_fetcher<"all_images">("all_images"),
+    single_sketch: define_fetcher<"single_sketch">("single_sketch"),
     all_sketches: define_fetcher<"all_sketches">("all_sketches"),
     image_description: define_fetcher<"image_description">("image_description"),
     full_episodic: define_fetcher<"full_episodic">("full_episodic"),

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as Api from "../../api/api";
     import * as Domain from "../../helpers/domain.ts";
     import * as Fetchers from "../../fetchers";
 
@@ -19,12 +20,38 @@
     $: clear_bg = current_page.domain === "home" || current_page.domain === "episodic";
 
     let news_promise = Fetchers.get.all_news({});
-    let sketches_promise = Fetchers.get.all_sketches({});
+
+    async function get_image_data(name?: string): Promise<{image: Api.ImageObject, description?: string}> {
+        const image = await Fetchers.get.single_image({name});
+
+        const description = image.has_description
+            ? (await Fetchers.get.image_description({name: image.name})).description
+            : undefined;
+
+        return {image, description};
+    }
+
+    async function get_sketch_data(name?: string): Promise<Api.SketchObject> {
+        const sketch = await Fetchers.get.single_sketch({name});
+        return sketch;
+    }
+
+    async function get_record_data(name?: string): Promise<{entry: Api.RedactableRecordEntry, lines: Api.RecordTextResponse}> {
+        const entry = await Fetchers.get.single_record({name});
+        const lines = await Fetchers.get.record_text({name});
+
+        return {entry, lines};
+    }
+    
+    async function get_puzzle_data(name?: string): Promise<Api.PuzzleObject> {
+        const puzzle = await Fetchers.get.single_puzzle({name});
+        return puzzle;
+    }
 </script>
 
-{#await Promise.all([news_promise, sketches_promise])}
+{#await news_promise}
     <Loading />
-{:then [news, sketches]}
+{:then news}
     <div class="view-container" class:reading-mode={current_page.domain === "episodic"} class:solving-mode={current_page.domain === "discover"}>
         <GlassPane 
             --background-color={clear_bg ? "none" : undefined} 
@@ -34,22 +61,33 @@
             {#if current_page.domain === "home"}
                 <HomeView />
             {:else if current_page.domain === "image"}
-                <ImageView name={current_page.name} />
-            {:else if current_page.domain === "sketch"}
-                <SketchView sketch={sketches.sketches.find(sketch => sketch.name === current_page.name)} />
-            {:else if current_page.domain === "episodic"}
-                <!-- TODO This is probably how everything should be done. The views shouldn't be left to load their own shit. -->
-                {#await Promise.all([Fetchers.get.single_record({name: current_page.record_name}), Fetchers.get.record_text({name: current_page.record_name})])}
+                {#await get_image_data(current_page.name)}
                     <Loading />
-                {:then [record, text]} 
-                    <RecordView {record} {text} line_index={current_page.line_index} />
+                {:then {image, description}}
+                    <ImageView {image} {description} />
+                {/await}
+            {:else if current_page.domain === "sketch"}
+                {#await get_sketch_data(current_page.name)}
+                    <Loading />
+                {:then sketch}
+                    <SketchView {sketch} />
+                {/await}
+            {:else if current_page.domain === "episodic"}
+                {#await get_record_data(current_page.record_name)}
+                    <Loading />
+                {:then {entry, lines}} 
+                    <RecordView record={entry} text={lines} line_index={current_page.line_index} />
                 {:catch}
                     <div class="record-error-container">
                         <em class="record-error-text">this memory is hazy...</em>
                     </div>
                 {/await}
             {:else if current_page.domain === "discover"}
-                <PuzzleView name={current_page.name} />
+                {#await get_puzzle_data(current_page.name)}
+                    <Loading />
+                {:then puzzle}
+                    <PuzzleView {puzzle} />
+                {/await}
             {:else if current_page.domain === "subproject"}
                 <SubprojectView name={current_page.name} />
             {/if}
