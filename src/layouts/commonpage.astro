@@ -1,8 +1,4 @@
 ---
-    import Db from "../data/db";
-    import * as Schema from "../data/schema/schema";
-    import * as Exp from "drizzle-orm/sqlite-core/expressions";
-
     import * as ImageHelpers from "../helpers/image";
     import * as ImageQueries from "../queries/image";
     import * as SketchQueries from "../queries/sketch";
@@ -21,12 +17,14 @@
     const {domain, path} = Astro.params;
     const env = Config.env;
 
-    const url = `${domain}/${path ?? ""}`;
+    const url = `${domain}${path ? `/${path}` : ""}`;
     const embed = await (async () => {
         if (domain === "image" && path) {
             const name = path;
 
-            const image = await ImageQueries.get_one(name);
+            const image = path 
+                ? await ImageQueries.get_latest()
+                : await ImageQueries.get_one(name);
 
             return {
                 url, 
@@ -36,7 +34,9 @@
         } else if (domain === "sketch" && path) {
             const name = path;
 
-            const sketch = await SketchQueries.get_one(name);
+            const sketch = path 
+                ? await SketchQueries.get_latest()
+                : await SketchQueries.get_one(name);
 
             return {
                 url, 
@@ -74,7 +74,11 @@
     // @ts-ignore
     const env = body?.dataset["env"] ?? "prod";
 
-    const page = Domain.path_to_page(`${domain}/${path ?? ""}`);
+    let page = Domain.path_to_page(`${domain}${path ? `/${path}` : ""}`);
+    page = Nav.is_incomplete_page(page)
+        ? await Nav.get_landing_page(page.domain)
+        : page;
+
     ClientPage.current.set(page);
     ClientPage.env.set(env);
 
