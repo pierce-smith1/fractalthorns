@@ -49,10 +49,6 @@ export const image_object_schema = {
         type: Interfaces.fields.optional_string,
         description: "An approximation of the second most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
     },
-    is_latest: {
-        type: Interfaces.fields.required_boolean,
-        description: "True if this is the most recent image, false otherwise.",
-    },
 };
 
 export const single_image_request_schema = {

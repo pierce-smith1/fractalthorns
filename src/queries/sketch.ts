@@ -46,7 +46,6 @@ export function to_api_object(row: typeof Schema.sketch.$inferSelect): Api.Sketc
         thumb_url: `/serve/sketch_thumb/${row.name}`,
         primary_color: row.primary_color ?? undefined,
         secondary_color: row.secondary_color ?? undefined,
-        is_latest: !!row.latest,
     };
 
     return sketch;
