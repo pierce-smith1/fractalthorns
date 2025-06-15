@@ -16,6 +16,11 @@ export async function regenerate_runewords() {
     const runewords_definition_path = `${Config.content_root}/runes/runewords.json`;
     const runewords_definition = JSON.parse(await Filesystem.read(runewords_definition_path)) as RunewordsDefinition;
 
+    if (Object.keys(runewords_definition).length === 0) {
+        console.log("No runes? :(");
+        return;
+    }
+
     await Promise.all([
         Db.delete(Schema.runeword),
         Db.delete(Schema.runeword_rune),
