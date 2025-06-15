@@ -96,4 +96,7 @@ To get set up locally:
   # Or, to specify a port (again, bash syntax):
   PORT=4321 node dist/server/entry.mjs
   ```
-* To regenerate the content database, run `npm run compile-content` (which you can even do while the server is running!)
+* To update the content database, run `npm run compile-content` (which you can even do while the server is running!)
+  This will read the modified times of the files in the content directory to intelligently determine what entities actually need
+  recreating. If you suspect your database is in a buggy state and needs to be fully remade though, you can use
+  `npm run fully-recompile-content`, which will do a totally clean recreation from scratch.
