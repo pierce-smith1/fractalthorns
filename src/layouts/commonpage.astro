@@ -19,24 +19,24 @@
 
     const url = `${domain}${path ? `/${path}` : ""}`;
     const embed = await (async () => {
-        if (domain === "image" && path) {
+        if (domain === "image") {
             const name = path;
 
-            const image = path 
-                ? await ImageQueries.get_latest()
-                : await ImageQueries.get_one(name);
+            const image = name 
+                ? await ImageQueries.get_one(name)
+                : await ImageQueries.get_latest();
 
             return {
                 url, 
-                image_url: image ? ImageHelpers.get_image_url(name) : "",
+                image_url: image ? ImageHelpers.get_image_url(image.name) : "",
                 descr: `${image?.title ?? "unknown"} · ${ImageHelpers.get_date_string(image?.date ?? new Date())}`,
             };
-        } else if (domain === "sketch" && path) {
+        } else if (domain === "sketch") {
             const name = path;
 
-            const sketch = path 
-                ? await SketchQueries.get_latest()
-                : await SketchQueries.get_one(name);
+            const sketch = name 
+                ? await SketchQueries.get_one(name)
+                : await SketchQueries.get_latest();
 
             return {
                 url, 
