@@ -19,7 +19,8 @@ export const GET: APIRoute = async context => {
             runeword_rune: {
                 with: {
                     rune: true,
-                }
+                },
+                orderBy: Exp.asc(Schema.runeword_rune.ordinal),
             }
         },
         where: Exp.eq(Schema.runeword.name, word),

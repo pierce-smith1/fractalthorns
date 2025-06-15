@@ -4,6 +4,7 @@ import * as ImageDirectory from "./directory/image";
 import * as NewsDirectory from "./directory/news";
 import * as SketchDirectory from "./directory/sketch";
 import * as RecordDirectory from "./directory/record";
+import * as RuneDirectory from "./directory/rune";
 import * as NewsLoader from "./loaders/news";
 import * as RecordLoader from "./loaders/record";
 import * as SketchLoader from "./loaders/sketch";
@@ -38,10 +39,13 @@ export async function repopulate() {
     ]);
     */
 
-    await ImageDirectory.detect_and_resolve_changes();
-    await NewsDirectory.detect_and_resolve_changes();
-    await SketchDirectory.detect_and_resolve_changes();
-    await RecordDirectory.detect_and_resolve_changes();
+    await Promise.all([
+        ImageDirectory.detect_and_resolve_changes(),
+        NewsDirectory.detect_and_resolve_changes(),
+        SketchDirectory.detect_and_resolve_changes(),
+        RecordDirectory.detect_and_resolve_changes(),
+        RuneDirectory.detect_and_resolve_changes(),
+    ]);
 
     await DirectoryLoader.repopulate();
 }

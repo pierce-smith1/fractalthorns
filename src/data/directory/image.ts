@@ -49,7 +49,10 @@ async function get_load_operations(): Promise<Array<LoadOperation>> {
     return GenericUtil.unique_by_key(operations, operation => `${operation.name}:${operation.type}`);
 }
 
-function extract_image_change(change: Directory.DirectoryChange): null | {name: string, type: "png" | "info" | "descr"} {
+function extract_image_change(change: Directory.DirectoryChange)
+    : null 
+    | {name: string, type: "png" | "info" | "descr"} 
+{
     if (!change.path.startsWith("/image")) {
         return null;
     }

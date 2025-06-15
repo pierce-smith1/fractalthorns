@@ -3,22 +3,27 @@ import * as Sqlite from "drizzle-orm/sqlite-core";
 
 export const rune = Sqlite.sqliteTable("rune", {
     id: Sqlite.integer().primaryKey(),
-    name: Sqlite.text().notNull(),
+    name: Sqlite.text().notNull().unique(),
     file_id: Sqlite.integer().notNull(),
-});
+}, table => [
+    Sqlite.index("idx_rune_name").on(table.name),
+]);
 
 export const runeword = Sqlite.sqliteTable("runeword", {
     id: Sqlite.integer().primaryKey(),
-    name: Sqlite.text().notNull(),
+    name: Sqlite.text().notNull().unique(),
 }, table => [
-    Sqlite.index("idx_runeword_name").on(table.name)
+    Sqlite.index("idx_runeword_name").on(table.name),
 ]);
 
 export const runeword_rune = Sqlite.sqliteTable("runeword_rune", {
     id: Sqlite.integer().primaryKey(),
-    rune_id: Sqlite.integer().notNull(),
-    runeword_id: Sqlite.integer().notNull(),
-});
+    rune_name: Sqlite.text().notNull(),
+    runeword_name: Sqlite.text().notNull(),
+    ordinal: Sqlite.integer().notNull(),
+}, table => [
+    Sqlite.index("idx_runeword_rune_runeword_name").on(table.runeword_name),
+]);
 
 export const rune_relation = Drizzle.relations(rune, ({many}) => ({
     runeword_rune: many(runeword_rune),
@@ -30,11 +35,11 @@ export const runeword_relation = Drizzle.relations(runeword, ({many}) => ({
 
 export const runeword_rune_relation = Drizzle.relations(runeword_rune, ({one}) => ({
     rune: one(rune, {
-        fields: [runeword_rune.rune_id],
-        references: [rune.id],
+        fields: [runeword_rune.rune_name],
+        references: [rune.name],
     }),
     runeword: one(runeword, {
-        fields: [runeword_rune.runeword_id],
-        references: [runeword.id],
+        fields: [runeword_rune.runeword_name],
+        references: [runeword.name],
     }),
 }));
