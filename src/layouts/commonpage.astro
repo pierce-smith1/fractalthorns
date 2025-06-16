@@ -29,7 +29,7 @@
             return {
                 url, 
                 image_url: image ? ImageHelpers.get_image_url(image.name) : "",
-                descr: `${image?.title ?? "unknown"} · ${ImageHelpers.get_date_string(image?.date ?? new Date())}`,
+                descr: `${image?.title ?? "unknown"} · ${image?.date ?? new Date()}`,
             };
         } else if (domain === "sketch") {
             const name = path;

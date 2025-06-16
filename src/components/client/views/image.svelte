@@ -23,7 +23,7 @@
             parts.push(`<img class="iteration-sigil" src=/assets/images/common/iteration-${image.canon}.png />`);
         }
 
-        parts.push(ImageHelpers.get_date_string(image.date));
+        parts.push(image.date);
 
         if (image.speedpaint_video_url) {
             parts.push(`<a href="${image.speedpaint_video_url}">speedpaint</a>`);

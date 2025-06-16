@@ -34,12 +34,6 @@ export function american_to_iso_date(date: string) {
     return `${day.padStart(2, "0")}-${month.padStart(2, "0")}-${year}`;
 }
 
-export function get_date_string(image_date: string | Date) {
-    const date = new Date(image_date);
-    const formatted_date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    return formatted_date;
-}
-
 export function get_image_url(name: string) {
     return `/serve/image/${name}`;
 }
