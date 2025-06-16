@@ -107,12 +107,14 @@ export function set_domain_items(domain: Domain.Domain) {
     new_items_promise.then(items => nav_state.update(state => ({...state, nav_results: items})));
 }
 
-export function execute_search(term: string) {
+export function execute_search(term: string, options: {set_term?: boolean} = {set_term: true}) {
     term = term.trim();
 
-    nav_state.update(state => ({...state,
-        search_term: term,
-    }));
+    if (options.set_term) {
+        nav_state.update(state => ({...state,
+            search_term: term,
+        }));
+    }
 
     if (term.length === 0) {
         nav_state.update(state => ({...state,

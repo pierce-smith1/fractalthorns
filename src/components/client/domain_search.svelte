@@ -13,7 +13,7 @@
         const term = event.target.value as string;
 
         if (event.key === "Enter") {
-            execute_search(term);
+            execute_search(term, {set_term: false});
         }
 
         if (submit_timeout_handle) {
@@ -41,7 +41,7 @@
 </script>
 
 <div class="domain-search-container">
-    <input bind:this={search_box} type="search" class="domain-search-box" placeholder="search everything" on:keyup={submit_search} />
+    <input bind:this={search_box} type="search" class="domain-search-box" placeholder="search everything" on:keyup={submit_search} value={$nav_state.search_term}/>
     {#if $nav_state.viewing_search_results}
         <button type="button" class="close-search-button" on:click={clear_search}>╳</button>
     {/if}

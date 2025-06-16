@@ -7,7 +7,6 @@
     import * as Nav from "../nav";
     import * as Api from "../../../api/api";
 
-    import Loading from "../loading.svelte";
     import Keynav from './keynav.svelte';
 
     const no_description_placeholder = "🛠 *something indistinct echoes from the future...* 🛠";
