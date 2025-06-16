@@ -22,7 +22,7 @@ export function american_to_iso_date(date: string) {
     // Some of the dates for images are written as just a year because I
     // couldn't find a more exact time. So this is a special handler for those.
     if (!date.includes("/")) {
-        return `01-01-${date}`;
+        return `${date}-01-01`;
     }
 
     let [month, day, year] = date.split("/");
@@ -31,7 +31,7 @@ export function american_to_iso_date(date: string) {
         ? year
         : `20${year}`; // Y 2.1 K
 
-    return `${day.padStart(2, "0")}-${month.padStart(2, "0")}-${year}`;
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
 export function get_image_url(name: string) {
