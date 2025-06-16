@@ -113,9 +113,17 @@
         <Canvas {artist} bind:ctx={artist_ctx} />
     </div>
 
-    <a class="repo-link" href="https://github.com/pierce-smith1/fractalthorns">
-        <img src="/assets/images/common/socials-github.png" />
-    </a>
+    <div class="socials-container">
+        <a class="social-link" href="https://github.com/pierce-smith1/fractalthorns">
+            <img src="/assets/images/common/socials-github.png" />
+        </a>
+        <a class="social-link" href="https://discord.gg/xmTjgPkt3S">
+            <img src="/assets/images/common/socials-discord.png" />
+        </a>
+        <a class="social-link" href="https://www.youtube.com/@berylrose2270">
+            <img src="/assets/images/common/socials-youtube.png" />
+        </a>
+    </div>
 </div>
 {#await Fetchers.get.single_image({name: undefined})}
 {:then image}
@@ -140,12 +148,18 @@
         position: fixed;
     }
 
-    .repo-link {
+    .socials-container {
         position: absolute;
-        right: 0;
         bottom: 0;
-        padding: 10px;
-        opacity: 50%;
+        right: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        padding: 0 10px;
+        gap: 5px;
+    }
+
+    .social-link {
+        opacity: 30%;
     }
 
     * {
