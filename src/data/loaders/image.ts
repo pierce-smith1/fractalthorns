@@ -4,6 +4,7 @@ import sharp from "sharp";
 
 import Config from "../../config";
 import * as Filesystem from "../../filesystem";
+import * as ImageHelpers from "../../helpers/image";
 import Db from "../db";
 import * as Schema from "../schema/schema";
 import * as LoaderUtil from "./util";
@@ -76,7 +77,7 @@ export async function upsert_image(name: string, ordinals: OrdinalInformation) {
     const new_row = {
         name: name,
         title: info.title,
-        date: new Date(info.date).toISOString(),
+        date: ImageHelpers.american_to_iso_date(info.date),
         canon: info.canon,
         speedpaint_url,
         ordinal: ordinals[name],

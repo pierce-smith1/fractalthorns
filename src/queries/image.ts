@@ -41,7 +41,7 @@ export function to_api_object(row: typeof Schema.image.$inferSelect): Api.ImageO
     const image = {
         name: row.name,
         title: row.title,
-        date: new Date(row.date).toISOString().substring(0, 10),
+        date: row.date,
         ordinal: row.ordinal,
         image_url: `/serve/image/${row.name}`,
         thumb_url: `/serve/thumb/${row.name}`,

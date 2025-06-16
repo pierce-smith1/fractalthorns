@@ -1,7 +1,8 @@
-import Config from '../../config';
-import * as Filesystem from '../../filesystem';
-import Db from '../db';
-import * as Schema from '../schema/schema';
+import Config from "../../config";
+import * as Filesystem from "../../filesystem";
+import * as ImageHelpers from "../../helpers/image";
+import Db from "../db";
+import * as Schema from "../schema/schema";
 
 type News = {
     title: string,
@@ -21,7 +22,7 @@ export async function repopulate() {
     return Promise.all(news.map(async entry => {
         const [news_row] = await Db.insert(Schema.news).values({
             title: entry.title,
-            date: new Date(entry.date).toISOString(),
+            date: ImageHelpers.american_to_iso_date(entry.date),
             version: entry.version,
         }).returning();
 
