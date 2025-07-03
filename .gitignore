@@ -3,9 +3,10 @@ dist/
 .idea/
 _content/
 node_modules/
-drizzle/
 .git-old/
 rvaenv
 deploy*
 *.sqlite
 *.sqlite-journal
+*.bak
+db/schema.sql

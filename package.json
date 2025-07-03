@@ -8,7 +8,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "ensure-database": "env-cmd -f rvaenv drizzle-kit push",
+    "ensure-database": "env-cmd -f rvaenv dbmate up",
     "compile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts",
     "fully-recompile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts --fully-recreate"
   },
@@ -36,5 +36,8 @@
     "tsx": "^4.19.4",
     "typescript": "^5.3.3",
     "vite-plugin-javascript-obfuscator": "^3.1.0"
+  },
+  "devDependencies": {
+    "dbmate": "^2.27.0"
   }
 }
