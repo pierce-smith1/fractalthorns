@@ -29,4 +29,3 @@ create table [puzzle_solve] (
 drop table [puzzle];
 drop table [puzzle_linked_record];
 drop table [puzzle_solve];
-

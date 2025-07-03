@@ -1,21 +1,17 @@
-import * as Drizzle from "drizzle-orm";
-import * as Sqlite from "drizzle-orm/sqlite-core";
+import * as Kysely from "kysely"
 
-export const image = Sqlite.sqliteTable("image", {
-    id: Sqlite.integer().primaryKey(),
-    name: Sqlite.text().notNull().unique(),
-    title: Sqlite.text().notNull(),
-    date: Sqlite.text().notNull(),
-    canon: Sqlite.text(),
-    speedpaint_url: Sqlite.text(),
-    ordinal: Sqlite.integer().notNull(),
-    file_id: Sqlite.integer().notNull(),
-    thumbnail_file_id: Sqlite.integer().notNull(),
-    description: Sqlite.text(),
-    characters: Sqlite.text(),
-    primary_color: Sqlite.text(),
-    secondary_color: Sqlite.text(),
-}, table => [
-    Sqlite.index("idx_image_name").on(table.name),
-    Sqlite.index("idx_image_ordinal").on(table.ordinal),
-]);
+export interface ImageTable {
+    id: Kysely.Generated<number>,
+    name: string,
+    title: string,
+    date: string,
+    canon: string | null,
+    speedpaint_url: string | null,
+    ordinal: number,
+    file_id: number,
+    thumbnail_file_id: number,
+    description: string | null,
+    characters: string | null,
+    primary_color: string | null,
+    secondary_color: string | null,
+}
