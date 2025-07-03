@@ -1,25 +1,17 @@
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
+import * as Kysely from "kysely"
 
-import * as Api from "../api/api";
-import Db from "../data/db";
-import * as Schema from "../data/schema/schema";
+import * as Api from "../api/api"
+import Db from "../data/db"
+import * as Schema from "../data/schema/schema"
 
-export async function get_one(name: string): Promise<Api.ImageObject | null> {
-    const row = await Db.query.image.findFirst({
-        where: Exp.eq(Schema.image.name, name),
-    });
+type BaseImage = Api.ImageObject;
 
-    if (!row) {
-        return null;
-    }
-
-    return to_api_object(row);
-}
-
-export async function get_latest(): Promise<Api.ImageObject | null> {
-    const row = await Db.query.image.findFirst({
-        orderBy: Exp.desc(Schema.image.ordinal),
-    });
+export async function get_one(name: string): Promise<BaseImage | null> {
+    const row = await Db
+        .selectFrom("image")
+        .selectAll()
+        .where("name", "=", name)
+        .executeTakeFirst()
 
     if (!row) {
         return null;
@@ -28,16 +20,31 @@ export async function get_latest(): Promise<Api.ImageObject | null> {
     return to_api_object(row);
 }
 
-export async function get_all(): Promise<Array<Api.ImageObject>> {
-    const rows = await Db.query.image.findMany({
-        orderBy: Exp.desc(Schema.image.ordinal),
-    });
+export async function get_latest(): Promise<BaseImage | null> {
+    const row = await Db
+        .selectFrom("image")
+        .selectAll()
+        .orderBy("ordinal", "desc")
+        .executeTakeFirst()
+
+    if (!row) {
+        return null;
+    }
+
+    return to_api_object(row);
+}
+
+export async function get_all(): Promise<Array<BaseImage>> {
+    const rows = await Db
+        .selectFrom("image")
+        .selectAll()
+        .execute();
 
     const images = rows.map(to_api_object);
     return images;
 }
 
-export function to_api_object(row: typeof Schema.image.$inferSelect): Api.ImageObject {
+export function to_api_object(row: Kysely.Selectable<Schema.ImageTable>): BaseImage {
     const image = {
         name: row.name,
         title: row.title,

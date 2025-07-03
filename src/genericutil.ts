@@ -25,3 +25,11 @@ export function neighbors<T>(index: number, array: Array<T>) {
 
     return [array[lower], array[higher]];
 }
+
+export function undefined_if_empty<T>(array: Array<T>): Array<T> | undefined {
+    return array.length === 0 ? undefined : array;
+}
+
+export function non_null<T>(array: Array<T>): Array<Exclude<T, null | undefined>> {
+    return array.filter(x => x) as Array<Exclude<T, null | undefined>>;
+}
