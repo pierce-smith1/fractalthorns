@@ -27,7 +27,7 @@ export async function regenerate_puzzles() {
     const puzzles_definition_path = `${Config.content_root}/puzzles/puzzles.json`;
     const puzzles_definition = JSON.parse(await Filesystem.read(puzzles_definition_path)) as PuzzlesDefinition;
 
-    Promise.all(puzzles_definition.map(async ({chapter, puzzles}) => 
+    return Promise.all(puzzles_definition.map(async ({chapter, puzzles}) =>
         Promise.all(puzzles.map(async puzzle_entry => {
             const chapter_root = `${Config.content_root}/puzzles/chapter-${chapter}`;
 
@@ -48,25 +48,33 @@ export async function regenerate_puzzles() {
 
             const ordinal = puzzles.findIndex(entry => puzzle_entry.name === entry.name) + 1;
 
-            const [puzzle_row] = await Db.insert(Schema.puzzle).values({
-                name: puzzle_entry.name,
-                chapter,
-                solve_behavior: puzzle_entry.solve_behavior.type,
-                solve_code: puzzle_entry.solve_code,
-                primary_color: puzzle_entry.primary_color,
-                secondary_color: puzzle_entry.secondary_color,
-                type,
-                ordinal,
-            }).returning();
+            const puzzle_row = await Db
+                .insertInto("puzzle")
+                .values({
+                    name: puzzle_entry.name,
+                    chapter,
+                    solve_behavior: puzzle_entry.solve_behavior.type,
+                    solve_code: puzzle_entry.solve_code,
+                    primary_color: puzzle_entry.primary_color,
+                    secondary_color: puzzle_entry.secondary_color,
+                    type,
+                    ordinal,
+                })
+                .returning(["id"])
+                .executeTakeFirstOrThrow();
 
             if (puzzle_entry.solve_behavior.type === "linked") {
-                return Promise.all(puzzle_entry.solve_behavior.linked_records.map(record_name => 
-                    Db.insert(Schema.puzzle_linked_record).values({
+                await Promise.all(puzzle_entry.solve_behavior.linked_records.map(record_name => Db
+                    .insertInto("puzzle_linked_record")
+                    .values({
                         record_name,
                         puzzle_id: puzzle_row.id,
                     })
-                )).then(() => console.log(`Added puzzle ${puzzle_row.name}`));
+                    .execute()
+                ));
             }
+
+            console.log(`Added puzzle ${puzzle_entry.name}`);
         }))
     ));
 }

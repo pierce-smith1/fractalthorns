@@ -1,11 +1,11 @@
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
+import * as Kysely from "kysely"
 
-import Config from "../../config";
-import * as Filesystem from "../../filesystem";
-import * as RecordHelpers from "../../helpers/record";
-import Db from "../db";
-import * as Schema from "../schema/schema";
-import * as PuzzleLoader from "./puzzle";
+import Config from "../../config"
+import * as Filesystem from "../../filesystem"
+import * as RecordHelpers from "../../helpers/record"
+import Db from "../db"
+import * as Schema from "../schema/schema"
+import * as PuzzleLoader from "./puzzle"
 
 type StoryDefinition = Array<{
     chapter_name: string,
@@ -52,9 +52,12 @@ export async function regenerate_story_outline() {
     })).then(() => console.log("Regenerated story outline"));
 }
 
-async function ensure_record_row(record: RecordBase, entry: RecordEntry, ordered_records: Array<RecordEntry>, puzzles_definition: PuzzleLoader.PuzzlesDefinition)
-    : Promise<typeof Schema.record.$inferSelect>
-{
+async function ensure_record_row(
+    record: RecordBase,
+    entry: RecordEntry,
+    ordered_records: Array<RecordEntry>,
+    puzzles_definition: PuzzleLoader.PuzzlesDefinition
+): Promise<Kysely.Selectable<Schema.RecordTable>> {
     const ordinal = ordered_records.findIndex(x => x.name === entry.name) + 1;
     const iteration = ordered_records.find(x => x.name === entry.name)!.iteration;
 
@@ -71,10 +74,15 @@ async function ensure_record_row(record: RecordBase, entry: RecordEntry, ordered
         always_discovered: puzzles_definition.some(x => x.chapter === entry.chapter) ? 0 : 1,
     };
 
-    const [row] = await Db.insert(Schema.record).values(new_row).onConflictDoUpdate({
-        target: Schema.record.name,
-        set: new_row,
-    }).returning();
+    const row = await Db
+        .insertInto("record")
+        .values(new_row)
+        .onConflict(oc => oc
+            .column("name")
+            .doUpdateSet(new_row)
+         )
+         .returningAll()
+         .executeTakeFirstOrThrow();
 
     return row;
 }
@@ -87,8 +95,11 @@ export async function regenerate_record_lines(name: string, chapter: string) {
 
     const record_lines = parse_from(record_text);
 
-    const [existing_record_row] = await Db.select().from(Schema.record)
-        .where(Exp.eq(Schema.record.name, name));
+    const existing_record_row = await Db
+        .selectFrom("record")
+        .selectAll()
+        .where("name", "=", name)
+        .executeTakeFirst();
 
     const record_row = existing_record_row
         ?? await ensure_record_row(
@@ -102,20 +113,33 @@ export async function regenerate_record_lines(name: string, chapter: string) {
             await PuzzleLoader.get_puzzles_definition()
         );
 
+    const delete_lines_promise = Db
+        .deleteFrom("record_line")
+        .where("record_id", "=", record_row.id)
+        .execute();
+
+    const delete_header_lines_promise = Db
+        .deleteFrom("record_header_line")
+        .where("record_header_line.id", "=", record_row.id)
+        .execute();
+
     await Promise.all([
-        Db.delete(Schema.record_line).where(Exp.eq(Schema.record_line.record_id, record_row.id)),
-        Db.delete(Schema.record_header_line).where(Exp.eq(Schema.record_header_line.record_id, record_row.id)),
+        delete_lines_promise,
+        delete_header_lines_promise,
     ]);
 
-    const header_line_insert_promise = Promise.all(record_lines.header_lines.map(async header_line => 
-        Db.insert(Schema.record_header_line).values({
+    const header_line_insert_promise = Promise.all(record_lines.header_lines.map(async header_line => Db
+        .insertInto("record_header_line")
+        .values({
             record_id: record_row.id,
             text: header_line,
         })
+        .execute()
     ));
 
-    const line_insert_promise = Promise.all(record_lines.lines.map(async (line, i) =>
-        Db.insert(Schema.record_line).values({
+    const line_insert_promise = Promise.all(record_lines.lines.map(async (line, i) => Db
+        .insertInto("record_line")
+        .values({
             record_id: record_row.id,
             type: line.type,
             character: line.character,
@@ -124,6 +148,7 @@ export async function regenerate_record_lines(name: string, chapter: string) {
             text: line.text,
             ordinal: i + 1,
         })
+        .execute()
     ));
 
     return Promise.all([
@@ -135,13 +160,26 @@ export async function regenerate_record_lines(name: string, chapter: string) {
 export async function delete_record_lines(name: string): Promise<void> {
     console.log(`Deleting record ${name}`);
 
-    const [existing_record_row] = await Db.select().from(Schema.record)
-        .where(Exp.eq(Schema.record.name, name));
+    const existing_record_row = await Db
+        .selectFrom("record")
+        .selectAll()
+        .where("name", "=", name)
+        .executeTakeFirst();
 
     if (existing_record_row) {
+        const delete_lines_promise = Db
+            .deleteFrom("record_line")
+            .where("record_id", "=", existing_record_row.id)
+            .execute();
+
+        const delete_header_lines_promise = Db
+            .deleteFrom("record_header_line")
+            .where("record_header_line.id", "=", existing_record_row.id)
+            .execute();
+
         return Promise.all([
-            Db.delete(Schema.record_line).where(Exp.eq(Schema.record_line.record_id, existing_record_row.id)),
-            Db.delete(Schema.record_header_line).where(Exp.eq(Schema.record_line.record_id, existing_record_row.id)),
+            delete_lines_promise,
+            delete_header_lines_promise
         ]).then(() => console.log(`Deleted record ${name}`));
     }
 }

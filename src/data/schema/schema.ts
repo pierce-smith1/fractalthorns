@@ -36,3 +36,10 @@ export interface Database {
     runeword_rune: RuneSchema.RunewordRuneTable,
     sketch: SketchSchema.SketchTable,
 }
+
+export * from "./image"
+export * from "./news"
+export * from "./puzzle"
+export * from "./record"
+export * from "./rune"
+export * from "./sketch"

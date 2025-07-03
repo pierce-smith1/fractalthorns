@@ -17,7 +17,7 @@ export interface RecordTable {
 export interface RecordLineTable {
     id: Kysely.Generated<number>,
     record_id: number,
-    type: number,
+    type: string,
     character: string | null,
     language: string | null,
     emphasis: string | null,

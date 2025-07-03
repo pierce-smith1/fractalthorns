@@ -1,5 +1,3 @@
-import * as Drizzle from "drizzle-orm";
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
 import sharp from "sharp";
 
 import Config from "../../config";
@@ -59,34 +57,60 @@ export async function upsert_sketch(name: string, prefix: string, ordinals: Ordi
         secondary_color: dominant_colors.secondary,
     };
 
-    return Db.insert(Schema.sketch).values(new_row).onConflictDoUpdate({
-        target: Schema.sketch.name,
-        set: new_row,
-    }).then(() => console.log(`Added sketch ${name}`));
+    return Db
+        .insertInto("sketch")
+        .values(new_row)
+        .onConflict(oc => oc
+            .column("name")
+            .doUpdateSet(new_row)
+         )
+        .execute()
+        .then(() => console.log(`Added sketch ${name}`));
 }
 
 export async function delete_sketch(name: string) {
     console.log(`Deleting sketch ${name}...`);
 
-    const [row] = await Db.select({
-        file_id: Schema.sketch.file_id,
-        thumbnail_id: Schema.sketch.thumbnail_file_id,
-        ordinal: Schema.sketch.ordinal
-    }).from(Schema.sketch)
-        .where(Exp.eq(Schema.sketch.name, name));
+    const sketch_row = await Db
+        .selectFrom("sketch")
+        .select([
+            "id",
+            "file_id",
+            "thumbnail_file_id",
+            "ordinal",
+        ])
+        .where("name", "=", name)
+        .executeTakeFirst();
 
-    if (!row) {
+    if (!sketch_row) {
         return;
     }
 
+    const delete_sketch_row_promise = Db
+        .deleteFrom("sketch")
+        .where("id", "=", sketch_row.id)
+        .execute();
+
+    const delete_files_promise = Db
+        .deleteFrom("sketch")
+        .where(eb => eb.or([
+            eb("id", "=", sketch_row.file_id),
+            eb("id", "=", sketch_row.thumbnail_file_id),
+        ]))
+        .execute();
+
     await Promise.all([
-        Db.delete(Schema.sketch).where(Exp.eq(Schema.sketch.name, name)),
-        Db.delete(Schema.file).where(Exp.inArray(Schema.file.id, [row.file_id, row.thumbnail_id])),
+        delete_sketch_row_promise,
+        delete_files_promise,
     ]);
 
-    return Db.update(Schema.sketch).set({
-        ordinal: Drizzle.sql`${Schema.sketch.ordinal} - 1`,
-    }).where(Exp.gt(Schema.sketch.ordinal, row.ordinal))
+    return Db
+        .updateTable("image")
+        .set({
+            ordinal: eb => eb("ordinal", "-", 1),
+        })
+        .where("ordinal", ">", sketch_row.ordinal)
+        .execute()
         .then(() => console.log(`Deleted sketch ${name}`));
 }
 
@@ -100,18 +124,26 @@ export async function update_sketch_info(name: string) {
         ? JSON.parse(await Filesystem.read(info_path)) as SketchInfo
         : null;
 
-    return Db.update(Schema.sketch).set({
-        characters: info?.characters?.join(","),
-    }).where(Exp.eq(Schema.sketch.name, name))
+    return Db
+        .updateTable("sketch")
+        .set({
+            characters: info?.characters?.join(","),
+        })
+        .where("name", "=", name)
+        .execute()
         .then(() => console.log(`Updated sketch info for ${name}`));
 }
 
 export async function clear_sketch_info(name: string) {
     console.log(`Clearing sketch info for ${name}`);
 
-    return Db.update(Schema.sketch).set({
-        characters: null,
-    }).where(Exp.eq(Schema.sketch.name, name))
+    return Db
+        .updateTable("sketch")
+        .set({
+            characters: null,
+        })
+        .where("name", "=", name)
+        .execute()
         .then(() => console.log(`Cleared sketch info for ${name}`));
 }
 

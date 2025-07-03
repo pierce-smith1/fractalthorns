@@ -1,12 +1,9 @@
-import * as Drizzle from "drizzle-orm";
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
 import sharp from "sharp";
 
 import Config from "../../config";
 import * as Filesystem from "../../filesystem";
 import * as ImageHelpers from "../../helpers/image";
 import Db from "../db";
-import * as Schema from "../schema/schema";
 import * as LoaderUtil from "./util";
 
 export const info_file_name = "info.json";
@@ -89,43 +86,73 @@ export async function upsert_image(name: string, ordinals: OrdinalInformation) {
         secondary_color: dominant_colors.secondary,
     };
 
-    return Db.insert(Schema.image).values(new_row).onConflictDoUpdate({
-        target: Schema.image.name,
-        set: new_row,
-    }).then(() => console.log(`Added image ${name}`));
+    return Db
+        .insertInto("image")
+        .values(new_row)
+        .onConflict(oc => oc
+            .column("name")
+            .doUpdateSet(new_row)
+        )
+        .execute()
+        .then(() => console.log(`Inserted image ${name}`));
 }
 
 export async function delete_image(name: string) {
     console.log(`Deleting image ${name}...`);
 
-    const [row] = await Db.select({
-        file_id: Schema.image.file_id,
-        thumbnail_id: Schema.image.thumbnail_file_id,
-        ordinal: Schema.image.ordinal
-    }).from(Schema.image)
-        .where(Exp.eq(Schema.image.name, name));
+    const image_row = await Db
+        .selectFrom("image")
+        .select([
+            "id",
+            "file_id",
+            "thumbnail_file_id",
+            "ordinal",
+        ])
+        .where("name", "=", name)
+        .executeTakeFirst();
 
-    if (!row) {
+    if (!image_row) {
         return;
     }
 
+    const delete_image_row_promise = Db
+        .deleteFrom("image")
+        .where("id", "=", image_row.id)
+        .execute();
+
+    const delete_files_promise = Db
+        .deleteFrom("file")
+        .where(eb => eb.or([
+            eb("id", "=", image_row.file_id),
+            eb("id", "=", image_row.thumbnail_file_id),
+        ]))
+        .execute();
+
     await Promise.all([
-        Db.delete(Schema.image).where(Exp.eq(Schema.image.name, name)),
-        Db.delete(Schema.file).where(Exp.inArray(Schema.file.id, [row.file_id, row.thumbnail_id])),
+        delete_image_row_promise,
+        delete_files_promise,
     ]);
 
-    return Db.update(Schema.image).set({
-        ordinal: Drizzle.sql`${Schema.image.ordinal} - 1`,
-    }).where(Exp.gt(Schema.image.ordinal, row.ordinal))
+    return Db
+        .updateTable("image")
+        .set({
+            ordinal: eb => eb("ordinal", "-", 1),
+        })
+        .where("ordinal", ">", image_row.ordinal)
+        .execute()
         .then(() => console.log(`Deleted image ${name}`));
 }
 
 export async function clear_image_description(name: string) {
     console.log(`Clearing image description ${name}...`);
 
-    return Db.update(Schema.image).set({
-        description: null,
-    }).where(Exp.eq(Schema.image.name, name))
+    return Db
+        .updateTable("image")
+        .set({
+            description: null,
+        })
+        .where("name", "=", name)
+        .execute()
         .then(() => console.log(`Cleared description for ${name}`));
 }
 

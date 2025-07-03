@@ -8,6 +8,7 @@
         ".astro/types.d.ts",
         "**/*"
     ],
+    "lib": "ESNext",
     "compilerOptions": {
         "noUnusedLocals": false,
         "noUnusedParameters": false
