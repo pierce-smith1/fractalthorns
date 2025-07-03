@@ -1,10 +1,12 @@
+import * as Kysely from "kysely"
+import BetterSqlite3 from "better-sqlite3"
+
 import Config from "../config";
+import * as Schema from "./schema/schema";
 
-import Database from "better-sqlite3";
-import * as schema from "./schema/schema";
-import * as drizzle from "drizzle-orm/better-sqlite3";
-
-const driver = new Database(Config.database_file);
-const db = drizzle.drizzle(driver, {schema});
-
-export default db;
+export default new Kysely.Kysely<Schema.Database>({
+    dialect: new Kysely.SqliteDialect({
+        database: new BetterSqlite3(Config.database_file),
+    }),
+    log: ["query"],
+});

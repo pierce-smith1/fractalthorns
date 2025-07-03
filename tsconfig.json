@@ -2,14 +2,14 @@
     "extends": "astro/tsconfigs/strict",
     "exclude": [
         "node_modules",
-        "dist",
+        "dist"
     ],
     "include": [
         ".astro/types.d.ts",
-        "**/*",
+        "**/*"
     ],
     "compilerOptions": {
         "noUnusedLocals": false,
-        "noUnusedParameters": false,
+        "noUnusedParameters": false
     }
 }

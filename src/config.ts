@@ -11,7 +11,7 @@ function get_or_die(key: string): string {
 const config = {
     self_url: get_or_die("RVA_SELF_URL"),
     content_root: process.env.RVA_CONTENT_ROOT ?? "./_content",
-    database_file: get_or_die("RVA_DATABASE_FILE"),
+    database_file: get_or_die("DATABASE_URL"),
 
     env: process.env.RVA_ENV ?? "prod",
 };
