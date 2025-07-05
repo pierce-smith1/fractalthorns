@@ -2,7 +2,7 @@
 
 create table [image] (
     [id] integer primary key,
-    [name] text not null,
+    [name] text not null unique,
     [title] text not null,
     [date] text not null,
     [canon] text,

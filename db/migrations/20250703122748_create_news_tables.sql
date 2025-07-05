@@ -8,7 +8,7 @@ create table [news] (
 );
 
 create table [news_item] (
-    [id] integer not null,
+    [id] integer primary key,
     [news_id] integer not null,
     [text] text not null
 );

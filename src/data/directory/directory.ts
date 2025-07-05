@@ -1,9 +1,6 @@
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
-
 import Config from "../../config";
 import * as Filesystem from "../../filesystem";
 import Db from "../db";
-import * as Schema from "../schema/schema";
 
 export type DirectoryListing = Array<{
     path: string, 
@@ -11,7 +8,11 @@ export type DirectoryListing = Array<{
 }>;
 
 export async function load_db_directory(): Promise<DirectoryListing> {
-    const rows = await Db.select().from(Schema.directory);
+    const rows = await Db
+        .selectFrom("directory")
+        .selectAll()
+        .execute();
+
     return rows;
 }
 
