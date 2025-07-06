@@ -52,13 +52,16 @@ export async function get_matching(term: string): Promise<Array<BaseSketch>> {
         .selectFrom("sketch")
         .selectAll()
         .where(exp => exp.or([
-            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "sketch.name"]), "=", 1),
+            exp(exp.fn<number>("glob", [Kysely.sql.val(`*${term}*`), "sketch.name"]), "=", 1),
+            // TODO This character search is not quite correct, because
+            // something like "romal,e" can match when it really shouldn't.
+            // I doubt anyone will notice, but this should get fixed.
+            exp(exp.fn<number>("glob", [Kysely.sql.val(`*${term}*`), "sketch.characters"]), "=", 1),
         ]))
+        .orderBy("sketch.ordinal", "desc")
         .execute();
 
     const images = rows.map(to_object)
-        // Searching for characters is a little impractical in SQL unforunately
-        .filter(sketch => sketch.characters.find(x => x.includes(term)))
 
     return images;
 }

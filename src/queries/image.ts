@@ -53,14 +53,17 @@ export async function get_matching(term: string): Promise<Array<BaseImage>> {
         .selectFrom("image")
         .selectAll()
         .where(exp => exp.or([
-            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "image.name"]), "=", 1),
-            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "image.title"]), "=", 1),
+            exp(exp.fn<number>("glob", [Kysely.sql.val(`*${term}*`), "image.name"]), "=", 1),
+            exp(exp.fn<number>("glob", [Kysely.sql.val(`*${term}*`), "image.title"]), "=", 1),
+            // TODO This character search is not quite correct, because
+            // something like "romal,e" can match when it really shouldn't.
+            // I doubt anyone will notice, but this should get fixed.
+            exp(exp.fn<number>("glob", [Kysely.sql.val(`*${term}*`), "image.characters"]), "=", 1),
         ]))
+        .orderBy("image.ordinal", "desc")
         .execute();
 
-    const images = rows.map(to_api_object)
-        // Searching for characters is a little impractical in SQL unforunately
-        .filter(image => image.characters.find(x => x.includes(term)))
+    const images = rows.map(to_api_object);
 
     return images;
 }

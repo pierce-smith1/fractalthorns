@@ -218,9 +218,7 @@ export async function get_all_text(): Promise<Array<{text: BaseRecordText, entry
 
 export async function get_matching(term: string): Promise<Array<BaseRecordEntry>> {
     const rows = await base_entry.query
-        .where(exp => exp.or([
-            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "record.title"]), "=", 1),
-        ]))
+        .where(exp => exp.fn<number>("glob", [Kysely.sql.val(`*${term}*`), "record.title"]), "=", 1)
         .execute();
 
     const entries = QueryUtil.coalesce_rows({
