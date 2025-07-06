@@ -46,6 +46,23 @@ export async function get_all(): Promise<Array<BaseImage>> {
     return images;
 }
 
+export async function get_matching(term: string): Promise<Array<BaseImage>> {
+    const rows = await Db
+        .selectFrom("image")
+        .selectAll()
+        .where(exp => exp.or([
+            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "image.name"]), "=", 1),
+            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "image.title"]), "=", 1),
+        ]))
+        .execute();
+
+    const images = rows.map(to_api_object)
+        // Searching for characters is a little impractical in SQL unforunately
+        .filter(image => image.characters.find(x => x.includes(term)))
+
+    return images;
+}
+
 export function to_api_object(row: Kysely.Selectable<Schema.ImageTable>): BaseImage {
     const image = {
         name: row.name,

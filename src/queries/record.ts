@@ -1,5 +1,7 @@
-import * as Api from "../api/api";
-import Db from "../data/db";
+import * as Kysely from "kysely"
+
+import * as Api from "../api/api"
+import Db from "../data/db"
 import * as QueryUtil from "./util"
 import * as Util from "../genericutil"
 
@@ -42,7 +44,7 @@ export async function get_all_entries(): Promise<Array<BaseRecordEntry>> {
     return entries;
 }
 
-export async function get_one_entry(name: string): Promise<Api.RedactableRecordEntry | null> {
+export async function get_one_entry(name: string): Promise<BaseRecordEntry | null> {
     const rows = await base_entry.query
         .where("record_name", "=", "name")
         .execute();
@@ -59,7 +61,7 @@ export async function get_one_entry(name: string): Promise<Api.RedactableRecordE
     return entry;
 }
 
-export async function get_first_entry(): Promise<Api.RedactableRecordEntry | null> {
+export async function get_first_entry(): Promise<BaseRecordEntry | null> {
     const rows = await base_entry.query
         .select("record.ordinal as record_ordinal")
         .orderBy("record_ordinal", "asc")
@@ -121,7 +123,7 @@ const base_text = QueryUtil.make_base_query(Db
 
 export type BaseRecordText = Api.RecordTextResponse;
 
-export async function get_one_text(name: string): Promise<Api.RecordTextResponse | null | "unsolved"> {
+export async function get_one_text(name: string): Promise<BaseRecordText | null | "unsolved"> {
     const rows = await base_text.query
         .where("record.name", "=", name)
         .execute();
@@ -142,9 +144,12 @@ export async function get_one_text(name: string): Promise<Api.RecordTextResponse
     return text;
 }
 
-export async function get_first_text(): Promise<Api.RecordTextResponse | null | "unsolved"> {
+export async function get_first_text(): Promise<BaseRecordText | null | "unsolved"> {
     const rows = await base_text.query
-        .where("record.ordinal", "=", 1)
+        .where("record.ordinal", "=", eb => eb
+            .selectFrom("record")
+            .select(eb => eb.fn<number>("min", ["record.ordinal"]).as("min_ordinal"))
+        )
         .execute();
 
     if (rows.length === 0) {
@@ -163,7 +168,7 @@ export async function get_first_text(): Promise<Api.RecordTextResponse | null | 
     return text;
 }
 
-export async function get_all_text(): Promise<Array<{text: Api.RecordTextResponse, entry: Api.RedactableRecordEntry}>> {
+export async function get_all_text(): Promise<Array<{text: BaseRecordText, entry: BaseRecordEntry}>> {
     const rows = await Db
         .selectFrom("record")
         .leftJoin("record_line", "record_line.record_id", "record.id")
@@ -205,6 +210,22 @@ export async function get_all_text(): Promise<Array<{text: Api.RecordTextRespons
     });
 
     return objects;
+}
+
+export async function get_matching(term: string): Promise<Array<BaseRecordEntry>> {
+    const rows = await base_entry.query
+        .where(exp => exp.or([
+            exp(exp.fn<number>("glob", [Kysely.sql<string>`*${term}*`, "record.title"]), "=", 1),
+        ]))
+        .execute();
+
+    const entries = QueryUtil.coalesce_rows({
+        rows,
+        get_key: row => row.record_id,
+        merge: base_entry.merge_fn,
+    });
+
+    return entries;
 }
 
 function is_solved(row: {record_always_discovered: number, solving_puzzle_id: number | null}) {

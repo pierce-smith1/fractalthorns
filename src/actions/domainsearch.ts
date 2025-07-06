@@ -1,5 +1,3 @@
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
-
 import Db from "../data/db";
 import * as Schema from "../data/schema/schema";
 import * as Domain from "../helpers/domain";
@@ -25,63 +23,33 @@ export async function find_items(term: string, type: Domain.SearchItemType): Pro
 }
 
 export async function find_image_items(term: string): ReturnType<typeof find_items> {
-    const rows = await Db.query.image.findMany({
-        where: Exp.or(
-            // TODO: Technically this is SQL injection, but Drizzle provides no way around it
-            // and it's probably not a **dangerous** form of injection... the impact should be
-            // localized to the LIKE statemenet. Hopefully.
-            Exp.like(Schema.image.name, `%${term}%`),
-            Exp.like(Schema.image.title, `%${term}%`),
-            // TODO: This is also technically not correct because it will search the commas
-            // in the list...
-            Exp.like(Schema.image.characters, `%${term}%`), 
-        ),
-    });
-
-    const image_items = rows.map(row => ({
-        domain: "image" as const, 
-        image: ImageQueries.to_api_object(row),
+    const images = await ImageQueries.get_matching(term);
+    const items = images.map(x => ({
+        domain: "image" as const,
+        image: x,
     }));
 
-    return image_items;
+    return items;
 }
 
 export async function find_sketch_items(term: string): ReturnType<typeof find_items> {
-    const rows = await Db.query.sketch.findMany({
-        where: Exp.or(
-            Exp.like(Schema.sketch.name, `%${term}%`),
-            Exp.like(Schema.sketch.characters, `%${term}%`), // TODO again, not really correct but close enough...
-        ),
-    });
-
-    const sketch_items = rows.map(row => ({
+    const sketches = await SketchQueries.get_matching(term);
+    const items = sketches.map(x => ({
         domain: "sketch" as const,
-        sketch: SketchQueries.to_api_object(row),
+        sketch: x,
     }));
 
-    return sketch_items;
+    return items;
 }
 
 export async function find_episodic_items(term: string): ReturnType<typeof find_items> {
-    // TODO: Fucking put a bullet through my god damn head
-    const rows = await Db.query.record.findMany({
-        with: {
-            puzzle_solve: true,
-            puzzle_linked_record: {
-                with: {
-                    puzzle: true,
-                }
-            }
-        },
-        where: Exp.like(Schema.record.title, `%${term}%`),
-    });
-
-    const record_items = rows.map(row => ({
+    const records = await RecordQueries.get_matching(term);
+    const items = records.map(x => ({
         domain: "episodic-item" as const,
-        record: RecordQueries.to_api_entry_object(row),
+        record: x,
     }));
 
-    return record_items;
+    return items;
 }
 
 export async function find_episodic_lines(term: string): ReturnType<typeof find_items> {
