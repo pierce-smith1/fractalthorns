@@ -20,23 +20,6 @@ To avoid spoilers, this repo does not contain the actual content folder for the 
 
 Astro powers the rest of the site's functionality, such as routing pages, making API endpoints, and bundling client code. It is worth taking a trip to [their docs](https://docs.astro.build/en/concepts/why-astro/) to learn some fundamentals of the platform. 
 
-The following is a rough outline of the project structure:
-
-```
-. _content/        # The source of content, used to create the database
-| public/          # Static assets, such as decorative images and shared CSS
-| src/
-'---.
-    | actions/     # Server code that performs more complicated tasks than just fetching and transforming data (though it turns out, that's 90% of we do here)
-    | api/         # Schemas and definitions for the API endpoints
-    | components/  # Client code - 99% of frontend stuff and all Svelte code lives in here
-    | data/        # Code for database setup, loading, and populating
-    | helpers/     # Domain-specific utility code that is safe to use on the client or server
-    | layouts/     # Astro layouts
-    | pages/       # The actual API endpoints, and weird one-off pages (e.g. the bitplot tool used in my boot screen video)
-    | queries/     # Convenience functions for interacting with the database
-```
-
 ## Setup / Deployment
 
 Requirements:
@@ -65,9 +48,9 @@ To get set up locally:
   # will not function correctly. Sorry :(
   RVA_CONTENT_ROOT="./_content"
 
-  # The path to your database file. If it doesn't exist, it will be created
-  # for you when runnning the compile-content command.
-  RVA_DATABASE_FILE="./rva.sqlite"
+  # The path to your database file, prefixed with "sqlite". If it doesn't exist, 
+  # it will be created for you when runnning the compile-content command.
+  DATABASE_URL="sqlite:rva.sqlite"
 
   # What environment this is running in. Set to "local" for local development.
   RVA_ENV="local"
@@ -98,5 +81,7 @@ To get set up locally:
   ```
 * To update the content database, run `npm run compile-content` (which you can even do while the server is running!)
   This will read the modified times of the files in the content directory to intelligently determine what entities actually need
-  recreating. If you suspect your database is in a buggy state and needs to be fully remade though, you can use
-  `npm run fully-recompile-content`, which will do a totally clean recreation from scratch.
+  recreating. 
+  * If you suspect your database is in a buggy state and needs to be fully remade, you can use
+  `npm run fully-recompile-content`, which will do a clean recreation from scratch (tables not derived from content, such as
+  puzzle_solve, are preserved. To start fresh for totally real, just delete the database.)
