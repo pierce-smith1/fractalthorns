@@ -20,6 +20,6 @@ export interface PuzzleLinkedRecordTable {
 
 export interface PuzzleSolveTable {
     id: Kysely.Generated<number>,
-    puzzle_id: number,
-    record_id: number,
+    puzzle_name: string,
+    record_name: string,
 }

@@ -20,8 +20,8 @@ create table [puzzle_linked_record] (
 
 create table [puzzle_solve] (
     [id] integer primary key,
-    [puzzle_id] integer not null,
-    [record_id] integer not null
+    [puzzle_name] text not null,
+    [record_name] text not null
 );
 
 -- migrate:down

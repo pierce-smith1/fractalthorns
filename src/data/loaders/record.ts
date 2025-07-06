@@ -120,7 +120,7 @@ export async function regenerate_record_lines(name: string, chapter: string) {
 
     const delete_header_lines_promise = Db
         .deleteFrom("record_header_line")
-        .where("record_header_line.id", "=", record_row.id)
+        .where("record_header_line.record_id", "=", record_row.id)
         .execute();
 
     await Promise.all([
@@ -128,29 +128,27 @@ export async function regenerate_record_lines(name: string, chapter: string) {
         delete_header_lines_promise,
     ]);
 
-    const header_line_insert_promise = Promise.all(record_lines.header_lines.map(async (header_line, i) => Db
+    const header_line_insert_promise = Db
         .insertInto("record_header_line")
-        .values({
+        .values(record_lines.header_lines.map((x, i) => ({
             record_id: record_row.id,
-            text: header_line,
+            text: x,
             ordinal: i + 1,
-        })
+        })))
         .execute()
-    ));
 
-    const line_insert_promise = Promise.all(record_lines.lines.map(async (line, i) => Db
+    const line_insert_promise = Db
         .insertInto("record_line")
-        .values({
+        .values(record_lines.lines.map((x, i) => ({
             record_id: record_row.id,
-            type: line.type,
-            character: line.character,
-            language: line.language,
-            emphasis: line.emphasis,
-            text: line.text,
+            text: x.text,
+            type: x.type,
+            character: x.character,
+            language: x.language,
+            emphasis: x.emphasis,
             ordinal: i + 1,
-        })
-        .execute()
-    ));
+        })))
+        .execute();
 
     return Promise.all([
         header_line_insert_promise,

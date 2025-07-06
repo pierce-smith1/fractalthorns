@@ -9,7 +9,7 @@ export type BaseRecordEntry = Api.RedactableRecordEntry;
 
 const base_entry = QueryUtil.make_base_query(Db
     .selectFrom("record")
-    .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+    .leftJoin("puzzle_solve", "puzzle_solve.record_name", "record.name")
     .leftJoin("puzzle_linked_record", "puzzle_linked_record.record_name", "record.name")
     .leftJoin("puzzle", "puzzle.id", "puzzle_linked_record.id")
     .select([
@@ -19,7 +19,7 @@ const base_entry = QueryUtil.make_base_query(Db
         "record.canon as record_iteration",
         "record.chapter as record_chapter",
         "record.always_discovered as record_always_discovered",
-        "puzzle_solve.puzzle_id as solving_puzzle_id",
+        "puzzle_solve.puzzle_name as solving_puzzle_name",
         "puzzle.name as linked_puzzle_name",
     ]),
     (representative, rows) => ({
@@ -85,7 +85,7 @@ const base_text = QueryUtil.make_base_query(Db
     .selectFrom("record")
     .leftJoin("record_line", "record_line.record_id", "record.id")
     .leftJoin("record_header_line", "record_header_line.record_id", "record.id")
-    .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+    .leftJoin("puzzle_solve", "puzzle_solve.record_name", "record.name")
     .select([
         "record.id as record_id",
         "record.name as record_name",
@@ -103,7 +103,7 @@ const base_text = QueryUtil.make_base_query(Db
         "record_line.text as record_line_text",
         "record_header_line.id as record_header_line_id",
         "record_header_line.text as record_header_line_text",
-        "puzzle_solve.puzzle_id as solving_puzzle_id",
+        "puzzle_solve.puzzle_name as solving_puzzle_name",
     ])
     .orderBy("record_line.ordinal", "asc")
     .orderBy("record_header_line.ordinal", "asc"),
@@ -177,8 +177,8 @@ export async function get_all_text(): Promise<Array<{text: BaseRecordText, entry
         .selectFrom("record")
         .leftJoin("record_line", "record_line.record_id", "record.id")
         .leftJoin("record_header_line", "record_header_line.record_id", "record.id")
-        .leftJoin("puzzle_linked_record", "puzzle_linked_record.record_name", "record_name")
-        .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+        .leftJoin("puzzle_linked_record", "puzzle_linked_record.record_name", "record.name")
+        .leftJoin("puzzle_solve", "puzzle_solve.record_name", "record.name")
         .leftJoin("puzzle", "puzzle.id", "puzzle_linked_record.puzzle_id")
         .select([
             "record.id as record_id",
@@ -199,9 +199,11 @@ export async function get_all_text(): Promise<Array<{text: BaseRecordText, entry
             "record_line.text as record_line_text",
             "record_header_line.id as record_header_line_id",
             "record_header_line.text as record_header_line_text",
-            "puzzle_solve.puzzle_id as solving_puzzle_id",
+            "puzzle_solve.puzzle_name as solving_puzzle_name",
             "puzzle.name as linked_puzzle_name",
         ])
+        .orderBy("record.ordinal", "asc")
+        .orderBy("record_line.ordinal", "asc")
         .execute();
 
     const objects = QueryUtil.coalesce_rows({
@@ -230,6 +232,6 @@ export async function get_matching(term: string): Promise<Array<BaseRecordEntry>
     return entries;
 }
 
-export function is_solved(row: {record_always_discovered: number, solving_puzzle_id: number | null}) {
-    return !!row.record_always_discovered || row.solving_puzzle_id != null;
+export function is_solved(row: {record_always_discovered: number, solving_puzzle_name: string | null}) {
+    return !!row.record_always_discovered || row.solving_puzzle_name != null;
 }

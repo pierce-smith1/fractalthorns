@@ -8,9 +8,9 @@ export type BasePuzzle = Api.PuzzleObject;
 
 const base_puzzle = QueryUtil.make_base_query(Db
     .selectFrom("puzzle")
-    .leftJoin("puzzle_solve", "puzzle_solve.puzzle_id", "puzzle.id")
+    .leftJoin("puzzle_solve", "puzzle_solve.puzzle_name", "puzzle.name")
     .leftJoin("puzzle_linked_record", "puzzle_linked_record.puzzle_id", "puzzle.id")
-    .leftJoin("record", "record.id", "puzzle_solve.record_id")
+    .leftJoin("record", "record.name", "puzzle_solve.record_name")
     .select([
         "puzzle.id as puzzle_id",
         "puzzle.name as puzzle_name",
@@ -21,7 +21,6 @@ const base_puzzle = QueryUtil.make_base_query(Db
         "puzzle.secondary_color as puzzle_secondary_color",
         "puzzle.type as puzzle_type",
         "puzzle.ordinal as puzzle_ordinal",
-        "puzzle_solve.record_id as puzzle_solve_record_id",
         "puzzle_linked_record.record_name as puzzle_linked_record_name",
         "record.name as solved_record_name",
     ]),
@@ -92,11 +91,12 @@ type SolveResult =
 export async function solve_puzzle(name: string, code: string): Promise<SolveResult> {
     const solve_rows = await Db
         .selectFrom("puzzle")
-        .leftJoin("puzzle_solve", "puzzle_solve.puzzle_id", "puzzle.id")
+        .leftJoin("puzzle_solve", "puzzle_solve.puzzle_name", "puzzle.name")
         .leftJoin("puzzle_linked_record", "puzzle_linked_record.puzzle_id", "puzzle.id")
-        .leftJoin("record", "record.id", "puzzle_solve.record_id")
+        .leftJoin("record", "record.name", "puzzle_solve.record_name")
         .select([
             "puzzle.id as puzzle_id",
+            "puzzle.name as puzzle_name",
             "puzzle.chapter as puzzle_chapter",
             "record.name as unlocked_record_name",
             "record.id as unlocked_record_id",
@@ -115,6 +115,7 @@ export async function solve_puzzle(name: string, code: string): Promise<SolveRes
         rows: solve_rows,
         merge: (representative, rows) => ({
             puzzle_id: representative.puzzle_id,
+            puzzle_name: representative.puzzle_name,
             puzzle_chapter: representative.puzzle_chapter,
             solve_code: representative.puzzle_solve_code,
             solve_behavior: representative.puzzle_solve_behavior,
@@ -144,8 +145,8 @@ export async function solve_puzzle(name: string, code: string): Promise<SolveRes
         await Db
             .insertInto("puzzle_solve")
             .values(solve_info.unlocked_records.map(x => ({
-                puzzle_id: solve_info.puzzle_id,
-                record_id: x.id,
+                puzzle_name: name,
+                record_name: x.name,
             })))
             .execute();
 
@@ -156,12 +157,12 @@ export async function solve_puzzle(name: string, code: string): Promise<SolveRes
     } else if (solve_info.solve_behavior === "increment") {
         const chapter_record_rows = await Db
             .selectFrom("record")
-            .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+            .leftJoin("puzzle_solve", "puzzle_solve.record_name", "record.name")
             .select([
                 "record.id as record_id",
                 "record.name as record_name",
                 "record.always_discovered as record_always_discovered",
-                "puzzle_solve.puzzle_id as solving_puzzle_id",
+                "puzzle_solve.puzzle_name as solving_puzzle_name",
             ])
             .where("record.chapter", "=", solve_info.puzzle_chapter)
             .orderBy("record.ordinal", "asc")
@@ -173,8 +174,8 @@ export async function solve_puzzle(name: string, code: string): Promise<SolveRes
         await Db
             .insertInto("puzzle_solve")
             .values({
-                puzzle_id: solve_info.puzzle_id,
-                record_id: next_to_discover.record_id,
+                puzzle_name: solve_info.puzzle_name,
+                record_name: next_to_discover.record_name,
             })
             .execute();
 
