@@ -6,8 +6,19 @@ export function coalesce_rows<R, O>({rows, get_key, merge}: {
     merge: (representative: R, rows: Array<R>) => O,
 }): Array<O> {
     const groups = Object.groupBy(rows, get_key) as Record<string, Array<R>>;
-    const objects = Object.entries(groups).map(([_, group]) => merge(group[0], group));
+
+    const objects = Object.entries(groups).map(([_key, group]) => ({
+        representative: group[0],
+        object: merge(group[0], group),
+    }))
+        .toSorted((a, b) => original_ordering(a.representative, b.representative))
+        .map(x => x.object);
+
     return objects;
+
+    function original_ordering(a: R, b: R): number {
+        return rows.findIndex(x => x === a) - rows.findIndex(x => x === b);
+    }
 }
 
 export function coalesce_to_one<R, O>({rows, merge}: {

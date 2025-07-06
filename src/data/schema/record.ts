@@ -29,4 +29,5 @@ export interface RecordHeaderLineTable {
     id: Kysely.Generated<number>,
     record_id: number,
     text: string,
+    ordinal: number,
 }

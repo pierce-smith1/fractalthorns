@@ -28,7 +28,8 @@ create table [record_line] (
 create table [record_header_line] (
     [id] integer primary key,
     [record_id] integer not null,
-    [text] text not null
+    [text] text not null,
+    [ordinal] integer not null
 );
 
 -- migrate:down

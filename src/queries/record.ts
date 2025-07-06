@@ -26,14 +26,16 @@ const base_entry = QueryUtil.make_base_query(Db
         solved: is_solved(representative),
         chapter: representative.record_chapter,
         name: representative.record_name,
-        title: is_solved(representative) ? representative.record_title : undefined,
+        title: representative.record_title,
         iteration: is_solved(representative) ? representative.record_iteration : undefined,
         linked_puzzles: Util.undefined_if_all_null(rows.map(x => x.linked_puzzle_name)),
     }),
 );
 
 export async function get_all_entries(): Promise<Array<BaseRecordEntry>> {
-    const rows = await base_entry.query.execute();
+    const rows = await base_entry.query
+        .orderBy("record.ordinal", "asc")
+        .execute();
 
     const entries = QueryUtil.coalesce_rows({
         rows,
@@ -46,7 +48,7 @@ export async function get_all_entries(): Promise<Array<BaseRecordEntry>> {
 
 export async function get_one_entry(name: string): Promise<BaseRecordEntry | null> {
     const rows = await base_entry.query
-        .where("record_name", "=", "name")
+        .where("record.name", "=", name)
         .execute();
 
     if (rows.length === 0) {
@@ -55,7 +57,7 @@ export async function get_one_entry(name: string): Promise<BaseRecordEntry | nul
 
     const entry = QueryUtil.coalesce_to_one({
         rows,
-        merge: base_entry.merge_fn
+        merge: base_entry.merge_fn,
     });
 
     return entry;
@@ -102,7 +104,9 @@ const base_text = QueryUtil.make_base_query(Db
         "record_header_line.id as record_header_line_id",
         "record_header_line.text as record_header_line_text",
         "puzzle_solve.puzzle_id as solving_puzzle_id",
-    ]),
+    ])
+    .orderBy("record_line.ordinal", "asc")
+    .orderBy("record_header_line.ordinal", "asc"),
     (representative, rows) => ({
         requested: !!representative.record_requested,
         iteration: representative.record_iteration,
@@ -228,6 +232,6 @@ export async function get_matching(term: string): Promise<Array<BaseRecordEntry>
     return entries;
 }
 
-function is_solved(row: {record_always_discovered: number, solving_puzzle_id: number | null}) {
+export function is_solved(row: {record_always_discovered: number, solving_puzzle_id: number | null}) {
     return !!row.record_always_discovered || row.solving_puzzle_id != null;
 }

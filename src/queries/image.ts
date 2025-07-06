@@ -26,6 +26,7 @@ export async function get_latest(): Promise<BaseImage | null> {
         .selectFrom("image")
         .selectAll()
         .orderBy("ordinal", "desc")
+        .limit(1)
         .executeTakeFirst()
 
     if (!row) {
@@ -40,6 +41,7 @@ export async function get_all(): Promise<Array<BaseImage>> {
     const rows = await Db
         .selectFrom("image")
         .selectAll()
+        .orderBy("image.ordinal", "desc")
         .execute();
 
     const images = rows.map(to_api_object);
@@ -63,7 +65,51 @@ export async function get_matching(term: string): Promise<Array<BaseImage>> {
     return images;
 }
 
-export function to_api_object(row: Kysely.Selectable<Schema.ImageTable>): BaseImage {
+export async function get_data(name: string): Promise<Buffer | null> {
+    const row = await Db
+        .selectFrom("image")
+        .innerJoin("file", "file.id", "image.file_id")
+        .select("file.data as file_data")
+        .where("image.name", "=", name)
+        .executeTakeFirst();
+
+    if (!row) {
+        return null;
+    }
+
+    return row.file_data;
+}
+
+export async function get_thumbnail_data(name: string): Promise<Buffer | null> {
+    const row = await Db
+        .selectFrom("image")
+        .innerJoin("file", "file.id", "image.thumbnail_file_id")
+        .select("file.data as file_data")
+        .where("image.name", "=", name)
+        .executeTakeFirst();
+
+    if (!row) {
+        return null;
+    }
+
+    return row.file_data;
+}
+
+export async function get_description(name: string): Promise<string | null> {
+    const row = await Db
+        .selectFrom("image")
+        .select("image.description")
+        .where("image.name", "=", name)
+        .executeTakeFirst();
+
+    if (!row) {
+        return null;
+    }
+
+    return row.description;
+}
+
+function to_api_object(row: Kysely.Selectable<Schema.ImageTable>): BaseImage {
     const image = {
         name: row.name,
         title: row.title,

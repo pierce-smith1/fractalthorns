@@ -128,11 +128,12 @@ export async function regenerate_record_lines(name: string, chapter: string) {
         delete_header_lines_promise,
     ]);
 
-    const header_line_insert_promise = Promise.all(record_lines.header_lines.map(async header_line => Db
+    const header_line_insert_promise = Promise.all(record_lines.header_lines.map(async (header_line, i) => Db
         .insertInto("record_header_line")
         .values({
             record_id: record_row.id,
             text: header_line,
+            ordinal: i + 1,
         })
         .execute()
     ));

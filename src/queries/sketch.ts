@@ -26,6 +26,7 @@ export async function get_latest(): Promise<BaseSketch | null> {
         .selectFrom("sketch")
         .selectAll()
         .orderBy("sketch.ordinal", "desc")
+        .limit(1)
         .executeTakeFirst();
 
     if (!row) {
@@ -39,6 +40,7 @@ export async function get_all(): Promise<Array<Api.SketchObject>> {
     const rows = await Db
         .selectFrom("sketch")
         .selectAll()
+        .orderBy("sketch.ordinal", "desc")
         .execute();
 
     const sketches = rows.map(to_object);
@@ -61,7 +63,37 @@ export async function get_matching(term: string): Promise<Array<BaseSketch>> {
     return images;
 }
 
-export function to_object(row: Kysely.Selectable<Schema.SketchTable>): BaseSketch {
+export async function get_data(name: string): Promise<Buffer | null> {
+    const row = await Db
+        .selectFrom("sketch")
+        .innerJoin("file", "file.id", "sketch.file_id")
+        .select("file.data as file_data")
+        .where("sketch.name", "=", name)
+        .executeTakeFirst();
+
+    if (!row) {
+        return null;
+    }
+
+    return row.file_data;
+}
+
+export async function get_thumbnail_data(name: string): Promise<Buffer | null> {
+    const row = await Db
+        .selectFrom("sketch")
+        .innerJoin("file", "file.id", "sketch.thumbnail_file_id")
+        .select("file.data as file_data")
+        .where("sketch.name", "=", name)
+        .executeTakeFirst();
+
+    if (!row) {
+        return null;
+    }
+
+    return row.file_data;
+}
+
+function to_object(row: Kysely.Selectable<Schema.SketchTable>): BaseSketch {
     const sketch = {
         name: row.name,
         title: row.name,

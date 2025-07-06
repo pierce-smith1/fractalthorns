@@ -10,8 +10,7 @@
     import PageLink from "../page_link.svelte";
 
     export let puzzle: Api.PuzzleObject;
-
-    let return_records: Array<string> | null = null;
+    let return_records: Array<string> | null = puzzle.solved;
 
     // BRITTLE: hardcoding paths because it's the only way
     // Vite needs to know how to bundle these things, the only way it

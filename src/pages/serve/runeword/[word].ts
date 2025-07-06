@@ -1,37 +1,22 @@
-import type {APIRoute} from "astro";
-import * as Exp from "drizzle-orm/sqlite-core/expressions";
-import sharp from "sharp";
+import type {APIRoute} from "astro"
+import sharp from "sharp"
 
-import Db from "../../../data/db";
-import * as Schema from "../../../data/schema/schema";
+import * as RuneQueries from "../../../queries/rune"
 
 const RUNE_SIZE = 64;
 
 export const GET: APIRoute = async context => {
     const {word} = context.params;
-
     if (!word) {
         return new Response(null, {status: 400});
     }
 
-    const row = await Db.query.runeword.findFirst({
-        with: {
-            runeword_rune: {
-                with: {
-                    rune: true,
-                },
-                orderBy: Exp.asc(Schema.runeword_rune.ordinal),
-            }
-        },
-        where: Exp.eq(Schema.runeword.name, word),
-    });
-
-    if (!row) {
+    const runes = await RuneQueries.get_runes_for_runeword(word);
+    if (runes.length === 0) {
         return new Response(null, {status: 404});
     }
 
-    const mapping = row.runeword_rune.map(x => x.rune.name);
-    const word_height = RUNE_SIZE * mapping.length;
+    const word_height = RUNE_SIZE * runes.length;
     const word_width = RUNE_SIZE;
 
     const word_image = sharp({create: {
@@ -41,12 +26,8 @@ export const GET: APIRoute = async context => {
         background: {r: 0, g: 0, b: 0, alpha: 0}}
     });
 
-    const rune_data = await Db.select().from(Schema.file)
-        .innerJoin(Schema.rune, Exp.eq(Schema.file.id, Schema.rune.file_id))
-        .where(Exp.inArray(Schema.file.id, row.runeword_rune.map(x => x.rune.file_id)));
-
-    word_image.composite(mapping.map((rune, i) => ({
-        input: rune_data.find(row => row.rune.name === rune)!.file.data,
+    word_image.composite(runes.map((rune, i) => ({
+        input: rune.data,
         top: RUNE_SIZE * i,
         left: 0,
     })));
