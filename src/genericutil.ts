@@ -33,3 +33,7 @@ export function undefined_if_empty<T>(array: Array<T>): Array<T> | undefined {
 export function non_null<T>(array: Array<T>): Array<Exclude<T, null | undefined>> {
     return array.filter(x => x) as Array<Exclude<T, null | undefined>>;
 }
+
+export function undefined_if_all_null<T>(array: Array<T>): Array<Exclude<T, null | undefined>> | undefined {
+    return undefined_if_empty(non_null(array));
+}

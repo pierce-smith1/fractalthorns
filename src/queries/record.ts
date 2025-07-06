@@ -1,153 +1,212 @@
 import * as Api from "../api/api";
 import Db from "../data/db";
-import * as Schema from "../data/schema/schema";
+import * as QueryUtil from "./util"
+import * as Util from "../genericutil"
 
-const base_entry_query = {
-    with: {
-        puzzle_solve: true,
-        puzzle_linked_record: {
-            with: {
-                puzzle: true,
-            }
-        }
-    },
-} as const;
-type BaseEntryQueryRow = Exclude<Awaited<ReturnType<typeof Db.query.record.findFirst<typeof base_entry_query>>>, undefined>;
+export type BaseRecordEntry = Api.RedactableRecordEntry;
 
-const base_text_query = {
-    with: {
-        record_line: true,
-        record_header_line: true,
-        puzzle_solve: true,
-    },
-} as const;
-type BaseTextQueryRow = Exclude<Awaited<ReturnType<typeof Db.query.record.findFirst<typeof base_text_query>>>, undefined>;
+const base_entry = QueryUtil.make_base_query(Db
+    .selectFrom("record")
+    .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+    .leftJoin("puzzle_linked_record", "puzzle_linked_record.record_name", "record.name")
+    .leftJoin("puzzle", "puzzle.id", "puzzle_linked_record.id")
+    .select([
+        "record.id as record_id",
+        "record.name as record_name",
+        "record.title as record_title",
+        "record.canon as record_iteration",
+        "record.chapter as record_chapter",
+        "record.always_discovered as record_always_discovered",
+        "puzzle_solve.puzzle_id as solving_puzzle_id",
+        "puzzle.name as linked_puzzle_name",
+    ]),
+    (representative, rows) => ({
+        solved: is_solved(representative),
+        chapter: representative.record_chapter,
+        name: representative.record_name,
+        title: is_solved(representative) ? representative.record_title : undefined,
+        iteration: is_solved(representative) ? representative.record_iteration : undefined,
+        linked_puzzles: Util.undefined_if_all_null(rows.map(x => x.linked_puzzle_name)),
+    }),
+);
 
-const base_all_query = {
-    with: {
-        ...base_text_query.with,
-        ...base_entry_query.with
-    } 
-}as const;
-type BaseAllQueryRow = Exclude<Awaited<ReturnType<typeof Db.query.record.findFirst<typeof base_all_query>>>, undefined>;
+export async function get_all_entries(): Promise<Array<BaseRecordEntry>> {
+    const rows = await base_entry.query.execute();
 
-export async function get_all_entries(): Promise<Array<Api.RedactableRecordEntry>> {
-    const rows = await Db.query.record.findMany({
-        ...base_entry_query,
-        orderBy: Exp.asc(Schema.record.ordinal),
+    const entries = QueryUtil.coalesce_rows({
+        rows,
+        get_key: row => row.record_id,
+        merge: base_entry.merge_fn,
     });
 
-    const records = rows.map(to_api_entry_object);
-    return records;
+    return entries;
 }
 
 export async function get_one_entry(name: string): Promise<Api.RedactableRecordEntry | null> {
-    const row = await Db.query.record.findFirst({
-        ...base_entry_query,
-        where: Exp.eq(Schema.record.name, name),
-    });
+    const rows = await base_entry.query
+        .where("record_name", "=", "name")
+        .execute();
 
-    if (!row) {
+    if (rows.length === 0) {
         return null;
     }
 
-    return to_api_entry_object(row);
+    const entry = QueryUtil.coalesce_to_one({
+        rows,
+        merge: base_entry.merge_fn
+    });
+
+    return entry;
 }
 
 export async function get_first_entry(): Promise<Api.RedactableRecordEntry | null> {
-    const row = await Db.query.record.findFirst({
-        ...base_entry_query,
-        orderBy: Exp.asc(Schema.record.ordinal),
-    });
+    const rows = await base_entry.query
+        .select("record.ordinal as record_ordinal")
+        .orderBy("record_ordinal", "asc")
+        .execute();
 
-    if (!row) {
+    if (rows.length === 0) {
         return null;
     }
 
-    return to_api_entry_object(row);
+    const entry = QueryUtil.coalesce_to_one({
+        rows,
+        merge: base_entry.merge_fn,
+    });
+
+    return entry;
 }
 
-export async function get_one_text(name: string): Promise<Api.RecordTextResponse | null | "unsolved"> {
-    const row = await Db.query.record.findFirst({
-        ...base_text_query,
-        where: Exp.eq(Schema.record.name, name),
-    });
+const base_text = QueryUtil.make_base_query(Db
+    .selectFrom("record")
+    .leftJoin("record_line", "record_line.record_id", "record.id")
+    .leftJoin("record_header_line", "record_header_line.record_id", "record.id")
+    .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+    .select([
+        "record.id as record_id",
+        "record.name as record_name",
+        "record.canon as record_iteration",
+        "record.languages as record_languages",
+        "record.characters as record_characters",
+        "record.format as record_format",
+        "record.requested as record_requested",
+        "record.always_discovered as record_always_discovered",
+        "record_line.id as record_line_id",
+        "record_line.type as record_line_type",
+        "record_line.character as record_line_character",
+        "record_line.language as record_line_language",
+        "record_line.emphasis as record_line_emphasis",
+        "record_line.text as record_line_text",
+        "record_header_line.id as record_header_line_id",
+        "record_header_line.text as record_header_line_text",
+        "puzzle_solve.puzzle_id as solving_puzzle_id",
+    ]),
+    (representative, rows) => ({
+        requested: !!representative.record_requested,
+        iteration: representative.record_iteration,
+        format: representative.record_format ?? undefined,
+        header_lines: Util.unique_by(rows, (a, b) => a.record_header_line_id === b.record_header_line_id)
+            .map(x => x.record_header_line_text!),
+        languages: representative.record_languages.split(","),
+        characters: representative.record_characters.split(","),
+        lines: Util.unique_by(rows, (a, b) => a.record_line_id === b.record_line_id).map(x => ({
+            type: x.record_line_type!,
+            character: x.record_line_character ?? undefined,
+            language: x.record_line_language ?? undefined,
+            emphasis: x.record_line_emphasis ?? undefined,
+            text: x.record_line_text!,
+        })),
+    }),
+);
 
-    if (!row) {
+export type BaseRecordText = Api.RecordTextResponse;
+
+export async function get_one_text(name: string): Promise<Api.RecordTextResponse | null | "unsolved"> {
+    const rows = await base_text.query
+        .where("record.name", "=", name)
+        .execute();
+
+    if (rows.length === 0) {
         return null;
     }
 
-    if (!is_solved(row)) {
+    if (!is_solved(rows[0])) {
         return "unsolved";
     }
 
-    const record_text = to_api_text_object(row);
-    return record_text;
+    const text = QueryUtil.coalesce_to_one({
+        rows,
+        merge: base_text.merge_fn,
+    });
+
+    return text;
 }
 
 export async function get_first_text(): Promise<Api.RecordTextResponse | null | "unsolved"> {
-    const row = await Db.query.record.findFirst({
-        ...base_text_query,
-        orderBy: Exp.asc(Schema.record.ordinal),
-    });
+    const rows = await base_text.query
+        .where("record.ordinal", "=", 1)
+        .execute();
 
-    if (!row) {
+    if (rows.length === 0) {
         return null;
     }
 
-    if (!is_solved(row)) {
+    if (!is_solved(rows[0])) {
         return "unsolved";
     }
 
-    return to_api_text_object(row);
+    const text = QueryUtil.coalesce_to_one({
+        rows,
+        merge: base_text.merge_fn,
+    });
+
+    return text;
 }
 
 export async function get_all_text(): Promise<Array<{text: Api.RecordTextResponse, entry: Api.RedactableRecordEntry}>> {
-    const rows = await Db.query.record.findMany({
-        ...base_all_query,
+    const rows = await Db
+        .selectFrom("record")
+        .leftJoin("record_line", "record_line.record_id", "record.id")
+        .leftJoin("record_header_line", "record_header_line.record_id", "record.id")
+        .leftJoin("puzzle_linked_record", "puzzle_linked_record.record_name", "record_name")
+        .leftJoin("puzzle_solve", "puzzle_solve.record_id", "record.id")
+        .leftJoin("puzzle", "puzzle.id", "puzzle_linked_record.puzzle_id")
+        .select([
+            "record.id as record_id",
+            "record.name as record_name",
+            "record.title as record_title",
+            "record.chapter as record_chapter",
+            "record.canon as record_iteration",
+            "record.languages as record_languages",
+            "record.characters as record_characters",
+            "record.format as record_format",
+            "record.requested as record_requested",
+            "record.always_discovered as record_always_discovered",
+            "record_line.id as record_line_id",
+            "record_line.type as record_line_type",
+            "record_line.character as record_line_character",
+            "record_line.language as record_line_language",
+            "record_line.emphasis as record_line_emphasis",
+            "record_line.text as record_line_text",
+            "record_header_line.id as record_header_line_id",
+            "record_header_line.text as record_header_line_text",
+            "puzzle_solve.puzzle_id as solving_puzzle_id",
+            "puzzle.name as linked_puzzle_name",
+        ])
+        .execute();
+
+    const objects = QueryUtil.coalesce_rows({
+        rows: rows.filter(is_solved),
+        get_key: row => row.record_id,
+        merge: (representative, rows) => ({
+            text: base_text.merge_fn(representative, rows),
+            entry: base_entry.merge_fn(representative, rows),
+        }),
     });
 
-    const record_texts = rows.map(row => ({
-        text: to_api_text_object(row),
-        entry: to_api_entry_object(row),
-    }));
-
-    return record_texts;
+    return objects;
 }
 
-export function to_api_entry_object(row: BaseEntryQueryRow): Api.RedactableRecordEntry {
-    const record = {
-        solved: is_solved(row),
-        chapter: row.chapter,
-        name: row.name,
-        title: row.title,
-        iteration: is_solved(row) ? row.canon : undefined,
-        linked_puzzles: row.puzzle_linked_record.map(x => x.puzzle.name),
-    };
-
-    return record;
-}
-
-export function is_solved(row: BaseTextQueryRow | BaseEntryQueryRow): boolean {
-    return !!row.always_discovered || row.puzzle_solve.length > 0;
-}
-
-export function to_api_text_object(row: BaseTextQueryRow): Api.RecordTextResponse {
-    const record_text = {
-        requested: !!row.requested,
-        iteration: row.canon,
-        format: row.format ?? undefined,
-        header_lines: row.record_header_line.map(x => x.text),
-        languages: row.languages.split(","),
-        characters: row.languages.split(","),
-        lines: row.record_line.map(line_row => ({
-            type: line_row.type,
-            character: line_row.character ?? undefined,
-            language: line_row.language ?? undefined,
-            emphasis: line_row.emphasis ?? undefined,
-            text: line_row.text,
-        })),
-    };
-
-    return record_text;
+function is_solved(row: {record_always_discovered: number, solving_puzzle_id: number | null}) {
+    return !!row.record_always_discovered || row.solving_puzzle_id != null;
 }

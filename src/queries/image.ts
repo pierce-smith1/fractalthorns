@@ -17,7 +17,8 @@ export async function get_one(name: string): Promise<BaseImage | null> {
         return null;
     }
 
-    return to_api_object(row);
+    const image = to_api_object(row);
+    return image;
 }
 
 export async function get_latest(): Promise<BaseImage | null> {
@@ -31,7 +32,8 @@ export async function get_latest(): Promise<BaseImage | null> {
         return null;
     }
 
-    return to_api_object(row);
+    const image = to_api_object(row);
+    return image;
 }
 
 export async function get_all(): Promise<Array<BaseImage>> {
