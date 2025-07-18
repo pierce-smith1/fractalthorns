@@ -10,3 +10,5 @@ deploy*
 *.sqlite-journal
 *.bak
 db/schema.sql
+start.sh
+recompile-content.sh
