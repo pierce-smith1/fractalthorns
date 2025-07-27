@@ -12,7 +12,7 @@ type SquareCoord = {
     ys: number,
 }
 
-const square_size = 16;
+const default_square_size = 16;
 
 function memoize(fn: ImplicitFunction): ImplicitFunction {
     const memo: {[x: number]: {[y: number]: number}} = {};
@@ -30,14 +30,23 @@ function memoize(fn: ImplicitFunction): ImplicitFunction {
     };
 }
 
-function square_to_real(square: SquareCoord): [number, number] {
+function square_to_real(square: SquareCoord, square_size: number): [number, number] {
     return [square.xs * square_size, square.ys * square_size];
 }
 
 export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) {
+    ctx.push();
+
     fn = memoize(fn);
 
+    const square_size = default_square_size;
+
+    const center = {x: ctx.width / 2, y: ctx.height / 2};
+    ctx.translate(center.x, center.y);
+
     for_all_cells((real, square) => {
+        ctx.point(real.x, real.y);
+
         const {
             top_left: tl,
             top_right: tr,
@@ -45,10 +54,10 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
             bot_right: br,
         } = get_corners(square);
 
-        const top_left_above = fn(...square_to_real(tl)) > threshold;
-        const top_right_above = fn(...square_to_real(tr)) > threshold;
-        const bot_right_above = fn(...square_to_real(br)) > threshold;
-        const bot_left_above = fn(...square_to_real(bl)) > threshold;
+        const top_left_above = fn(...square_to_real(tl, square_size)) > threshold;
+        const top_right_above = fn(...square_to_real(tr, square_size)) > threshold;
+        const bot_right_above = fn(...square_to_real(br, square_size)) > threshold;
+        const bot_left_above = fn(...square_to_real(bl, square_size)) > threshold;
 
         const pattern =
             (top_left_above ? 8 : 0) +
@@ -56,81 +65,66 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
             (bot_right_above ? 2 : 0) +
             (bot_left_above ? 1 : 0);
 
-        const point_groups: Array<Array<SquareCoord>> = pattern === 0 ? [[
-                tl, tr, br, bl
-            ]] : pattern === 1 ? [[
-                tl, tr, bl,
+        const point_groups: Array<[SquareCoord, SquareCoord]> =
+            pattern === 1 ? [[
                 get_isoline_point_between(bl, br, "x"),
                 get_isoline_point_between(bl, tl, "y"),
             ]] : pattern === 2 ? [[
-                bl, tl, tr,
                 get_isoline_point_between(tr, br, "y"),
                 get_isoline_point_between(br, bl, "x"),
             ]] : pattern === 3 ? [[
-                tl, tr,
                 get_isoline_point_between(tr, br, "y"),
                 get_isoline_point_between(tl, bl, "y"),
             ]] : pattern === 4 ? [[
-                tl, bl, br,
                 get_isoline_point_between(br, tr, "y"),
                 get_isoline_point_between(tl, tr, "x"),
             ]] : pattern === 5 ? [
                 [
-                    tl,
                     get_isoline_point_between(tl, tr, "x"),
                     get_isoline_point_between(tl, bl, "y"),
                 ], [
-                    br,
                     get_isoline_point_between(bl, br, "x"),
                     get_isoline_point_between(tr, br, "y"),
                 ]
             ] : pattern === 6 ? [[
-                tl, bl,
                 get_isoline_point_between(bl, br, "x"),
                 get_isoline_point_between(tl, tr, "x"),
             ]] : pattern === 7 ? [[
-                tl,
                 get_isoline_point_between(tl, tr, "x"),
                 get_isoline_point_between(tl, bl, "y"),
             ]] : pattern === 8 ? [[
-                tr, br, bl,
                 get_isoline_point_between(tl, bl, "y"),
                 get_isoline_point_between(tl, tr, "x"),
             ]] : pattern === 9 ? [[
-                tr, br,
                 get_isoline_point_between(bl, br, "x"),
                 get_isoline_point_between(tl, tr, "x"),
             ]] : pattern === 10 ? [
                 [
-                    tr,
                     get_isoline_point_between(tr, br, "y"),
                     get_isoline_point_between(tl, tr, "x"),
                 ],
                 [
-                    bl,
                     get_isoline_point_between(br, bl, "x"),
                     get_isoline_point_between(tl, bl, "y"),
                 ]
             ] : pattern === 11 ? [[
-                tr,
                 get_isoline_point_between(br, tr, "y"),
                 get_isoline_point_between(tl, tr, "x"),
             ]] : pattern === 12 ? [[
-                bl, br,
                 get_isoline_point_between(tr, br, "y"),
                 get_isoline_point_between(tl, bl, "y"),
             ]] : pattern === 13 ? [[
-                br,
                 get_isoline_point_between(br, bl, "x"),
                 get_isoline_point_between(tr, br, "y"),
             ]] : pattern === 14 ? [[
-                bl,
                 get_isoline_point_between(bl, br, "x"),
                 get_isoline_point_between(bl, tl, "y"),
             ]] : [];
 
-        for (const points of point_groups) {
-            draw_shape(points, ctx);
+        for (const [a, b] of point_groups) {
+            const [ax, ay] = square_to_real(a, square_size);
+            const [bx, by] = square_to_real(b, square_size);
+            ctx.line(ax, ay, bx, by);
         }
 
         function get_isoline_point_between(a: SquareCoord, b: SquareCoord, orientation: "x" | "y"): SquareCoord {
@@ -139,7 +133,7 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
 
             const point_var = ctx.map(
                 threshold,
-                fn(...square_to_real(a)), fn(...square_to_real(b)),
+                fn(...square_to_real(a, square_size)), fn(...square_to_real(b, square_size)),
                 a[dimension], b[dimension]
             );
 
@@ -150,27 +144,27 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
 
             return point;
         }
-    }, ctx);
+    }, square_size, ctx);
+
+    ctx.pop();
 }
 
-function reverse_lerp(start: number, end: number, value: number): number {
-    const t = (value - start) / (end - start);
-    return t;
-}
-
-function draw_shape(points: Array<SquareCoord>, ctx: p5) {
+function draw_shape(points: Array<SquareCoord>, square_size: number, ctx: p5) {
     ctx.beginShape();
 
     for (const point of points) {
-        ctx.vertex(...square_to_real(point));
+        ctx.vertex(...square_to_real(point, square_size));
     }
 
     ctx.endShape();
 }
 
-function for_all_cells(fn: (real: RealCoord, square: SquareCoord) => void, ctx: p5) {
-    for (let y = 0; y < ctx.height + square_size; y += square_size) {
-        for (let x = 0; x < ctx.width + square_size; x += square_size) {
+function for_all_cells(fn: (real: RealCoord, square: SquareCoord) => void, square_size: number, ctx: p5) {
+    const y_span = Math.ceil(ctx.height / 2 / square_size) * square_size;
+    const x_span = Math.ceil(ctx.width / 2 / square_size) * square_size;
+
+    for (let y = -y_span; y < y_span; y += square_size) {
+        for (let x = -x_span; x < x_span; x += square_size) {
             const ys = y / square_size;
             const xs = x / square_size;
 

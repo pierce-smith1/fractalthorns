@@ -1,12 +1,15 @@
 <script lang="ts">
     import p5 from "p5";
 
-    import * as Fetchers from "../../../fetchers";
+    import * as Fetchers from "../../../fetchers"
+    import * as MarchingSquares from "./graphics/marching_squares.ts"
+    import * as Julia from "./graphics/julia.ts"
 
     import {Artist} from "../../canvas/artist";
 
     import Canvas from "../../canvas/canvas.svelte";
     import Keynav from "./keynav.svelte";
+    import Loading from "../loading.svelte";
 
     function get_view_width() {
         const width = document.querySelector(".home-artist-container")?.clientWidth ?? 0;
@@ -18,7 +21,6 @@
         return height;
     }
 
-    type SphericalPoint = {theta: number, phi: number, theta_velocity: number, phi_velocity: number};
     class HomeArtist extends Artist {
         width() {
             return get_view_width();
@@ -28,68 +30,38 @@
             return get_view_height();
         }
 
-        preload(p5: p5) {
-            p5.windowResized = () => {
-                p5.resizeCanvas(this.width(), this.height());
+        preload(ctx: p5) {
+            ctx.windowResized = () => {
+                ctx.resizeCanvas(this.width(), this.height());
             };
         }
 
-        points: Array<SphericalPoint> = [];
-        setup(p5: p5, canvas: HTMLCanvasElement) {
-            super.setup(p5, canvas);
-
-            this.points = Array(150).fill(0).map(_ => ({
-                theta: Math.random() * p5.TWO_PI, 
-                phi: Math.random() * p5.TWO_PI,
-                theta_velocity: Math.random() * 0.002 + 0.0005,
-                phi_velocity: Math.random() * 0.002 + 0.0005,
-            }));
+        setup(ctx: p5, canvas: HTMLCanvasElement) {
+            super.setup(ctx, canvas);
         }
 
-        draw(p5: p5) {
-            p5.clear();
+        draw(ctx: p5) {
+            ctx.clear();
 
-            const center = {x: this.width() / 2, y: this.height() / 2};
-            p5.translate(center.x, center.y);
+            ctx.stroke(255);
+            ctx.noFill();
+            ctx.strokeWeight(1);
 
-            const r = Math.min(300, this.width() * 0.90, this.height() * 0.90);
+            const scale = ctx.min(this.width() / 2, this.height() / 2);
+            const speed_divisor = 7000;
 
-            this.points.forEach(point => {
-                point.theta += point.theta_velocity;
-                point.phi += point.phi_velocity;
-            });
-            
-            const cartesian_points = this.points.map(({theta, phi}) => {
-                const x = p5.sin(theta) * p5.sin(phi) * r;
-                const y = p5.cos(theta) * r;
+            const fn = Julia.scaled_julia_for({
+                r: ctx.sin(Date.now() / speed_divisor) / 2,
+                i: ctx.cos(Date.now() / speed_divisor * 1.5) / 2,
+            }, scale);
 
-                const prominence = p5.abs(p5.sin(phi));
+            MarchingSquares.draw_implicit(fn, 2, ctx);
 
-                return {x, y, prominence};
-            });
+            ctx.stroke(128);
+            ctx.noFill();
+            ctx.strokeWeight(1);
 
-            for (const point of cartesian_points) {
-                p5.push();
-
-                p5.stroke(255);
-                p5.noFill();
-
-                const angle = -p5.atan2(point.x, point.y)
-                p5.translate(point.x, point.y);
-                p5.rotate(angle);
-
-                const p = point.prominence;
-                const p_sq = p * p;
-                const p_cube = p * p * p;
-
-                const spread = p_cube * 10;
-                const pointyness = p_sq * 50;
-                const height = p_cube * p_cube * p_cube * 50;
-                p5.bezier(spread, 0, pointyness / 3, 0, 0, p_cube * 20 / 3, 0, height); 
-                p5.bezier(-spread, 0, -pointyness / 3, 0, 0, p_cube * 20 / 3, 0, height); 
-
-                p5.pop();
-            }
+            MarchingSquares.draw_implicit(fn, 0.5, ctx);
         }
     };
 
@@ -126,6 +98,7 @@
     </div>
 </div>
 {#await Fetchers.get.single_image({name: undefined})}
+    <Loading />
 {:then image}
     <Keynav 
         page_right={{domain: "image", name: image.name}}
