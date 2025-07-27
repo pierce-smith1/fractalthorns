@@ -11,12 +11,22 @@ function complex_add(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
     return sum;
 }
 
-function complex_square(z: ComplexNumber): ComplexNumber {
-    const square = {
-        r: z.r * z.r - z.i * z.i,
-        i: 2 * z.r * z.i,
+function complex_mult(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
+    const product = {
+        r: a.r * b.r - a.i * b.i,
+        i: a.r * b.i + a.i * b.r,
     };
-    return square;
+    return product;
+}
+
+function complex_pow(z: ComplexNumber, p: number) {
+    let result = z;
+
+    for (let i = 0; i < p - 1; i++) {
+        result = complex_mult(result, z);
+    }
+
+    return result;
 }
 
 function complex_magnitude(z: ComplexNumber): number {
@@ -24,12 +34,10 @@ function complex_magnitude(z: ComplexNumber): number {
     return magnitude;
 }
 
-export function julia_for(c: ComplexNumber): (x: number, y: number) => number {
-    const iterations = 10;
-
+export function julia_for(c: ComplexNumber, iterations: number): (x: number, y: number) => number {
     return (x, y) => {
         function iterate(z: ComplexNumber): ComplexNumber {
-            const z_square = complex_square(z);
+            const z_square = complex_pow(z, 4);
             const next = complex_add(z_square, c);
             return next;
         }
@@ -43,8 +51,8 @@ export function julia_for(c: ComplexNumber): (x: number, y: number) => number {
     };
 }
 
-export function scaled_julia_for(c: ComplexNumber, scale: number): ReturnType<typeof julia_for> {
-    const julia = julia_for(c);
+export function scaled_julia_for(c: ComplexNumber, iterations: number, scale: number): ReturnType<typeof julia_for> {
+    const julia = julia_for(c, iterations);
 
     return (x, y) => {
         x /= scale;

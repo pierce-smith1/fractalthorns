@@ -7,57 +7,28 @@ type RealCoord = {
     y: number,
 }
 
-type SquareCoord = {
-    xs: number,
-    ys: number,
-}
-
-const default_square_size = 16;
-
-function memoize(fn: ImplicitFunction): ImplicitFunction {
-    const memo: {[x: number]: {[y: number]: number}} = {};
-    return (x, y) => {
-        memo[x] ??= {};
-
-        if (memo[x][y]) {
-            return memo[x][y];
-        }
-
-        const v = fn(x, y);
-        memo[x][y] = v;
-
-        return v;
-    };
-}
-
-function square_to_real(square: SquareCoord, square_size: number): [number, number] {
-    return [square.xs * square_size, square.ys * square_size];
-}
+const default_square_size = 12;
 
 export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) {
     ctx.push();
-
-    fn = memoize(fn);
 
     const square_size = default_square_size;
 
     const center = {x: ctx.width / 2, y: ctx.height / 2};
     ctx.translate(center.x, center.y);
 
-    for_all_cells((real, square) => {
-        ctx.point(real.x, real.y);
-
+    for_all_cells(cell => {
         const {
             top_left: tl,
             top_right: tr,
             bot_left: bl,
             bot_right: br,
-        } = get_corners(square);
+        } = get_corners(cell, square_size);
 
-        const top_left_above = fn(...square_to_real(tl, square_size)) > threshold;
-        const top_right_above = fn(...square_to_real(tr, square_size)) > threshold;
-        const bot_right_above = fn(...square_to_real(br, square_size)) > threshold;
-        const bot_left_above = fn(...square_to_real(bl, square_size)) > threshold;
+        const top_left_above = fn(tl.x, tl.y) > threshold;
+        const top_right_above = fn(tr.x, tr.y) > threshold;
+        const bot_right_above = fn(br.x, br.y) > threshold;
+        const bot_left_above = fn(bl.x, bl.y) > threshold;
 
         const pattern =
             (top_left_above ? 8 : 0) +
@@ -65,7 +36,7 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
             (bot_right_above ? 2 : 0) +
             (bot_left_above ? 1 : 0);
 
-        const point_groups: Array<[SquareCoord, SquareCoord]> =
+        const point_groups: Array<[RealCoord, RealCoord]> =
             pattern === 1 ? [[
                 get_isoline_point_between(bl, br, "x"),
                 get_isoline_point_between(bl, tl, "y"),
@@ -122,25 +93,23 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
             ]] : [];
 
         for (const [a, b] of point_groups) {
-            const [ax, ay] = square_to_real(a, square_size);
-            const [bx, by] = square_to_real(b, square_size);
-            ctx.line(ax, ay, bx, by);
+            ctx.line(a.x, a.y, b.x, b.y);
         }
 
-        function get_isoline_point_between(a: SquareCoord, b: SquareCoord, orientation: "x" | "y"): SquareCoord {
-            const dimension: keyof SquareCoord = orientation === "x" ? "xs" : "ys";
-            const fixed_dimension: keyof SquareCoord = dimension === "xs" ? "ys" : "xs";
+        function get_isoline_point_between(a: RealCoord, b: RealCoord, orientation: "x" | "y"): RealCoord {
+            const dimension = orientation;
+            const fixed_dimension = dimension === "x" ? "y" : "x";
 
             const point_var = ctx.map(
                 threshold,
-                fn(...square_to_real(a, square_size)), fn(...square_to_real(b, square_size)),
+                fn(a.x, a.y), fn(b.x, b.y),
                 a[dimension], b[dimension]
             );
 
             const point = {
                 [dimension]: point_var,
                 [fixed_dimension]: a[fixed_dimension],
-            } as SquareCoord;
+            } as RealCoord;
 
             return point;
         }
@@ -149,34 +118,27 @@ export function draw_implicit(fn: ImplicitFunction, threshold: number, ctx: p5) 
     ctx.pop();
 }
 
-function draw_shape(points: Array<SquareCoord>, square_size: number, ctx: p5) {
-    ctx.beginShape();
-
-    for (const point of points) {
-        ctx.vertex(...square_to_real(point, square_size));
-    }
-
-    ctx.endShape();
-}
-
-function for_all_cells(fn: (real: RealCoord, square: SquareCoord) => void, square_size: number, ctx: p5) {
-    const y_span = Math.ceil(ctx.height / 2 / square_size) * square_size;
-    const x_span = Math.ceil(ctx.width / 2 / square_size) * square_size;
+function for_all_cells(fn: (coord: RealCoord) => void, square_size: number, ctx: p5) {
+    const y_span = Math.min(
+        Math.ceil(ctx.height / 2 / square_size) * square_size,
+        500 // TODO: Brittle optimization
+    );
+    const x_span = Math.min(
+        Math.ceil(ctx.width / 2 / square_size) * square_size,
+        500
+    );
 
     for (let y = -y_span; y < y_span; y += square_size) {
         for (let x = -x_span; x < x_span; x += square_size) {
-            const ys = y / square_size;
-            const xs = x / square_size;
-
-            fn({x, y}, {xs, ys});
+            fn({x, y});
         }
     }
 }
 
-function get_corners(top_left: SquareCoord) {
-    const top_right = {xs: top_left.xs + 1, ys: top_left.ys    };
-    const bot_left  = {xs: top_left.xs    , ys: top_left.ys + 1};
-    const bot_right = {xs: top_left.xs + 1, ys: top_left.ys + 1};
+function get_corners(top_left: RealCoord, square_size: number) {
+    const top_right = {x: top_left.x + square_size, y: top_left.y};
+    const bot_left  = {x: top_left.x, y: top_left.y + square_size};
+    const bot_right = {x: top_left.x + square_size, y: top_left.y + square_size};
 
     return {top_left, top_right, bot_left, bot_right};
 }

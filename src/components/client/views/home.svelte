@@ -30,38 +30,88 @@
             return get_view_height();
         }
 
+        font_lekton: p5.Font = null!;
         preload(ctx: p5) {
             ctx.windowResized = () => {
                 ctx.resizeCanvas(this.width(), this.height());
             };
+
+            this.font_lekton = ctx.loadFont("/assets/fonts/Lekton-Bold.ttf");
         }
 
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
+
+            ctx.textFont(this.font_lekton);
         }
 
         draw(ctx: p5) {
             ctx.clear();
 
+            this.draw_julia(ctx);
+            this.draw_splash(ctx);
+        }
+
+        draw_julia(ctx: p5) {
+            ctx.push();
+
+            const scale = ctx.min(
+                ctx.min(this.width() / 2, this.height() / 2),
+                400
+            );
+
+            const t = Date.now() / 9000;
+
+            const c = {
+                r: ctx.sin(t / Math.E) * 0.8,
+                i: ctx.cos(t) * 0.8,
+            };
+
+            const iterations = Math.floor(Math.pow(scale, 0.3));
+            const fn = [
+                Julia.scaled_julia_for(c, iterations, scale),
+                //this.circle(100, ctx),
+            ].reduce((acc, fn) => (x, y) => acc(x, y) - fn(x, y));
+
             ctx.stroke(255);
             ctx.noFill();
-            ctx.strokeWeight(1);
-
-            const scale = ctx.min(this.width() / 2, this.height() / 2);
-            const speed_divisor = 7000;
-
-            const fn = Julia.scaled_julia_for({
-                r: ctx.sin(Date.now() / speed_divisor) / 2,
-                i: ctx.cos(Date.now() / speed_divisor * 1.5) / 2,
-            }, scale);
+            ctx.strokeWeight(2);
 
             MarchingSquares.draw_implicit(fn, 2, ctx);
 
-            ctx.stroke(128);
+            ctx.stroke(255, 128);
             ctx.noFill();
             ctx.strokeWeight(1);
 
             MarchingSquares.draw_implicit(fn, 0.5, ctx);
+
+            ctx.pop();
+        }
+
+        draw_splash(ctx: p5) {
+            const t = Date.now() / 300;
+
+            ctx.push();
+
+            ctx.translate(ctx.width / 2, ctx.height / 2);
+
+            ctx.noStroke();
+            ctx.fill(255);
+            ctx.textSize(25);
+
+            const splash = `< ${"to dust, and back again"} >`;
+            const full_splash_width = ctx.textWidth(splash);
+
+            let running_splash = "";
+
+            for (let i = 0; i < splash.length; i++) {
+                const char = splash[i];
+
+                ctx.text(char, -full_splash_width / 2 + ctx.textWidth(running_splash), 170 - ctx.sin(t + i * 100) * 2);
+                running_splash += char;
+            }
+
+            ctx.pop();
         }
     };
 
