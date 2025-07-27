@@ -52,6 +52,7 @@
             this.draw_splash(ctx);
         }
 
+        c = {r: 0, i: 0};
         draw_julia(ctx: p5) {
             ctx.push();
 
@@ -62,16 +63,11 @@
 
             const t = Date.now() / 9000;
 
-            const c = {
-                r: ctx.sin(t / Math.E) * 0.8,
-                i: ctx.cos(t) * 0.8,
-            };
+            this.c.r = ctx.sin(t / Math.E) * 0.8;
+            this.c.i = ctx.cos(t) * 0.8;
 
             const iterations = Math.floor(Math.pow(scale, 0.3));
-            const fn = [
-                Julia.scaled_julia_for(c, iterations, scale),
-                //this.circle(100, ctx),
-            ].reduce((acc, fn) => (x, y) => acc(x, y) - fn(x, y));
+            const fn = Julia.scaled_julia_for(this.c, iterations, scale);
 
             ctx.stroke(255);
             ctx.noFill();
@@ -84,6 +80,7 @@
             ctx.strokeWeight(1);
 
             MarchingSquares.draw_implicit(fn, 0.5, ctx);
+            MarchingSquares.draw_implicit(fn, 0.8, ctx);
 
             ctx.pop();
         }
@@ -113,6 +110,27 @@
 
             ctx.pop();
         }
+
+        /*
+        memo: {[x: number]: {[y: number]: number}} = {};
+        memoize(fn: (x: number, y: number) => number): (x: number, y: number) => number {
+            this.memo = {};
+            return (x, y) => {
+                if (this.memo[x]?.[y]) {
+                    return this.memo[x][y];
+                }
+
+                if (this.memo[x]) {
+                    this.memo[x][y] = fn(x, y);
+                    return this.memo[x][y] = fn(x, y);
+                }
+
+                this.memo[x] = {};
+                this.memo[x][y] = fn(x, y);
+                return this.memo[x][y] = fn(x, y);
+            };
+        }
+        */
     };
 
     const artist = new HomeArtist();
