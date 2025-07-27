@@ -110,27 +110,6 @@
 
             ctx.pop();
         }
-
-        /*
-        memo: {[x: number]: {[y: number]: number}} = {};
-        memoize(fn: (x: number, y: number) => number): (x: number, y: number) => number {
-            this.memo = {};
-            return (x, y) => {
-                if (this.memo[x]?.[y]) {
-                    return this.memo[x][y];
-                }
-
-                if (this.memo[x]) {
-                    this.memo[x][y] = fn(x, y);
-                    return this.memo[x][y] = fn(x, y);
-                }
-
-                this.memo[x] = {};
-                this.memo[x][y] = fn(x, y);
-                return this.memo[x][y] = fn(x, y);
-            };
-        }
-        */
     };
 
     const artist = new HomeArtist();
