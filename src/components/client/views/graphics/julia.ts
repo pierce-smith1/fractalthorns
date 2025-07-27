@@ -3,30 +3,29 @@ type ComplexNumber = {
     i: number,
 };
 
-function complex_add(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
-    const sum = {
-        r: a.r + b.r,
-        i: a.i + b.i,
-    };
-    return sum;
+// All complex functions use an out variable or mutate their arguments to reduce
+// memory allocations.
+function complex_add(a: ComplexNumber, b: ComplexNumber, out: ComplexNumber): void {
+    const new_r = a.r + b.r;
+    const new_i = a.i + b.i;
+    out.r = new_r;
+    out.i = new_i;
 }
 
-function complex_mult(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
-    const product = {
-        r: a.r * b.r - a.i * b.i,
-        i: a.r * b.i + a.i * b.r,
-    };
-    return product;
+function complex_mult(a: ComplexNumber, b: ComplexNumber, out: ComplexNumber): void {
+    const new_r = a.r * b.r - a.i * b.i;
+    const new_i = a.r * b.i + a.i * b.r;
+    out.r = new_r;
+    out.i = new_i;
 }
 
-function complex_pow(z: ComplexNumber, p: number) {
-    let result = z;
-
-    for (let i = 0; i < p - 1; i++) {
-        result = complex_mult(result, z);
+// The argument `p` here is actually interpreted as (2^p). So for example p = 2
+// actually gives z^4, and p = 1 gives z^2.
+// It was easier to optimize this way. Cry about it?
+function complex_pow(z: ComplexNumber, p: number): void {
+    for (let i = 0; i < p; i++) {
+        complex_mult(z, z, z);
     }
-
-    return result;
 }
 
 function complex_magnitude(z: ComplexNumber): number {
@@ -36,15 +35,14 @@ function complex_magnitude(z: ComplexNumber): number {
 
 export function julia_for(c: ComplexNumber, iterations: number): (x: number, y: number) => number {
     return (x, y) => {
-        function iterate(z: ComplexNumber): ComplexNumber {
-            const z_square = complex_pow(z, 4);
-            const next = complex_add(z_square, c);
-            return next;
+        function iterate(z: ComplexNumber): void {
+            complex_pow(z, 2); // Remember, this looks like z^2 but is actually z^4.
+            complex_add(z, c, z);
         }
 
         let z = {r: x, i: y};
         for (let i = 0; i < iterations; i++) {
-            z = iterate(z);
+            iterate(z);
         }
 
         return complex_magnitude(z);
