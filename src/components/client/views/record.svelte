@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Fetchers from "../../../fetchers";
-    import * as RecordDeco from "./record_deco";
+    import * as RecordDeco from "./graphics/record_deco";
     import * as Api from "../../../api/api";
 
     import Loading from '../loading.svelte';
