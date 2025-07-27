@@ -1,16 +1,16 @@
-import p5 from "p5";
+import p5 from "p5"
 
-import * as Api from "../../../api/api";
-import * as Episodic from "../../../helpers/record";
+import * as Api from "../../../../api/api"
+import * as Episodic from "../../../../helpers/record"
 
-import {Artist} from "../../canvas/artist";
+import {Artist} from "../../../canvas/artist"
 
 export const size = 64;
 
 export type Style = {
     type: Episodic.Iteration
         | "265404-repentance"
-        | "209151-somehow-i-knew"
+        | "209151-somehow-i-knew",
     accent_color: string,
 };
 
