@@ -4,6 +4,7 @@
     import * as Fetchers from "../../../fetchers"
     import * as MarchingSquares from "./graphics/marching_squares.ts"
     import * as Julia from "./graphics/julia.ts"
+    import * as Page from "../page"
 
     import {Artist} from "../../canvas/artist";
 
@@ -37,12 +38,104 @@
             };
 
             this.font_lekton = ctx.loadFont("/assets/fonts/Lekton-Bold.ttf");
+
         }
 
+        rune_points: Array<Array<Array<[number, number]>>> = [];
+        rune_colors: Array<p5.Color> = [];
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
 
             ctx.textFont(this.font_lekton);
+
+            this.rune_points = [
+                [
+                    [[0, 5], [0, 8], [6, 8], [6, 0], [2, 0], [2, 7], [8, 7]],
+                ],
+                [
+                    [[0, 8], [0, 0], [4, 8], [4, 0], [8, 8], [8, 0]],
+                ],
+                [
+                    [[0, 8], [3, 0], [6, 8], [8, 8], [8, 4], [6, 4]],
+                ],
+                [
+                    [[0, 8], [0, 5], [3, 5], [5, 8], [8, 8], [8, 5], [3, 0]],
+                ],
+                [
+                    [[1, 8], [6, 0], [8, 0], [8, 8], [6, 8], [2, 0], [0, 2]],
+                ],
+                [
+                    [[0, 0], [8, 0], [1, 4], [8, 4], [2, 8]],
+                ],
+                [
+                    [[4, 0], [0, 0], [0, 8], [8, 8], [8, 2], [6, 2], [6, 0], [8, 0]],
+                ],
+                [
+                    [[4, 8], [4, 0], [7, 4], [0, 4]],
+                    [[2, 1], [2, 7]],
+                ],
+                [
+                    [[2, 8], [0, 8], [0, 0], [5, 0], [5, 4], [3, 4], [3, 1], [8, 1], [8, 8], [6, 8]],
+                ],
+                [
+                    [[0, 0], [0, 2], [2, 2]],
+                    [[2, 0], [2, 8], [8, 8], [8, 0], [4, 0]],
+                ],
+                [
+                    [[0, 8], [4, 0], [8, 8], [5, 8], [8, 3]],
+                ],
+                [
+                    [[0, 0], [6, 0], [6, 8], [0, 8], [0, 4], [8, 4]],
+                ],
+                [
+                    [[4, 0], [4, 8], [7, 8], [7, 4], [1, 4]],
+                ],
+                [
+                    [[0, 8], [0, 6], [4, 6], [4, 8], [8, 8], [8, 1], [2, 1], [2, 3], [4, 3], [4, 1]]
+                ],
+                [
+                    [[4, 8], [8, 8], [8, 0], [0, 0], [0, 6], [6, 6], [6, 2], [2, 2], [2, 6]],
+                ],
+                [
+                    [[8, 0], [0, 0], [3, 8], [8, 8], [8, 4], [3, 4], [0, 8]],
+                ],
+                [
+                    [[0, 1], [3, 1], [3, 4], [1, 4], [1, 8], [7, 8], [7, 0]],
+                ],
+                [
+                    [[0, 8], [2, 8], [1, 4], [5, 8], [3, 0], [8, 5]],
+                ],
+                [
+                    [[0, 8], [0, 5], [4, 5], [4, 8], [8, 8], [8, 0], [2, 0], [2, 4]],
+                ],
+                [
+                    [[2, 8], [0, 8], [0, 0], [4, 0], [4, 8], [8, 8]],
+                ],
+            ];
+
+            this.rune_colors = [
+                ctx.color(69, 117, 199),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+                ctx.color(24, 97, 195),
+            ];
         }
 
         draw(ctx: p5) {
@@ -67,26 +160,59 @@
             this.c.i = ctx.cos(t) * 0.8;
 
             const iterations = Math.floor(Math.pow(scale, 0.3));
-            const fn = Julia.scaled_julia_for(this.c, iterations, scale);
+            const julia = Julia.scaled_julia_for(this.c, iterations, scale);
 
             ctx.stroke(255);
             ctx.noFill();
             ctx.strokeWeight(2);
 
-            MarchingSquares.draw_implicit(fn, 2, ctx);
+            let rune_grabbed = false;
+            for (let i = 0; i < this.rune_points.length; i++) {
+                ctx.push();
+
+                ctx.translate(ctx.width / 2, ctx.height / 2);
+
+                const r = 400;
+                const theta = ctx.map(i, 0, this.rune_points.length, 0, ctx.QUARTER_PI);
+
+                const x = r * ctx.cos(theta);
+                const y = r * ctx.sin(theta);
+                const z = Julia.scaled_julia_for(this.c, 3, scale)(x, y);
+
+                const z_r = Math.sqrt(z.r * z.r + z.i * z.i);
+                const z_theta = ctx.atan2(z.i, z.r);
+
+                function squeeze(value: number, target: number) {
+                    return Math.sign(value) * ctx.pow(ctx.abs(value / target), 1/10) * target;
+                }
+
+                const final_x = squeeze(z_r, r) * ctx.cos(z_theta);
+                const final_y = squeeze(z_r, r) * ctx.sin(z_theta);
+
+                ctx.noStroke();
+                ctx.fill(255);
+
+                this.draw_rune({i,x: final_x, y: final_y, scale: 1.5, ctx});
+
+                ctx.pop();
+            }
+
+            const julia_magnitude = (x: number, y: number) => Julia.complex_magnitude(julia(x, y));
+
+            MarchingSquares.draw_implicit(julia_magnitude, 2, ctx);
 
             ctx.stroke(255, 128);
             ctx.noFill();
             ctx.strokeWeight(1);
 
-            MarchingSquares.draw_implicit(fn, 0.5, ctx);
-            MarchingSquares.draw_implicit(fn, 0.8, ctx);
+            MarchingSquares.draw_implicit(julia_magnitude, 0.5, ctx);
+            MarchingSquares.draw_implicit(julia_magnitude, 0.8, ctx);
 
             ctx.pop();
         }
 
         draw_splash(ctx: p5) {
-            const t = Date.now() / 300;
+            const t = Date.now() / 500;
 
             ctx.push();
 
@@ -104,8 +230,101 @@
             for (let i = 0; i < splash.length; i++) {
                 const char = splash[i];
 
-                ctx.text(char, -full_splash_width / 2 + ctx.textWidth(running_splash), 170 - ctx.sin(t + i * 100) * 2);
+                const char_cycle = ctx.sin(t + i * 100);
+
+                ctx.text(
+                    char,
+                    -full_splash_width / 2 + ctx.textWidth(running_splash),
+                    170 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * 3)
+                );
                 running_splash += char;
+            }
+
+            ctx.pop();
+        }
+
+        grabbed_rune: number | null = null;
+        draw_rune(opts: {i: number, x: number, y: number, scale: number, ctx: p5}): void {
+            const {i, x, y, scale , ctx} = opts;
+
+            const point_groups = this.rune_points[i];
+
+            const mouse_x = ctx.mouseX - ctx.width / 2;
+            const mouse_y = ctx.mouseY - ctx.height / 2;
+            let mouse_t = ctx.map(ctx.dist(x, y, mouse_x, mouse_y), 40, 120, 1.0, 0, true);
+
+            if (this.grabbed_rune == null && mouse_t > 0.5) {
+                this.grabbed_rune = i;
+                Page.set_home_theme({
+                    primary_color: this.rune_colors[i].toString("#rrggbb"),
+                    secondary_color: "#000000",
+                });
+
+                // Dumbass hack to force background to update
+                // TODO: The theme should probably just be a global store instead
+                // of a store derived from page state
+                Page.current.update(current => ({...current}));
+            }
+
+            if (this.grabbed_rune !== i) {
+                mouse_t = 0;
+            }
+
+            if (this.grabbed_rune === i && mouse_t <= 0.5) {
+                this.grabbed_rune = null;
+            }
+
+            ctx.push();
+
+            ctx.noFill();
+            ctx.stroke(ctx.lerpColor(
+                ctx.color(255, 128),
+                this.rune_colors[i],
+                mouse_t,
+            ));
+            ctx.strokeWeight(ctx.map(mouse_t, 0, 1.0, 1.0, 2.0));
+            ctx.translate(x, y);
+
+            const scale_boost = mouse_t ** 3 + 1;
+            const final_scale = scale * scale_boost;
+
+            for (const points of point_groups) {
+                for (let i = 1; i < points.length; i++) {
+                    const prev_point = points[i - 1];
+                    const this_point = points[i];
+
+                    ctx.line(
+                        (prev_point[0] - 4) * final_scale,
+                        (prev_point[1] - 4) * final_scale,
+                        (this_point[0] - 4) * final_scale,
+                        (this_point[1] - 4) * final_scale);
+                }
+            }
+
+            if (this.grabbed_rune === i) {
+                const pips_margin_angle = ctx.PI / 16;
+
+                for (let group_i = 0; group_i < 4; group_i++) {
+                    const group_start_theta = ctx.PI + pips_margin_angle + (group_i * ctx.QUARTER_PI);
+                    const group_end_theta = (ctx.PI + ctx.HALF_PI) - pips_margin_angle + (group_i * ctx.QUARTER_PI);
+
+                    for (let pip_i = 0; pip_i < 5; pip_i++) {
+                        const pip_theta = group_start_theta + ctx.map(pip_i, 0, 5, group_start_theta, group_end_theta);
+
+                        ctx.push();
+
+                        ctx.strokeWeight(1);
+                        ctx.stroke(255, 128);
+
+                        const pip_length = ctx.map(mouse_t, 0.5, 1.0, 0, 10);
+                        const pip_offset = 40;
+
+                        ctx.rotate(pip_theta);
+                        ctx.line(pip_offset, 0, pip_offset + pip_length, 0);
+
+                        ctx.pop();
+                    }
+                }
             }
 
             ctx.pop();
