@@ -42,7 +42,7 @@
         }
 
         rune_points: Array<Array<Array<[number, number]>>> = [];
-        rune_colors: Array<p5.Color> = [];
+        rune_colors: Array<{primary: p5.Color, secondary: p5.Color}> = [];
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
 
@@ -114,27 +114,26 @@
             ];
 
             this.rune_colors = [
-                ctx.color(69, 117, 199),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
-                ctx.color(24, 97, 195),
+                {primary: ctx.color("#0d4f9c"), secondary: ctx.color("#647fc8")},
+                {primary: ctx.color("#a15310"), secondary: ctx.color("#c97a08")},
+                {primary: ctx.color("#1d82b6"), secondary: ctx.color("#12a1cc")},
+                {primary: ctx.color("#9bacdc"), secondary: ctx.color("#59771f")},
+                {primary: ctx.color("#5ad6d4"), secondary: ctx.color("#5652e7")},
+                {primary: ctx.color("#ffffff"), secondary: ctx.color("#ffaa77")},
+                {primary: ctx.color("#00ea42"), secondary: ctx.color("#352929")},
+                {primary: ctx.color("#c01e1c"), secondary: ctx.color("#866bca")},
+                {primary: ctx.color("#b62c37"), secondary: ctx.color("#ffffff")},
+                {primary: ctx.color("#abdbe9"), secondary: ctx.color("#ffffff")},
+                {primary: ctx.color("#fc00b4"), secondary: ctx.color("#fd01c8")},
+                {primary: ctx.color("#077d86"), secondary: ctx.color("#57375e")},
+                {primary: ctx.color("#d0bdaa"), secondary: ctx.color("#000000")},
+                {primary: ctx.color("#6a2220"), secondary: ctx.color("#17254e")},
+                {primary: ctx.color("#026ed1"), secondary: ctx.color("#0055a2")},
+                {primary: ctx.color("#a6aed3"), secondary: ctx.color("#314027")},
+                {primary: ctx.color("#d3d322"), secondary: ctx.color("#7589da")},
+                {primary: ctx.color("#1618a0"), secondary: ctx.color("#c01e1c")},
+                {primary: ctx.color("#d0805a"), secondary: ctx.color("#e88038")},
+                {primary: ctx.color("#375a97"), secondary: ctx.color("#548f35")},
             ];
         }
 
@@ -255,15 +254,21 @@
 
             if (this.grabbed_rune == null && mouse_t > 0.5) {
                 this.grabbed_rune = i;
-                Page.set_home_theme({
-                    primary_color: this.rune_colors[i].toString("#rrggbb"),
-                    secondary_color: "#000000",
-                });
 
-                // Dumbass hack to force background to update
-                // TODO: The theme should probably just be a global store instead
-                // of a store derived from page state
-                Page.current.update(current => ({...current}));
+                // If we hold on to the same rune for long enough...
+                setTimeout(() => {
+                    if (this.grabbed_rune === i) {
+                        Page.set_home_theme({
+                            primary_color: this.rune_colors[i].primary.toString("#rrggbb"),
+                            secondary_color: this.rune_colors[i].secondary.toString("#rrggbb"),
+                        });
+
+                        // Dumbass hack to force background to update
+                        // TODO: The theme should probably just be a global store instead
+                        // of a store derived from page state
+                        Page.current.update(current => ({...current}));
+                    }
+                }, 1500);
             }
 
             if (this.grabbed_rune !== i) {
@@ -279,7 +284,7 @@
             ctx.noFill();
             ctx.stroke(ctx.lerpColor(
                 ctx.color(255, 128),
-                this.rune_colors[i],
+                this.rune_colors[i].primary,
                 mouse_t,
             ));
             ctx.strokeWeight(ctx.map(mouse_t, 0, 1.0, 1.0, 2.0));

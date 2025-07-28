@@ -28,7 +28,6 @@ export const default_theme = {
 let home_theme: Theme | null = null;
 
 export async function get_theme(current_page: Domain.Page): Promise<Theme> {
-    console.log(current_page);
     if (current_page.domain === "home" && home_theme != null) {
         return home_theme;
     }
