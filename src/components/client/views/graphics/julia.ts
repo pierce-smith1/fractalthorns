@@ -3,8 +3,6 @@ type ComplexNumber = {
     i: number,
 };
 
-// All complex functions use an out variable or mutate their arguments to reduce
-// memory allocations.
 function complex_add(a: ComplexNumber, b: ComplexNumber, out: ComplexNumber): void {
     const new_r = a.r + b.r;
     const new_i = a.i + b.i;
