@@ -120,7 +120,7 @@
                 {primary: ctx.color("#1d82b6"), secondary: ctx.color("#12a1cc")},
                 {primary: ctx.color("#9bacdc"), secondary: ctx.color("#59771f")},
                 {primary: ctx.color("#5ad6d4"), secondary: ctx.color("#5652e7")},
-                {primary: ctx.color("#ffffff"), secondary: ctx.color("#ffaa77")},
+                {primary: ctx.color("#ffffff"), secondary: ctx.color("#ffeebb")},
                 {primary: ctx.color("#00ea42"), secondary: ctx.color("#352929")},
                 {primary: ctx.color("#c01e1c"), secondary: ctx.color("#866bca")},
                 {primary: ctx.color("#b62c37"), secondary: ctx.color("#ffffff")},
@@ -236,17 +236,36 @@
 
         draw_splash(ctx: p5) {
             const t = Date.now() / 500;
+            const splash_y_offset = 200;
+            const splash_box_padding = 35;
+
+            const splash = `< ${"oh man i am not too good with the computer"} >`;
 
             ctx.push();
 
             ctx.translate(ctx.width / 2, ctx.height / 2);
 
-            ctx.noStroke();
-            ctx.fill(255);
             ctx.textSize(25);
 
-            const splash = `< ${"to dust, and back again"} >`;
             const full_splash_width = ctx.textWidth(splash);
+
+            ctx.push();
+
+            ctx.noStroke();
+            ctx.fill(255, 200);
+
+            ctx.rect(
+                -full_splash_width / 2 - splash_box_padding,
+                splash_y_offset - splash_box_padding,
+                full_splash_width + splash_box_padding * 2,
+                splash_box_padding * 1.6,
+                20
+            );
+
+            ctx.pop();
+
+            ctx.noStroke();
+            ctx.fill(0, 220);
 
             let running_splash = "";
 
@@ -258,7 +277,7 @@
                 ctx.text(
                     char,
                     -full_splash_width / 2 + ctx.textWidth(running_splash),
-                    170 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * 3)
+                    splash_y_offset - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * 2)
                 );
                 running_splash += char;
             }
