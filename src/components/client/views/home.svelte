@@ -43,6 +43,7 @@
 
         rune_points: Array<Array<Array<[number, number]>>> = [];
         rune_colors: Array<{primary: p5.Color, secondary: p5.Color}> = [];
+        rune_groupings: Array<{group: number, pip: number}> = [];
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
 
@@ -126,14 +127,37 @@
                 {primary: ctx.color("#abdbe9"), secondary: ctx.color("#ffffff")},
                 {primary: ctx.color("#fc00b4"), secondary: ctx.color("#fd01c8")},
                 {primary: ctx.color("#077d86"), secondary: ctx.color("#57375e")},
-                {primary: ctx.color("#d0bdaa"), secondary: ctx.color("#000000")},
-                {primary: ctx.color("#6a2220"), secondary: ctx.color("#17254e")},
+                {primary: ctx.color("#d0bdaa"), secondary: ctx.color("#e1cbbc")},
+                {primary: ctx.color("#aa5250"), secondary: ctx.color("#37457e")},
                 {primary: ctx.color("#026ed1"), secondary: ctx.color("#0055a2")},
                 {primary: ctx.color("#a6aed3"), secondary: ctx.color("#314027")},
                 {primary: ctx.color("#d3d322"), secondary: ctx.color("#7589da")},
                 {primary: ctx.color("#1618a0"), secondary: ctx.color("#c01e1c")},
                 {primary: ctx.color("#d0805a"), secondary: ctx.color("#e88038")},
                 {primary: ctx.color("#375a97"), secondary: ctx.color("#548f35")},
+            ];
+
+            this.rune_groupings = [
+                {group: 1, pip: 1},
+                {group: 4, pip: 1},
+                {group: 3, pip: 1},
+                {group: 3, pip: 2},
+                {group: 4, pip: 2},
+                {group: 4, pip: 3},
+                {group: 1, pip: 2},
+                {group: 2, pip: 1},
+                {group: 2, pip: 2},
+                {group: 4, pip: 4},
+                {group: 2, pip: 3},
+                {group: 1, pip: 3},
+                {group: 1, pip: 4},
+                {group: 3, pip: 3},
+                {group: 3, pip: 4},
+                {group: 1, pip: 5},
+                {group: 2, pip: 4},
+                {group: 2, pip: 5},
+                {group: 4, pip: 5},
+                {group: 3, pip: 5},
             ];
         }
 
@@ -244,13 +268,17 @@
 
         grabbed_rune: number | null = null;
         draw_rune(opts: {i: number, x: number, y: number, scale: number, ctx: p5}): void {
+            const rune_grab_close_distance = 60;
+            const rune_grab_far_distance = 120;
+            const rune_grab_length_ms = 2500;
+
             const {i, x, y, scale , ctx} = opts;
 
             const point_groups = this.rune_points[i];
 
             const mouse_x = ctx.mouseX - ctx.width / 2;
             const mouse_y = ctx.mouseY - ctx.height / 2;
-            let mouse_t = ctx.map(ctx.dist(x, y, mouse_x, mouse_y), 40, 120, 1.0, 0, true);
+            let mouse_t = ctx.map(ctx.dist(x, y, mouse_x, mouse_y), rune_grab_close_distance, rune_grab_far_distance, 1.0, 0, true);
 
             if (this.grabbed_rune == null && mouse_t > 0.5) {
                 this.grabbed_rune = i;
@@ -268,7 +296,7 @@
                         // of a store derived from page state
                         Page.current.update(current => ({...current}));
                     }
-                }, 1500);
+                }, rune_grab_length_ms);
             }
 
             if (this.grabbed_rune !== i) {
@@ -309,17 +337,24 @@
             if (this.grabbed_rune === i) {
                 const pips_margin_angle = ctx.PI / 16;
 
+                const group_info = this.rune_groupings[i];
+
                 for (let group_i = 0; group_i < 4; group_i++) {
-                    const group_start_theta = ctx.PI + pips_margin_angle + (group_i * ctx.QUARTER_PI);
-                    const group_end_theta = (ctx.PI + ctx.HALF_PI) - pips_margin_angle + (group_i * ctx.QUARTER_PI);
+                    const group_start_theta = ctx.PI + pips_margin_angle + (group_i * ctx.HALF_PI);
+                    const group_end_theta = (ctx.PI + ctx.HALF_PI) - pips_margin_angle + (group_i * ctx.HALF_PI);
 
                     for (let pip_i = 0; pip_i < 5; pip_i++) {
-                        const pip_theta = group_start_theta + ctx.map(pip_i, 0, 5, group_start_theta, group_end_theta);
+                        const pip_theta = ctx.map(pip_i, 0, 5, group_start_theta, group_end_theta);
 
                         ctx.push();
 
                         ctx.strokeWeight(1);
                         ctx.stroke(255, 128);
+
+                        if (group_info.group === group_i + 1 && group_info.pip === pip_i + 1) {
+                            ctx.strokeWeight(2);
+                            ctx.stroke(this.rune_colors[i].primary);
+                        }
 
                         const pip_length = ctx.map(mouse_t, 0.5, 1.0, 0, 10);
                         const pip_offset = 40;
