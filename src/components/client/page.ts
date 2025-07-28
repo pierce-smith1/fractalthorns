@@ -25,7 +25,14 @@ export const default_theme = {
     secondary_color: "#000000",
 };
 
+let home_theme: Theme | null = null;
+
 export async function get_theme(current_page: Domain.Page): Promise<Theme> {
+    console.log(current_page);
+    if (current_page.domain === "home" && home_theme != null) {
+        return home_theme;
+    }
+
     if (current_page.domain === "image") {
         const image = await Fetchers.get.single_image({name: current_page.name});
 
@@ -76,6 +83,10 @@ export async function get_theme(current_page: Domain.Page): Promise<Theme> {
     }
 
     return default_theme;
+}
+
+export function set_home_theme(theme: Theme) {
+    home_theme = theme;
 }
 
 export const theme_promise = Store.derived(current, get_theme);

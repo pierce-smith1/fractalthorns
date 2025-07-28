@@ -28,12 +28,12 @@ function complex_pow(z: ComplexNumber, p: number): void {
     }
 }
 
-function complex_magnitude(z: ComplexNumber): number {
+export function complex_magnitude(z: ComplexNumber): number {
     const magnitude = Math.sqrt(z.r * z.r + z.i * z.i);
     return magnitude;
 }
 
-export function julia_for(c: ComplexNumber, iterations: number): (x: number, y: number) => number {
+export function julia_for(c: ComplexNumber, iterations: number): (x: number, y: number) => ComplexNumber {
     return (x, y) => {
         function iterate(z: ComplexNumber): void {
             complex_pow(z, 2); // Remember, this looks like z^2 but is actually z^4.
@@ -45,7 +45,7 @@ export function julia_for(c: ComplexNumber, iterations: number): (x: number, y: 
             iterate(z);
         }
 
-        return complex_magnitude(z);
+        return z;
     };
 }
 
