@@ -245,7 +245,8 @@
 
             ctx.translate(ctx.width / 2, ctx.height / 2);
 
-            ctx.textSize(25);
+            const text_size = ctx.min(25, ctx.min(ctx.width, ctx.height) / 25);
+            ctx.textSize(text_size);
 
             const full_splash_width = ctx.textWidth(splash);
 
