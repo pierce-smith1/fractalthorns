@@ -7,6 +7,7 @@ export function get_parameters(request: Request) {
     }
 
     const search_params = new URLSearchParams(url_parts[1]);
+
     const params_object = JSON.parse(search_params.get("body") ?? "{}");
     return params_object;
 }

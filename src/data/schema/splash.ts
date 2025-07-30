@@ -17,5 +17,5 @@ export interface SplashDiscordDetailTable {
 
 export interface SplashCursorTable {
     position: number,
-    last_updated: number,
+    last_updated: string,
 }

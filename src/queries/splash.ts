@@ -1,0 +1,128 @@
+import * as Kysely from "kysely"
+
+import * as Api from "../api/api"
+import Db from "../data/db"
+import * as Schema from "../data/schema/schema"
+
+type BaseSplash = Api.SplashObject;
+
+export async function get_paged(page: number): Promise<Array<BaseSplash>> {
+    await ensure_cursor_advanced();
+
+    const page_size = 20;
+
+    const cursor = await Db
+        .selectFrom("splash_cursor")
+        .selectAll()
+        .executeTakeFirstOrThrow();
+
+    const rows = await Db
+        .selectFrom("splash")
+        .selectAll()
+        .where("splash.ordinal", "<=", cursor.position)
+        .orderBy("splash.ordinal", "desc")
+        .offset(page_size * (page - 1))
+        .limit(page_size)
+        .execute();
+
+    return rows.map(to_api_object);
+}
+
+export async function queue_discord_splash(request: Api.DiscordSplashUploadRequest): Promise<
+    | {status: "ok"}
+    | {status: "rate-limited", retry_after_ms: number}
+> {
+    await ensure_cursor_advanced();
+
+    const max_splash_rate_ms = 1000 * 60 * 60 * 24; // One day
+
+    const too_recent_splash = await Db
+        .selectFrom("splash")
+        .innerJoin("splash_discord_detail", "splash_discord_detail.splash_id", "splash.id")
+        .select(eb =>
+            eb(eb.fn<number>("unixepoch", [eb.val("now")]), "-", eb.fn<number>("unixepoch", ["created_at"])).as("ms_since_submit"),
+        )
+        .where(eb => eb.and([
+            eb("splash_discord_detail.user_id", "=", request.submitter_user_id),
+            eb(Kysely.sql`ms_since_submit`, "<", max_splash_rate_ms),
+        ]))
+        .orderBy("splash.created_at", "desc")
+        .executeTakeFirst();
+
+    if (too_recent_splash) {
+        return {status: "rate-limited", retry_after_ms: max_splash_rate_ms - too_recent_splash.ms_since_submit};
+    }
+
+    Db.transaction().execute(async ctx => {
+        const most_recent_splash = await ctx
+            .selectFrom("splash")
+            .select("ordinal")
+            .orderBy("ordinal", "desc")
+            .executeTakeFirst();
+
+        const new_splash = await ctx
+            .insertInto("splash")
+            .values({
+                text: request.text,
+                created_at: new Date().toISOString(),
+                ordinal: (most_recent_splash?.ordinal ?? 0) + 1,
+                source: "discord",
+            })
+            .returning("id")
+            .executeTakeFirstOrThrow();
+
+        await ctx
+            .insertInto("splash_discord_detail")
+            .values({
+                splash_id: new_splash.id,
+                display_name: request.submitter_display_name,
+                user_id: request.submitter_user_id,
+            })
+            .execute();
+    });
+
+    return {status: "ok"};
+}
+
+export async function ensure_cursor_advanced() {
+    const advance_interval_ms = 1000 * 60 * 60 * 24; // One day
+    const now = new Date();
+
+    const cursor = await Db
+        .selectFrom("splash_cursor")
+        .selectAll()
+        .executeTakeFirst();
+
+    if (!cursor) {
+        await Db
+            .insertInto("splash_cursor")
+            .values({
+                position: 0,
+                last_updated: now.toISOString(),
+            })
+            .execute();
+
+        return;
+    }
+
+    const ms_since_last_advance = now.valueOf() - new Date(cursor.last_updated).valueOf();
+    const advances_needed = Math.floor(ms_since_last_advance / advance_interval_ms);
+
+    if (advances_needed > 0) {
+        await Db
+            .updateTable("splash_cursor")
+            .set({
+                position: cursor.position + advances_needed,
+                last_updated: now.toISOString(),
+            })
+            .execute();
+    }
+}
+
+function to_api_object(row: Kysely.Selectable<Schema.SplashTable>): BaseSplash {
+    const object = {
+        text: row.text,
+        ordinal: row.ordinal,
+    };
+    return object;
+}
