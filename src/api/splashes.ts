@@ -53,7 +53,7 @@ export const paged_splash_request_endpoint = {
 export const discord_splash_upload_endpoint = {
     method: "POST",
     protected: true,
-    description: "Submit a splash that was created by a Discord user into the splash queue. Only one splash for a particular user can be submitted per 24 hours; if more than one is attempted, the request will fail with a 400.",
+    description: "Submit a splash that was created by a Discord user into the splash queue. Only one splash for a particular user can be submitted per 24 hours; if more than one is attempted, the request will fail with a 429, and a `Retry-After` header will be included with the amount of seconds you will need to wait.",
     request: discord_splash_upload_request,
     response: {},
 } as const;
