@@ -1,4 +1,4 @@
-import * as Interfaces from "../interfaces";
+import * as Interfaces from "../interfaces"
 
 export const sketch_object_schema = {
     name: {

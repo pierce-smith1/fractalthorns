@@ -6,6 +6,7 @@ import * as PuzzleSchema from "./puzzle"
 import * as RecordSchema from "./record"
 import * as RuneSchema from "./rune"
 import * as SketchSchema from "./sketch"
+import * as SplashSchema from "./splash"
 
 interface FileTable {
     id: Kysely.Generated<number>,
@@ -35,6 +36,9 @@ export interface Database {
     runeword: RuneSchema.RunewordTable,
     runeword_rune: RuneSchema.RunewordRuneTable,
     sketch: SketchSchema.SketchTable,
+    splash: SplashSchema.SplashTable,
+    splash_discord_detail: SplashSchema.SplashDiscordDetailTable,
+    splash_cursor: SplashSchema.SplashCursorTable,
 }
 
 export * from "./image"
@@ -43,3 +47,4 @@ export * from "./puzzle"
 export * from "./record"
 export * from "./rune"
 export * from "./sketch"
+export * from "./splash"
