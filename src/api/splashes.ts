@@ -7,8 +7,8 @@ export const splash_object_schema = {
     },
     ordinal: {
         type: Interfaces.fields.required_number,
-        description: "A unique number ordering splashes from oldest to newest. The most recent splash has the highest ordinal, and the earliest has the lowest.",
-    }
+        description: "A unique number ordering splashes from oldest to newest. The most recent displayed splash has the highest ordinal, and the earliest has the lowest.",
+    },
 } as const;
 
 export const paged_splash_request_schema = {
@@ -16,16 +16,12 @@ export const paged_splash_request_schema = {
         type: Interfaces.fields.required_number,
         description: "The 1-indexed page to retrieve. Pages are at most 20 splashes long and are sorted by descending submission order, e.g. requesting page 1 will give the 20 most recent splashes. If the page is out of range - for example, if there are only 30 splashes but page 3 is requested - an empty page will be returned.",
     },
-};
+} as const;
 
 export const paged_splash_response_schema = {
     splashes: {
         type: Interfaces.fields.required_array(Interfaces.fields.required_object(splash_object_schema)),
-        description: "A list of at most 20 splashes, sorted by descending submission order (latest to earliest). Will be empty if the page requested is out of range.",
-    },
-    current: {
-        type: Interfaces.fields.optional_number,
-        description: "The ordinal of the splash that is currently being displayed on the site. Not present if the current splash is not included in the `splashes` array because it is on a different page.",
+        description: "A list of at most 20 splashes, sorted by descending submission order (latest to earliest). Will be empty if the page requested is out of range. If page 1 is requested, the first splash in this list is the one currently being displayed on the site.",
     },
     page: {
         type: Interfaces.fields.required_number,
@@ -44,8 +40,21 @@ export const discord_splash_upload_request = {
     },
     submitter_user_id: {
         type: Interfaces.fields.required_string,
-        description: "The user id of the Discord user that asked to submit this splash.",
+        description: "The user id of the Discord user that asked to submit this splash. This will be used for the purposes of rate limiting.",
     }
+} as const;
+
+export const paged_splash_request_endpoint = {
+    description: "Get the splashes that have been seen on the site. This includes ONLY splashes that have been or are being displayed - splashes that are in the splash queue are NOT included.",
+    request: paged_splash_request_schema,
+    response: paged_splash_response_schema,
+} as const;
+
+export const discord_splash_upload_endpoint = {
+    method: "POST",
+    description: "Submit a splash that was created by a Discord user into the splash queue. Only one splash for a particular user can be submitter per 24 hours; if more than one is attempted, the request will fail with a 400.",
+    request: discord_splash_upload_request,
+    response: {},
 } as const;
 
 export type SplashObject = Interfaces.TypeFromSchema<typeof splash_object_schema>;
