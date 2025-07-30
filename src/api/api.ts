@@ -1,10 +1,11 @@
-import * as Interfaces from "../interfaces";
-import * as DomainApi from "./domain";
-import * as EpisodicApi from "./episodic";
-import * as ImageApi from "./images";
-import * as NewsApi from "./news";
-import * as PuzzleApi from "./puzzles";
-import * as SketchApi from "./sketches";
+import * as Interfaces from "../interfaces"
+import * as DomainApi from "./domain"
+import * as EpisodicApi from "./episodic"
+import * as ImageApi from "./images"
+import * as NewsApi from "./news"
+import * as PuzzleApi from "./puzzles"
+import * as SketchApi from "./sketches"
+import * as SplashApi from "./splashes"
 
 export const endpoints = {
     all_news: NewsApi.all_news_endpoint,
@@ -20,6 +21,8 @@ export const endpoints = {
     all_puzzles: PuzzleApi.all_puzzles_endpoint,
     single_puzzle: PuzzleApi.single_puzzle_endpoint,
     solve_puzzle: PuzzleApi.solve_puzzle_endpoint,
+    paged_splashes: SplashApi.paged_splash_request_endpoint,
+    submit_discord_splash: SplashApi.discord_splash_upload_endpoint,
 } as const;
 
 export type GetEndpoints = {[endpoint in keyof typeof endpoints]: {
@@ -27,9 +30,10 @@ export type GetEndpoints = {[endpoint in keyof typeof endpoints]: {
     response: Interfaces.TypeFromSchema<typeof endpoints[endpoint]["response"]>,
 }};
 
-export * from "./news";
-export * from "./images";
-export * from "./sketches";
-export * from "./episodic";
-export * from "./domain";
-export * from "./puzzles";
+export * from "./news"
+export * from "./images"
+export * from "./sketches"
+export * from "./episodic"
+export * from "./domain"
+export * from "./puzzles"
+export * from "./splashes"

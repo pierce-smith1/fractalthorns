@@ -106,7 +106,7 @@ export const solve_puzzle_endpoint = {
     description: "Try to solve a puzzle by providing its secret unlock code. If the code is correct OR the puzzle was already solved, this returns a 200 and the puzzle is ensured to be solved. Otherwise, it returns a 400.",
     request: solve_puzzle_request_schema,
     response: solve_puzzle_response_schema,
-};
+} as const;
 
 export type PuzzleObject = Interfaces.TypeFromSchema<typeof puzzle_object_schema>;
 export type AllPuzzlesRequest = Interfaces.TypeFromSchema<typeof all_puzzles_request_schema>;
