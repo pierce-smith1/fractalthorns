@@ -127,10 +127,11 @@ curl 'https://fractalthorns.com/api/v1/domain_search?body={"term":"partner","typ
     <p>For more examples: open the network tab in your dev tools while browsing the site normally.</p>
 
     <h2>Endpoints</h2>
-    {endpoints.map(([name, endpoint]) => (
-        // @ts-ignore
+    {endpoints.map(([name, endpoint]: [string, any]) => (
         <h2 class="endpoint-name"><code>{endpoint.method ?? "GET"} <span class="subtle">/api/v1/</span>{name}</code></h2>
         <p class="big">{endpoint.description}</p>
+
+        <span>{(endpoint.protected ?? false) && <strong>🔒 This endpoint requires an API key. The request will fail with a 401 if a key is not provided, or a 403 if the key is not permissioned for this endpoint.</strong>}</span>
 
         <p>Request fields:</p>
         <div set:html={describe_interface(endpoint.request, "request")}></div>
