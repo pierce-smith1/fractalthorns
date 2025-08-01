@@ -129,9 +129,9 @@ export async function ensure_cursor_advanced(): Promise<void> {
         return;
     }
 
-    const {num_splashes} = await Db
+    const {max_splash_ordinal} = await Db
         .selectFrom("splash")
-        .select(eb => eb.fn<number>("count", []).as("num_splashes"))
+        .select(eb => eb.fn<number>("max", ["ordinal"]).as("max_splash_ordinal"))
         .executeTakeFirstOrThrow();
 
     const ms_since_last_advance = now.valueOf() - new Date(cursor.last_updated).valueOf();
@@ -141,7 +141,7 @@ export async function ensure_cursor_advanced(): Promise<void> {
         await Db
             .updateTable("splash_cursor")
             .set({
-                position: Math.min(cursor.position + advances_needed, num_splashes + 1),
+                position: Math.min(cursor.position + advances_needed, max_splash_ordinal + 1),
                 last_updated: now.toISOString(),
             })
             .execute();
