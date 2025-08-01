@@ -270,7 +270,7 @@
         draw_splash(ctx: p5) {
             const t = Date.now() / 500;
 
-            const splash_text = (this.splash_text ?? "i'm out").toLocaleLowerCase().trim();
+            const splash_text = (this.splash_text ?? "...then there was silence").toLocaleLowerCase().trim();
             const splash = `[ ${splash_text} ]`;
 
             ctx.push();
@@ -284,7 +284,7 @@
             this.splash_text_actual_width = full_splash_width;
 
             ctx.noStroke();
-            ctx.fill(255, 220);
+            ctx.fill(255, this.splash_text ? 220 : 120);
 
             let running_splash = "";
 
@@ -296,7 +296,7 @@
                 ctx.text(
                     char,
                     -full_splash_width / 2 + ctx.textWidth(running_splash),
-                    this.splash_y_offset + 4 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * 2)
+                    this.splash_y_offset + 4 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * (this.splash_text ? 2 : 0.5))
                 );
                 running_splash += char;
             }
