@@ -1,7 +1,7 @@
 import * as ImageQueries from "../../../queries/image";
 import * as Endpoint from "../../../endpoint";
 
-export const GET = Endpoint.make_handler<"all_images">(async (request, override) => {
+export const GET = Endpoint.make_handler<"all_images">("all_images", async (request, override) => {
     const images = await ImageQueries.get_all();
     return {images};
 });

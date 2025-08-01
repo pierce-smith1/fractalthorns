@@ -1,7 +1,7 @@
 import * as Endpoint from "../../../endpoint"
 import * as PuzzleQueries from "../../../queries/puzzle"
 
-export const POST = Endpoint.make_handler<"solve_puzzle">(async (request, override) => {
+export const POST = Endpoint.make_handler<"solve_puzzle">("solve_puzzle", async (request, override) => {
     const {name, code} = request;
 
     const solve_result = await PuzzleQueries.solve_puzzle(name, code);
