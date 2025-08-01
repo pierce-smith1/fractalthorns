@@ -21,6 +21,7 @@ export const endpoints = {
     all_puzzles: PuzzleApi.all_puzzles_endpoint,
     single_puzzle: PuzzleApi.single_puzzle_endpoint,
     solve_puzzle: PuzzleApi.solve_puzzle_endpoint,
+    current_splash: SplashApi.current_splash_request_endpoint,
     paged_splashes: SplashApi.paged_splash_request_endpoint,
     submit_discord_splash: SplashApi.discord_splash_upload_endpoint,
 } as const;

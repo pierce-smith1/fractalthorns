@@ -7,6 +7,27 @@ import Config from "../config"
 
 type BaseSplash = Api.SplashObject;
 
+export async function get_current(): Promise<BaseSplash | null> {
+    await ensure_cursor_advanced();
+
+    const cursor = await Db
+        .selectFrom("splash_cursor")
+        .selectAll()
+        .executeTakeFirstOrThrow();
+
+    const splash = await Db
+        .selectFrom("splash")
+        .selectAll()
+        .where("splash.ordinal", "=", cursor.position)
+        .executeTakeFirst();
+
+    if (!splash) {
+        return null;
+    }
+
+    return to_api_object(splash);
+}
+
 export async function get_paged(page: number): Promise<Array<BaseSplash>> {
     await ensure_cursor_advanced();
 
@@ -85,7 +106,7 @@ export async function queue_discord_splash(request: Api.DiscordSplashUploadReque
     return {status: "ok"};
 }
 
-export async function ensure_cursor_advanced() {
+export async function ensure_cursor_advanced(): Promise<void> {
     const advance_interval_ms = parseInt(Config.splash_advance_interval_ms);
     const now = new Date();
 

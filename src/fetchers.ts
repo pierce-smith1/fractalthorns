@@ -54,6 +54,7 @@ export const get = {
     domain_search: define_fetcher<"domain_search">("domain_search"),
     all_puzzles: define_fetcher<"all_puzzles">("all_puzzles"),
     single_puzzle: define_fetcher<"single_puzzle">("single_puzzle"),
+    current_splash: define_fetcher<"current_splash">("current_splash"),
     paged_splashes: define_fetcher<"paged_splashes">("paged_splashes"),
 };
 
