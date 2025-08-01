@@ -1,7 +1,7 @@
 import * as Endpoint from "../../../endpoint";
 import * as RecordQueries from "../../../queries/record";
 
-export const GET = Endpoint.make_handler<"single_record">(async (request, override) => {
+export const GET = Endpoint.make_handler<"single_record">("single_record", async (request, override) => {
     const {name} = request;
 
     const record = name

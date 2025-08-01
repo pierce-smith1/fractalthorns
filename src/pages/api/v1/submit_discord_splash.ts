@@ -1,7 +1,7 @@
 import * as SplashQueries from "../../../queries/splash"
 import * as Endpoint from "../../../endpoint";
 
-export const POST = Endpoint.make_handler<"submit_discord_splash">(async (request, override) => {
+export const POST = Endpoint.make_handler<"submit_discord_splash">("submit_discord_splash", async (request, override) => {
     const max_splash_length = 80;
 
     console.log({request});

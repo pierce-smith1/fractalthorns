@@ -1,7 +1,7 @@
 import * as Endpoint from "../../../endpoint";
 import * as SketchQueries from "../../../queries/sketch";
 
-export const GET = Endpoint.make_handler<"single_sketch">(async (request, override) => {
+export const GET = Endpoint.make_handler<"single_sketch">("single_sketch", async (request, override) => {
     const {name} = request;
 
     const sketch = name

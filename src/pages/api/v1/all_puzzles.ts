@@ -1,7 +1,7 @@
 import * as Endpoint from "../../../endpoint";
 import * as PuzzleQueries from "../../../queries/puzzle";
 
-export const GET = Endpoint.make_handler<"all_puzzles">(async (request, override) => {
+export const GET = Endpoint.make_handler<"all_puzzles">("all_puzzles", async (request, override) => {
     const puzzles = await PuzzleQueries.get_all();
 
     const rows_by_chapter = Object.groupBy(puzzles, puzzle => puzzle.chapter);

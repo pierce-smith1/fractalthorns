@@ -1,7 +1,7 @@
 import * as Endpoint from "../../../endpoint";
 import * as PuzzleQueries from "../../../queries/puzzle";
 
-export const GET = Endpoint.make_handler<"single_puzzle">(async (request, override) => {
+export const GET = Endpoint.make_handler<"single_puzzle">("single_puzzle", async (request, override) => {
     const {name} = request;
 
     const puzzle = name
