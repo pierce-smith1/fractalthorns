@@ -62,17 +62,19 @@ export async function queue_discord_splash(request: Api.DiscordSplashUploadReque
         .selectFrom("splash")
         .innerJoin("splash_discord_detail", "splash_discord_detail.splash_id", "splash.id")
         .select(eb =>
-            eb(eb.fn<number>("unixepoch", [eb.val("now")]), "-", eb.fn<number>("unixepoch", ["created_at"])).as("ms_since_submit"),
+            eb(eb.fn<number>("unixepoch", [eb.val("now")]), "-", eb.fn<number>("unixepoch", ["created_at"])).as("s_since_submit"),
         )
         .where(eb => eb.and([
             eb("splash_discord_detail.user_id", "=", request.submitter_user_id),
-            eb(Kysely.sql`ms_since_submit`, "<", max_splash_rate_ms),
+            eb(Kysely.sql`s_since_submit`, "<", max_splash_rate_ms / 1000),
         ]))
         .orderBy("splash.created_at", "desc")
         .executeTakeFirst();
 
+    console.log({max_splash_rate_ms});
+
     if (too_recent_splash) {
-        return {status: "rate-limited", retry_after_ms: max_splash_rate_ms - too_recent_splash.ms_since_submit};
+        return {status: "rate-limited", retry_after_ms: max_splash_rate_ms - (too_recent_splash.s_since_submit * 1000)};
     }
 
     Db.transaction().execute(async ctx => {
@@ -139,7 +141,7 @@ export async function ensure_cursor_advanced(): Promise<void> {
         await Db
             .updateTable("splash_cursor")
             .set({
-                position: Math.min(cursor.position + advances_needed, num_splashes),
+                position: Math.min(cursor.position + advances_needed, num_splashes + 1),
                 last_updated: now.toISOString(),
             })
             .execute();
