@@ -327,7 +327,7 @@
                 // If we hold on to the same rune for long enough...
                 // @ts-ignore
                 this.rune_grab_timer = setTimeout(() => {
-                    if (this.grabbed_rune_i === i) {
+                    if (this.grabbed_rune_i === i && this.last_held_rune_i !== i) {
                         this.last_held_rune_i = i;
                         this.last_held_rune_change_time = Date.now();
 
