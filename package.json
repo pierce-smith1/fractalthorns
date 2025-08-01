@@ -9,8 +9,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "ensure-database": "env-cmd -f rvaenv dbmate up",
-    "compile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts",
-    "fully-recompile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/data/repopulate.ts --fully-recreate"
+    "compile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/commands/repopulate.ts",
+    "fully-recompile-content": "npm run ensure-database && env-cmd -f rvaenv tsx src/commands/repopulate.ts --fully-recreate",
+    "generate-api-key": "env-cmd -f rvaenv tsx src/commands/generate_api_key.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.3",
