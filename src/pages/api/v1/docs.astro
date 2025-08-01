@@ -131,7 +131,7 @@ curl 'https://fractalthorns.com/api/v1/domain_search?body={"term":"partner","typ
         <h2 class="endpoint-name"><code>{endpoint.method ?? "GET"} <span class="subtle">/api/v1/</span>{name}</code></h2>
         <p class="big">{endpoint.description}</p>
 
-        <span>{(endpoint.protected ?? false) && <strong>🔒 This endpoint requires an API key. The request will fail with a 401 if a key is not provided, or a 403 if the key is not permissioned for this endpoint.</strong>}</span>
+        <span>{(endpoint.protected ?? false) && <strong>🔒 This endpoint requires an API key. The request will fail with a 401 if a key is not provided. <a href="mailto:pierce@doughbyte.com">Get in touch with me directly</a> to get an API key.</strong>}</span>
 
         <p>Request fields:</p>
         <div set:html={describe_interface(endpoint.request, "request")}></div>

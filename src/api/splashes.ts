@@ -11,6 +11,13 @@ export const splash_object_schema = {
     },
 } as const;
 
+export const current_splash_response_schema = {
+    splash: {
+        type: Interfaces.fields.optional_object(splash_object_schema),
+        description: "The current splash. Will be omitted if the queue has been exhausted and more splashes need to be submitted.",
+    }
+} as const;
+
 export const paged_splash_request_schema = {
     page: {
         type: Interfaces.fields.required_number,
@@ -44,8 +51,14 @@ export const discord_splash_upload_request = {
     }
 } as const;
 
+export const current_splash_request_endpoint = {
+    description: "Gets the splash that should be displayed on the site. This is either the most recent splash as returned by `paged_splashes`, OR it is ommitted entirely if the splash queue has been exhausted.",
+    request: {},
+    response: current_splash_response_schema,
+} as const;
+
 export const paged_splash_request_endpoint = {
-    description: "Get the splashes that have been seen on the site. This includes ONLY splashes that have been or are being displayed - splashes that are in the splash queue are NOT included.",
+    description: "Get the splashes that have been seen on the site. This includes ONLY splashes that have been or are being displayed - splashes that are waiting in the queue are NOT included.",
     request: paged_splash_request_schema,
     response: paged_splash_response_schema,
 } as const;

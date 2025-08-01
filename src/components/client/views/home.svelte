@@ -32,24 +32,38 @@
         }
 
         font_lekton: p5.Font = null!;
+        quintic_image: p5.Image = null!;
+
         preload(ctx: p5) {
             ctx.windowResized = () => {
                 ctx.resizeCanvas(this.width(), this.height());
             };
 
             this.font_lekton = ctx.loadFont("/assets/fonts/Lekton-Bold.ttf");
-
+            this.quintic_image = ctx.loadImage("/assets/images/common/thorns.png");
         }
 
+        quintic_points: Array<Array<[number, number]>> = [];
         rune_points: Array<Array<Array<[number, number]>>> = [];
         rune_colors: Array<{primary: p5.Color, secondary: p5.Color}> = [];
         rune_groupings: Array<{group: number, pip: number}> = [];
+
+        last_held_rune_i: number | null = null;
+        last_held_rune_change_time: number | null = null;
+
         splash_text: string | null = null;
+        splash_y_offset = 170;
+        splash_text_actual_width: number | null = null;
 
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
 
             ctx.textFont(this.font_lekton);
+
+            this.quintic_points = [
+                [[8, 9], [0, 1], [1, 4], [0, 6], [2, 5], [2, 8], [3, 6], [5, 8]],
+                [[0, -1], [8, 7], [7, 4], [8, 2], [6, 3], [6, 0], [5, 2], [3, 0]],
+            ];
 
             this.rune_points = [
                 [
@@ -118,7 +132,7 @@
 
             this.rune_colors = [
                 {primary: ctx.color("#0d4f9c"), secondary: ctx.color("#647fc8")},
-                {primary: ctx.color("#a15310"), secondary: ctx.color("#c97a08")},
+                {primary: ctx.color("#000000"), secondary: ctx.color("#000000")},
                 {primary: ctx.color("#1d82b6"), secondary: ctx.color("#12a1cc")},
                 {primary: ctx.color("#9bacdc"), secondary: ctx.color("#59771f")},
                 {primary: ctx.color("#5ad6d4"), secondary: ctx.color("#5652e7")},
@@ -162,8 +176,8 @@
                 {group: 3, pip: 5},
             ];
 
-            Fetchers.get.paged_splashes({page: 1}).then(result => {
-                this.splash_text = result.splashes[0]?.text;
+            Fetchers.get.current_splash({}).then(result => {
+                this.splash_text = result.splash?.text ?? null;
             });
         }
 
@@ -172,11 +186,25 @@
 
             this.draw_julia(ctx);
             this.draw_splash(ctx);
+            this.draw_logo(ctx);
         }
 
         c = {r: 0, i: 0};
         draw_julia(ctx: p5) {
             ctx.push();
+
+            // Clip away a rectangle for the splash to sit over
+            // @ts-ignore
+            ctx.clip(() => {
+                ctx.push();
+
+                ctx.translate(ctx.width / 2, ctx.height / 2 + this.splash_y_offset);
+
+                ctx.rectMode(ctx.CENTER);
+                ctx.rect(0, 0, this.splash_text_actual_width ?? 0 * 1.5, 40);
+
+                ctx.pop();
+            }, {invert: true});
 
             const scale = ctx.min(
                 ctx.min(this.width() / 2, this.height() / 2),
@@ -195,7 +223,6 @@
             ctx.noFill();
             ctx.strokeWeight(2);
 
-            let rune_grabbed = false;
             for (let i = 0; i < this.rune_points.length; i++) {
                 ctx.push();
 
@@ -242,10 +269,9 @@
 
         draw_splash(ctx: p5) {
             const t = Date.now() / 500;
-            const splash_y_offset = 200;
-            const splash_box_padding = 35;
 
-            const splash = `< ${this.splash_text ?? "i'm out"} >`;
+            const splash_text = (this.splash_text ?? "i'm out").toLocaleLowerCase().trim();
+            const splash = `[ ${this.splash_text ?? "i'm out"} ]`;
 
             ctx.push();
 
@@ -255,24 +281,10 @@
             ctx.textSize(text_size);
 
             const full_splash_width = ctx.textWidth(splash);
-
-            ctx.push();
-
-            ctx.noStroke();
-            ctx.fill(255, 200);
-
-            ctx.rect(
-                -full_splash_width / 2 - splash_box_padding,
-                splash_y_offset - splash_box_padding,
-                full_splash_width + splash_box_padding * 2,
-                splash_box_padding * 1.6,
-                20
-            );
-
-            ctx.pop();
+            this.splash_text_actual_width = full_splash_width;
 
             ctx.noStroke();
-            ctx.fill(0, 220);
+            ctx.fill(255, 220);
 
             let running_splash = "";
 
@@ -284,7 +296,7 @@
                 ctx.text(
                     char,
                     -full_splash_width / 2 + ctx.textWidth(running_splash),
-                    splash_y_offset - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * 2)
+                    this.splash_y_offset + 4 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * 2)
                 );
                 running_splash += char;
             }
@@ -292,7 +304,8 @@
             ctx.pop();
         }
 
-        grabbed_rune: number | null = null;
+        grabbed_rune_i: number | null = null;
+        rune_grab_timer: number | null = null;
         draw_rune(opts: {i: number, x: number, y: number, scale: number, ctx: p5}): void {
             const rune_grab_close_distance = 60;
             const rune_grab_far_distance = 120;
@@ -300,18 +313,24 @@
 
             const {i, x, y, scale , ctx} = opts;
 
-            const point_groups = this.rune_points[i];
-
             const mouse_x = ctx.mouseX - ctx.width / 2;
             const mouse_y = ctx.mouseY - ctx.height / 2;
             let mouse_t = ctx.map(ctx.dist(x, y, mouse_x, mouse_y), rune_grab_close_distance, rune_grab_far_distance, 1.0, 0, true);
 
-            if (this.grabbed_rune == null && mouse_t > 0.5) {
-                this.grabbed_rune = i;
+            if (this.grabbed_rune_i == null && mouse_t > 0.5) {
+                this.grabbed_rune_i = i;
+
+                if (this.rune_grab_timer) {
+                    clearTimeout(this.rune_grab_timer);
+                }
 
                 // If we hold on to the same rune for long enough...
-                setTimeout(() => {
-                    if (this.grabbed_rune === i) {
+                // @ts-ignore
+                this.rune_grab_timer = setTimeout(() => {
+                    if (this.grabbed_rune_i === i) {
+                        this.last_held_rune_i = i;
+                        this.last_held_rune_change_time = Date.now();
+
                         Page.set_home_theme({
                             primary_color: this.rune_colors[i].primary.toString("#rrggbb"),
                             secondary_color: this.rune_colors[i].secondary.toString("#rrggbb"),
@@ -325,12 +344,12 @@
                 }, rune_grab_length_ms);
             }
 
-            if (this.grabbed_rune !== i) {
+            if (this.grabbed_rune_i !== i) {
                 mouse_t = 0;
             }
 
-            if (this.grabbed_rune === i && mouse_t <= 0.5) {
-                this.grabbed_rune = null;
+            if (this.grabbed_rune_i === i && mouse_t <= 0.5) {
+                this.grabbed_rune_i = null;
             }
 
             ctx.push();
@@ -347,20 +366,9 @@
             const scale_boost = mouse_t ** 3 + 1;
             const final_scale = scale * scale_boost;
 
-            for (const points of point_groups) {
-                for (let i = 1; i < points.length; i++) {
-                    const prev_point = points[i - 1];
-                    const this_point = points[i];
+            this.draw_rune_shape(i, final_scale, 0, ctx);
 
-                    ctx.line(
-                        (prev_point[0] - 4) * final_scale,
-                        (prev_point[1] - 4) * final_scale,
-                        (this_point[0] - 4) * final_scale,
-                        (this_point[1] - 4) * final_scale);
-                }
-            }
-
-            if (this.grabbed_rune === i) {
+            if (this.grabbed_rune_i === i) {
                 const pips_margin_angle = ctx.PI / 16;
 
                 const group_info = this.rune_groupings[i];
@@ -395,7 +403,114 @@
 
             ctx.pop();
         }
+
+        logo_rune_i: number | null = null;
+        draw_logo(ctx: p5) {
+            function sine_interp(t: number, pow: number = 1) {
+                return -ctx.cos(ctx.PI * (t ** pow)) / 2 + 0.5;
+            }
+
+            const rune_transition_time_ms = 2500;
+
+            ctx.push();
+
+            ctx.translate(ctx.width / 2, ctx.height / 2);
+            ctx.imageMode(ctx.CENTER);
+
+            let size = 20;
+            let wiggle = 3;
+            let line_alpha = 255;
+            let rotation = 0;
+
+            if (this.last_held_rune_change_time != null) {
+                const ms_since_change = ctx.min(Date.now() - this.last_held_rune_change_time, rune_transition_time_ms);
+
+                if (ms_since_change < rune_transition_time_ms / 2) {
+                    const t = ctx.map(ms_since_change, 0, rune_transition_time_ms / 2, 1, 0);
+
+                    size = sine_interp(t, 3) * 20;
+                    line_alpha = sine_interp(t, 10) * 255;
+                    wiggle = sine_interp(t, 10) * 3;
+                    rotation = sine_interp(t, 1/2) * ctx.TWO_PI;
+                } else {
+                    this.logo_rune_i = this.last_held_rune_i;
+
+                    const t = ctx.map(ms_since_change, rune_transition_time_ms / 2, rune_transition_time_ms, 0, 1);
+
+                    size = sine_interp(t, 3) * 20;
+                    line_alpha = sine_interp(t, 10) * 255;
+                    wiggle = sine_interp(t, 10) * 3;
+                    rotation = sine_interp(t, 3) * ctx.TWO_PI;
+                }
+            }
+
+            ctx.rotate(rotation);
+
+            ctx.noFill();
+            ctx.stroke(255, line_alpha);
+            ctx.strokeWeight(this.logo_rune_i != null ? 16 : 13);
+            this.draw_rune_shape(this.logo_rune_i, size, wiggle, ctx);
+
+            ctx.stroke(255, 255 - line_alpha);
+            ctx.strokeWeight(2);
+            this.draw_rune_constellation(this.logo_rune_i, size, wiggle, ctx);
+
+            ctx.pop();
+        }
+
+        draw_rune_shape(rune_i: number | null, scale: number, wiggle_scale: number, ctx: p5) {
+            const t = Date.now() / 1000;
+
+            ctx.strokeCap(ctx.PROJECT);
+            ctx.strokeJoin(ctx.MITER);
+
+            for (const points of this.get_logo_rune_points(rune_i, scale, wiggle_scale, ctx)) {
+                ctx.beginShape();
+
+                for (const [x, y] of points) {
+                    ctx.vertex(x, y);
+                }
+
+                ctx.endShape();
+            }
+        }
+
+        draw_rune_constellation(rune_i: number | null, scale: number, wiggle_scale: number, ctx: p5) {
+            const t = Date.now() / 1000;
+
+            for (const points of this.get_logo_rune_points(rune_i, scale, wiggle_scale, ctx)) {
+                for (const [x, y] of points) {
+                    ctx.point(x, y);
+                }
+            }
+        }
+
+        get_logo_rune_points(rune_i: number | null, scale: number, wiggle_scale: number, ctx: p5) {
+            const t = Date.now() / 1000;
+
+            const point_groups = rune_i == null
+                ? this.quintic_points
+                : this.rune_points[rune_i];
+
+            const logo_points: Array<Array<[number, number]>> = [];
+
+            for (const points of point_groups) {
+                const logo_point_group: Array<[number, number]> = [];
+
+                for (const point of points) {
+                    const x = (point[0] - 4) * scale + (ctx.cos(t + point[0] + point[1]) * wiggle_scale);
+                    const y = (point[1] - 4) * scale + (ctx.sin(t + point[1] + point[1]) * wiggle_scale);
+
+                    logo_point_group.push([x, y]);
+                }
+
+                logo_points.push(logo_point_group);
+            }
+
+            return logo_points;
+        }
     };
+
 
     const artist = new HomeArtist();
 
@@ -411,8 +526,6 @@
 </script>
 
 <div class="home-artist-container" bind:this={artist_container_element}>
-    <img class="quintic" src="/assets/images/common/thorns.png">
-
     <div class="canvas-container">
         <Canvas {artist} bind:ctx={artist_ctx} />
     </div>
