@@ -19,7 +19,7 @@ const config = {
     database_url: get_or_die("DATABASE_URL"),
 
     splash_rate_limit_ms: get_or_default("RVA_SPLASH_RATE_LIMIT_MS", `${1000 * 60 * 60 * 24}`),
-    splash_advance_interval_ms: get_or_default("RVA_SPLASH_ADVANCE_INTERVAL", `${1000 * 60 * 60 * 24}`),
+    splash_advance_interval_ms: get_or_default("RVA_SPLASH_ADVANCE_INTERVAL_MS", `${1000 * 60 * 60 * 24}`),
 
     env: get_or_default("RVA_ENV", "prod"),
 };

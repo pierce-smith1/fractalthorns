@@ -150,7 +150,7 @@
                 {primary: ctx.color("#d3d322"), secondary: ctx.color("#7589da")},
                 {primary: ctx.color("#1618a0"), secondary: ctx.color("#c01e1c")},
                 {primary: ctx.color("#d0805a"), secondary: ctx.color("#e88038")},
-                {primary: ctx.color("#375a97"), secondary: ctx.color("#548f35")},
+                {primary: ctx.color("#ca8840"), secondary: ctx.color("#ca2010")},
             ];
 
             this.rune_groupings = [
@@ -271,7 +271,7 @@
             const t = Date.now() / 500;
 
             const splash_text = (this.splash_text ?? "i'm out").toLocaleLowerCase().trim();
-            const splash = `[ ${this.splash_text ?? "i'm out"} ]`;
+            const splash = `[ ${splash_text} ]`;
 
             ctx.push();
 
