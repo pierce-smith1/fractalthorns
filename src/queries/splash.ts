@@ -3,6 +3,7 @@ import * as Kysely from "kysely"
 import * as Api from "../api/api"
 import Db from "../data/db"
 import * as Schema from "../data/schema/schema"
+import Config from "../config"
 
 type BaseSplash = Api.SplashObject;
 
@@ -34,7 +35,7 @@ export async function queue_discord_splash(request: Api.DiscordSplashUploadReque
 > {
     await ensure_cursor_advanced();
 
-    const max_splash_rate_ms = 1000 * 60 * 60 * 24; // One day
+    const max_splash_rate_ms = parseInt(Config.splash_rate_limit_ms, 10);
 
     const too_recent_splash = await Db
         .selectFrom("splash")
@@ -85,7 +86,7 @@ export async function queue_discord_splash(request: Api.DiscordSplashUploadReque
 }
 
 export async function ensure_cursor_advanced() {
-    const advance_interval_ms = 1000 * 60 * 60 * 24; // One day
+    const advance_interval_ms = parseInt(Config.splash_advance_interval_ms);
     const now = new Date();
 
     const cursor = await Db
@@ -97,13 +98,18 @@ export async function ensure_cursor_advanced() {
         await Db
             .insertInto("splash_cursor")
             .values({
-                position: 0,
+                position: 1,
                 last_updated: now.toISOString(),
             })
             .execute();
 
         return;
     }
+
+    const {num_splashes} = await Db
+        .selectFrom("splash")
+        .select(eb => eb.fn<number>("count", []).as("num_splashes"))
+        .executeTakeFirstOrThrow();
 
     const ms_since_last_advance = now.valueOf() - new Date(cursor.last_updated).valueOf();
     const advances_needed = Math.floor(ms_since_last_advance / advance_interval_ms);
@@ -112,7 +118,7 @@ export async function ensure_cursor_advanced() {
         await Db
             .updateTable("splash_cursor")
             .set({
-                position: cursor.position + advances_needed,
+                position: Math.min(cursor.position + advances_needed, num_splashes),
                 last_updated: now.toISOString(),
             })
             .execute();

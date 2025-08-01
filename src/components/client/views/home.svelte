@@ -44,6 +44,8 @@
         rune_points: Array<Array<Array<[number, number]>>> = [];
         rune_colors: Array<{primary: p5.Color, secondary: p5.Color}> = [];
         rune_groupings: Array<{group: number, pip: number}> = [];
+        splash_text: string | null = null;
+
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
 
@@ -159,6 +161,10 @@
                 {group: 4, pip: 5},
                 {group: 3, pip: 5},
             ];
+
+            Fetchers.get.paged_splashes({page: 1}).then(result => {
+                this.splash_text = result.splashes[0]?.text;
+            });
         }
 
         draw(ctx: p5) {
@@ -239,7 +245,7 @@
             const splash_y_offset = 200;
             const splash_box_padding = 35;
 
-            const splash = `< ${"oh man i am not too good with the computer"} >`;
+            const splash = `< ${this.splash_text ?? "i'm out"} >`;
 
             ctx.push();
 
