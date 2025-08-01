@@ -1,11 +1,11 @@
-import Db from "./db";
-import * as ImageDirectory from "./directory/image";
-import * as NewsDirectory from "./directory/news";
-import * as PuzzlesDirectory from "./directory/puzzles";
-import * as RecordDirectory from "./directory/record";
-import * as RuneDirectory from "./directory/rune";
-import * as SketchDirectory from "./directory/sketch";
-import * as DirectoryLoader from "./loaders/directory";
+import Db from "../data/db";
+import * as ImageDirectory from "../data/directory/image";
+import * as NewsDirectory from "../data/directory/news";
+import * as PuzzlesDirectory from "../data/directory/puzzles";
+import * as RecordDirectory from "../data/directory/record";
+import * as RuneDirectory from "../data/directory/rune";
+import * as SketchDirectory from "../data/directory/sketch";
+import * as DirectoryLoader from "../data/loaders/directory";
 
 export async function repopulate(fully_recreate: boolean) {
     if (fully_recreate) {

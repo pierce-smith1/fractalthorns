@@ -8,21 +8,28 @@ import * as RuneSchema from "./rune"
 import * as SketchSchema from "./sketch"
 import * as SplashSchema from "./splash"
 
-interface FileTable {
+export interface FileTable {
     id: Kysely.Generated<number>,
     data: Buffer,
     hash: string,
 }
 
-interface DirectoryTable {
+export interface DirectoryTable {
     id: Kysely.Generated<number>,
     path: string,
     modified_ms: number,
 }
 
+export interface ApiKeyTable {
+    id: Kysely.Generated<number>,
+    key: string,
+    subject_name: string,
+}
+
 export interface Database {
     file: FileTable,
     directory: DirectoryTable,
+    api_key: ApiKeyTable,
     image: ImageSchema.ImageTable,
     news: NewsSchema.NewsTable,
     news_item: NewsSchema.NewsItemTable,

@@ -1,4 +1,4 @@
-import * as ImageLoader from "./loaders/image"
+import * as ImageLoader from "../data/loaders/image"
 
 import * as Filesystem from "../filesystem"
 
