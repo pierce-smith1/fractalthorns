@@ -70,24 +70,30 @@
     ];
 
     const background_for_today = backgrounds[new Date().getDay() % backgrounds.length];
+
+    let bg_primary_color = $state(Theme.default_theme.primary_color);
+    let bg_secondary_color = $state(Theme.default_theme.secondary_color);
+
+    $effect(() => {
+        Theme.get_theme_for_page(Page.state.current).then(theme => {
+            bg_primary_color = theme.primary_color;
+            bg_secondary_color = theme.secondary_color;
+        })
+    });
 </script>
 
-{#await Theme.get_theme_for_page(Page.state.current)}
-    <Loading />
-{:then theme}
-    <div>
-        <div
-            class="background"
-            style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.webp)`}
-            style:filter={colorize_filters(theme.primary_color)}
-        ></div>
-        <div
-            class="background bg-overlay"
-            style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.webp)`}
-            style:filter={colorize_filters(theme.secondary_color)}
-        ></div>
-    </div>
-{/await}
+<div>
+    <div
+        class="background"
+        style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.webp)`}
+        style:filter={colorize_filters(bg_primary_color)}
+    ></div>
+    <div
+        class="background bg-overlay"
+        style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.webp)`}
+        style:filter={colorize_filters(bg_secondary_color)}
+    ></div>
+</div>
 
 <style>
     .background {
