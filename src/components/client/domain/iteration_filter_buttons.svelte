@@ -7,21 +7,26 @@
     import * as RecordHelpers from "../../../helpers/record";
     import * as Domain from "../../../helpers/domain";
 
-    export let available_iterations: Set<RecordHelpers.Iteration>;
-    export let mouseover_handler: (iteration: RecordHelpers.Iteration) => void = () => {};
-    export let mouseout_handler: (iteration: RecordHelpers.Iteration) => void = () => {};
+    interface Props {
+        available_iterations: Set<RecordHelpers.Iteration>,
+        mouseover_handler?: (iteration: RecordHelpers.Iteration) => void,
+        mouseout_handler?: (iteration: RecordHelpers.Iteration) => void,
+    }
+
+    const {
+        available_iterations,
+        mouseover_handler = () => {},
+        mouseout_handler = () => {}
+    } = $props();
 
     let selected_iterations = $state(new Set<RecordHelpers.Iteration>());
     
-    function clear_selected() {
-        selected_iterations.clear();
-    }
-
     // Clear selection on changing tabs
-    let domain = $derived(Page.state.current.domain);
-    $: if (domain) {
-        clear_selected();
-    }
+    $effect(() => {
+        if (Page.state.current.domain) {
+            selected_iterations = new Set();
+        }
+    });
 
     const filter_fn = (item: Domain.Item) => {
         if (selected_iterations.size === 0) {
@@ -33,7 +38,7 @@
             return false;
         }
 
-        return selected_iterations.has(iteration);
+        return selected_iterations.has(iteration as RecordHelpers.Iteration);
     };
 
     function toggle_iteration(iteration: RecordHelpers.Iteration) {
@@ -43,12 +48,11 @@
             selected_iterations.add(iteration);
         }
         selected_iterations = selected_iterations;
-        $nav_state = $nav_state;
     }
 
     onMount(() => {
-        register_filter({name: "iteration-filter-buttons", fn: filter_fn});
-        return () => unregister_filter("iteration-filter-buttons");
+        Nav.register_filter({name: "iteration-filter-buttons", fn: filter_fn});
+        return () => Nav.unregister_filter("iteration-filter-buttons");
     });
 </script>
 
@@ -57,11 +61,11 @@
         <button 
             type="button" 
             class="iteration-button" 
-            on:click={() => toggle_iteration(iteration)} 
-            on:mouseover={() => mouseover_handler(iteration)} 
-            on:mouseout={() => mouseout_handler(iteration)}
-            on:focus={() => mouseover_handler(iteration)} 
-            on:blur={() => mouseout_handler(iteration)}
+            onclick={() => toggle_iteration(iteration)}
+            onmouseover={() => mouseover_handler(iteration)}
+            onmouseout={() => mouseout_handler(iteration)}
+            onfocus={() => mouseover_handler(iteration)}
+            onblur={() => mouseout_handler(iteration)}
         >
             <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
             <div class="button-background" style:background-color={RecordHelpers.get_iteration_color(iteration)} style:border-color={RecordHelpers.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
