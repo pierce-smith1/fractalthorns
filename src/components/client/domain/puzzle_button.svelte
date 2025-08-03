@@ -1,12 +1,16 @@
 <script lang="ts">
-    import * as Api from "../../../api/api.ts";
+    import * as Api from "../../../api/api.ts"
 
-    import PageLink from "../page_link.svelte";
+    import PageLink from "../page_link.svelte"
 
-    import {current} from "../page.ts";
+    import * as Page from "../page.svelte.ts"
 
-    export let puzzle: Api.PuzzleObject;
-    export let prev_neighbor: Api.PuzzleObject | undefined = undefined;
+    interface Props {
+        puzzle: Api.PuzzleObject,
+        prev_neighbor?: Api.PuzzleObject,
+    }
+
+    const {puzzle, prev_neighbor = undefined} = $props();
 
     function should_show_chapter(record: Api.PuzzleObject, prev?: Api.PuzzleObject) {
         return !prev || prev.chapter !== record.chapter;
@@ -22,7 +26,7 @@
     <h3 class="chapter-name">{puzzle.chapter}</h3>
 {/if}
 <PageLink dest={{domain: "discover", name: puzzle.name}} cause_layout_switch>
-    <div class="puzzle-button" class:selected={$current.domain === "discover" && $current.name === puzzle.name} class:solved={puzzle.solved}>
+    <div class="puzzle-button" class:selected={Page.state.current.domain === "discover" && Page.state.current.name === puzzle.name} class:solved={puzzle.solved}>
         <span><strong class="puzzle-name">{name_to_disply_title(puzzle.name)}</strong></span>
     </div>
 </PageLink>

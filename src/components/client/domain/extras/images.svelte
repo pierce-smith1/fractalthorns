@@ -4,8 +4,8 @@
     import GlassButton from "../../style/glass_button.svelte";
     import Loading from "../../loading.svelte";
 
-    import {nav_state, get_visible_items} from "../../nav.ts";
-    import {current} from "../../page.ts";
+    import * as Nav from "../../nav.svelte.ts";
+    import * as Page from "../../page.svelte.ts";
 
     let currently_downloading = false;
     function download_visible_images() {
@@ -15,11 +15,11 @@
 
         currently_downloading = true;
 
-        if ($current.domain !== "image") {
+        if (Page.state.current.domain !== "image") {
             return;
         }
 
-        const visible_images = get_visible_items($nav_state)
+        const visible_images = Nav.get_visible_items()
             .filter(item => item.domain === "image")
             .map(item => item.image);
 
@@ -64,7 +64,7 @@
         <p>package all art pieces into a zip for download</p>
         <p>respects the current filters</p>
     </div>
-    <GlassButton on:click={download_visible_images}>
+    <GlassButton onclick={download_visible_images}>
         {#if currently_downloading}
             <Loading />
         {:else}
