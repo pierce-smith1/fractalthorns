@@ -14,7 +14,7 @@
     
     let current_hovered_button: HoveredButton | undefined = $state();
 
-    let nav_items = Nav.get_items();
+    let nav_items = $derived(Nav.get_items(Nav.state));
 
     let available_iterations = $derived(new Set(RecordHelpers.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter))));
 

@@ -10,14 +10,14 @@
 
     let {
         record,
-        prev_neighbor = null,
-        preview_line_index = null,
-        preview_matched_text = null,
+        prev_neighbor = undefined,
+        preview_line_index = undefined,
+        preview_matched_text = undefined,
     }: {
         record: Api.RedactableRecordEntry,
-        prev_neighbor: Api.RedactableRecordEntry | null,
-        preview_line_index: number | null,
-        preview_matched_text: string | null,
+        prev_neighbor?: Api.RedactableRecordEntry,
+        preview_line_index?: number,
+        preview_matched_text?: string,
     } = $props();
 
     function truncate_preview_text(contents: string) {

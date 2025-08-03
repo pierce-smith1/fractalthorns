@@ -48,7 +48,7 @@
             : "items-list";
     }
 
-    let visible_items = $state(Nav.get_visible_items());
+    let visible_items = $derived(Nav.get_visible_items(Nav.state));
     let visible_domains = $derived(new Set(visible_items.map(item => item.domain)));
 
     let current_page_index = $derived(visible_items.findIndex(item =>

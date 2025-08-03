@@ -9,7 +9,7 @@
     import NavItemsList from "./nav_items_list.svelte";
     import ExtrasWidget from "./extras_widget.svelte";
 
-    let collapsed: boolean = false;
+    let collapsed: boolean = $state(false);
 
     function toggle_collapsed() {
         collapsed = !collapsed;
@@ -54,7 +54,7 @@
 
                 <div class="nav-spacer"></div>
             </div>
-            <button type="button" class="collapse-button" on:click={toggle_collapsed}>
+            <button type="button" class="collapse-button" onclick={toggle_collapsed}>
                 {collapsed ? ">" : "<"}
             </button>
         </nav>

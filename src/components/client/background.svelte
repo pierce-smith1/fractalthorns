@@ -2,8 +2,6 @@
     import * as Page from "./page.svelte.ts"
     import * as Theme from "./theme.svelte.ts"
 
-    import Loading from "./loading.svelte";
-
     type RgbColor = {r: number, g: number, b: number};
     type HslColor = {h: number, s: number, l: number};
 

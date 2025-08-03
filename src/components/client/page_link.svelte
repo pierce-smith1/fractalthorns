@@ -18,7 +18,7 @@
     async function navigate(event: MouseEvent) {
         event.preventDefault();
 
-        window.history.pushState(dest, "", Domain.page_to_path(dest));
+        window.history.pushState(JSON.stringify(dest), "", Domain.page_to_path(dest));
 
         const actual_dest = Nav.is_incomplete_page(dest)
             ? await Nav.get_landing_page(dest.domain)
@@ -30,11 +30,11 @@
             Page.state.layout = "only-page";
         }
 
-        Nav.set_domain_items(dest.domain);
+        Nav.set_domain_items(Nav.state, dest.domain);
     }
 
     window.onpopstate = (event: PopStateEvent) => {
-        Page.state.current = event.state;
+        Page.state.current = JSON.parse(event.state);
     };
 </script>
 
