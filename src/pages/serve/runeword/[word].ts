@@ -33,5 +33,5 @@ export const GET: APIRoute = async context => {
     })));
 
     const image_data = await word_image.png().toBuffer();
-    return new Response(image_data, {headers: {"Content-Type": "image/png"}});
+    return new Response(new Uint8Array(image_data), {headers: {"Content-Type": "image/png"}});
 };

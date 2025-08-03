@@ -1,10 +1,19 @@
 <script lang="ts">
-    import * as Domain from "../../helpers/domain.ts";
-    import * as Nav from "./nav.ts";
-    import {current, layout_state} from "./page.ts";
+    import * as Svelte from "svelte"
 
-    export let dest: Domain.Page;
-    export let cause_layout_switch: boolean = false;
+    import * as Domain from "../../helpers/domain.ts"
+    import * as Nav from "./nav.svelte.ts"
+    import * as Page from "./page.svelte.ts"
+
+    let {
+        dest,
+        cause_layout_switch = false,
+        children,
+    }: {
+        dest: Domain.Page,
+        cause_layout_switch?: boolean,
+        children?: Svelte.Snippet,
+    } = $props();
 
     async function navigate(event: MouseEvent) {
         event.preventDefault();
@@ -15,20 +24,22 @@
             ? await Nav.get_landing_page(dest.domain)
             : dest;
 
-        $current = actual_dest;
+        Page.state.current = actual_dest;
 
-        if (cause_layout_switch && $layout_state !== "full") {
-            $layout_state = "only-page";
+        if (cause_layout_switch && Page.state.layout !== "full") {
+            Page.state.layout = "only-page";
         }
 
         Nav.set_domain_items(dest.domain);
     }
 
     window.onpopstate = (event: PopStateEvent) => {
-        $current = event.state;
+        Page.state.current = event.state;
     };
 </script>
 
-<a href={Domain.page_to_path(dest)} on:click={navigate}> 
-    <slot />
+<a href={Domain.page_to_path(dest)} onclick={navigate}>
+    {#if children}
+        {@render children()}
+    {/if}
 </a>

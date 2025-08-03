@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {current} from "./page.ts";
-    import {nav_state, get_visible_items} from "./nav.ts";
+    import * as Page from "./page.svelte.ts";
+    import * as Nav from "./nav.svelte.ts";
 
     import ImageButton from "./domain/image_button.svelte";
     import EpisodicButton from "./domain/episodic_button.svelte";
@@ -44,30 +44,28 @@
     }
 
     function get_sublist_classname(domain: Domain.Item["domain"]) {
-        switch (domain) {
-            case "sketch": return "sketch-items-list";
-            default: return "items-list";
-        }
+        return domain === "sketch" ? "sketch-items-list"
+            : "items-list";
     }
 
-    $: visible_items = get_visible_items($nav_state);
-    $: visible_domains = new Set(visible_items.map(item => item.domain));
+    let visible_items = $state(Nav.get_visible_items());
+    let visible_domains = $derived(new Set(visible_items.map(item => item.domain)));
 
-    $: current_page_index = visible_items.findIndex(item =>
-        (item.domain === "image" && $current.domain === "image" && item.image.name === $current.name) ||
-        (item.domain === "sketch" && $current.domain === "sketch" && item.sketch.name === $current.name) ||
-        (item.domain === "episodic-item" && $current.domain === "episodic" && item.record.name === $current.record_name) ||
-        (item.domain === "episodic-line" && $current.domain === "episodic" && item.record.name === $current.record_name && item.line_index === $current.line_index) ||
-        (item.domain === "discover" && $current.domain === "discover" && item.puzzle.name === $current.name) ||
-        (item.domain === "subproject" && $current.domain === "subproject" && item.name === $current.name)
-    );
+    let current_page_index = $derived(visible_items.findIndex(item =>
+        (item.domain === "image" && Page.state.current.domain === "image" && item.image.name === Page.state.current.name) ||
+        (item.domain === "sketch" && Page.state.current.domain === "sketch" && item.sketch.name === Page.state.current.name) ||
+        (item.domain === "episodic-item" && Page.state.current.domain === "episodic" && item.record.name === Page.state.current.record_name) ||
+        (item.domain === "episodic-line" && Page.state.current.domain === "episodic" && item.record.name === Page.state.current.record_name && item.line_index === Page.state.current.line_index) ||
+        (item.domain === "discover" && Page.state.current.domain === "discover" && item.puzzle.name === Page.state.current.name) ||
+        (item.domain === "subproject" && Page.state.current.domain === "subproject" && item.name === Page.state.current.name)
+    ));
 
-    $: {
+    $effect(() => {
         const current_item_element = document.querySelector<HTMLDivElement>(`#item-${current_page_index}`);
         current_item_element?.scrollIntoView({behavior: "smooth", block: "center"});
-    }
+    });
 
-    $: neighbor_pages = GenericUtil.neighbors(current_page_index, visible_items);
+    let neighbor_pages = $derived(GenericUtil.neighbors(current_page_index, visible_items));
 </script>
 
 <div class="nav-items-list">
@@ -105,9 +103,9 @@
         </div>
     {/each}
 
-    {#if $nav_state.search_waiting}
+    {#if Nav.state.search_waiting}
         <Loading />
-    {:else if visible_items.length === 0 && $nav_state.viewing_search_results}
+    {:else if visible_items.length === 0 && Nav.state.viewing_search_results}
         <p class="nothing-warning"><em>nothing was found</em></p>
     {/if}
 </div>

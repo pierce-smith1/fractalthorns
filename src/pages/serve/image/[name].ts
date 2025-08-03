@@ -13,6 +13,6 @@ export const GET: APIRoute = async context => {
         return new Response(null, {status: 404});
     }
 
-    const response = new Response(data, {headers: {"Content-Type": "image/png"}});
+    const response = new Response(new Uint8Array(data), {headers: {"Content-Type": "image/png"}});
     return response;
 };

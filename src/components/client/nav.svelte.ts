@@ -1,5 +1,3 @@
-import * as Store from "svelte/store";
-
 import * as Api from "../../api/api";
 import * as Domain from "../../helpers/domain";
 import * as Fetchers from "../../fetchers";
@@ -16,7 +14,7 @@ export type NavState = {
     viewing_search_results: boolean,
 };
 
-export const nav_state = Store.writable<NavState>({
+export const state: NavState = $state({
     nav_results: [],
     search_results: [],
     search_term: "",
@@ -25,25 +23,25 @@ export const nav_state = Store.writable<NavState>({
     viewing_search_results: false,
 });
 
-export function get_items(state: NavState) {
+export function get_items() {
     const items = state.viewing_search_results || state.search_waiting
         ? state.search_results
         : state.nav_results;
     return items;
 }
 
-export function get_visible_items(state: NavState) {
-    const items = get_items(state);
+export function get_visible_items() {
+    const items = get_items();
     const visible_items = state.item_filters.reduce((acc, filter) => acc.filter(filter.fn), items);
     return visible_items;
 }
 
 export function register_filter(filter: NavItemFilter) {
-    nav_state.update(state => ({...state, item_filters: [...state.item_filters, filter]}));
+    state.item_filters = [...state.item_filters, filter];
 }
 
 export function unregister_filter(name: string) {
-    nav_state.update(state => ({...state, item_filters: state.item_filters.filter(filter => filter.name !== name)}));
+    state.item_filters = state.item_filters.filter(filter => filter.name !== name);
 }
 
 export function is_incomplete_page(page: Domain.Page): boolean {
@@ -104,24 +102,23 @@ export function set_domain_items(domain: Domain.Domain) {
         return Promise.resolve([]);
     })();
 
-    new_items_promise.then(items => nav_state.update(state => ({...state, nav_results: items})));
+    new_items_promise.then(items => {
+        state.nav_results = items;
+    });
 }
 
 export function execute_search(term: string, options: {set_term?: boolean} = {set_term: true}) {
     term = term.trim();
 
     if (options.set_term) {
-        nav_state.update(state => ({...state,
-            search_term: term,
-        }));
+        state.search_term = term;
     }
 
     if (term.length === 0) {
-        nav_state.update(state => ({...state,
-            search_results: [],
-            search_waiting: false,
-            viewing_search_results: true,
-        }));
+        state.search_results = [];
+        state.search_waiting = false,
+        state.viewing_search_results = true;
+
         return;
     }
 
@@ -130,15 +127,11 @@ export function execute_search(term: string, options: {set_term?: boolean} = {se
     const record_results = Fetchers.get.domain_search({term, type: "episodic-item"});
     const line_results = Fetchers.get.domain_search({term, type: "episodic-line"});
 
-    nav_state.update(state => ({...state,
-        search_results: [],
-        search_waiting: true,
-    }));
+    state.search_results = [];
+    state.search_waiting = true;
 
     function update_search_items(results: Array<Api.DomainSearchResult>) {
-        nav_state.update(state => ({...state, 
-            search_results: Domain.sort_items([...state.search_results, ...results.map(Domain.result_to_item)])
-        }));
+        state.search_results = Domain.sort_items([...state.search_results, ...results.map(Domain.result_to_item)])
     }
 
     image_results.then(({results}) => update_search_items(results));
@@ -147,9 +140,12 @@ export function execute_search(term: string, options: {set_term?: boolean} = {se
     line_results.then(({results}) => update_search_items(results));
 
     Promise.all([image_results, sketch_results, record_results, line_results]).then(_ => {
-        nav_state.update(state => ({...state,
-            search_waiting: false,
-            viewing_search_results: true,
-        }));
+        state.search_waiting = false;
+        state.viewing_search_results = true;
     });
+}
+
+export function clear_search() {
+    state.search_term = "";
+    state.viewing_search_results = false;
 }

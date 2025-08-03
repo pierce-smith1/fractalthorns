@@ -8,24 +8,32 @@
     import RecordLine from "./record_line.svelte";
     import Canvas from "../../canvas/canvas.svelte";
 
-    export let record: Api.RedactableRecordEntry;
-    export let text: Api.RecordTextResponse;
-    export let line_index: number | undefined = undefined;
+    let {
+        record,
+        text,
+        line_index = undefined,
+    }: {
+        record: Api.RedactableRecordEntry,
+        text: Api.RecordTextResponse,
+        line_index?: number,
+    } = $props();
 
     const style = RecordDeco.get_style(record);
 
     let container_element: HTMLElement;
     let deco_element: HTMLElement;
 
-    $: if (deco_element) {
-        deco_element.style.setProperty('--accent-color', RecordDeco.get_style(record).accent_color);
-        container_element.style.setProperty('--accent-color', RecordDeco.get_style(record).accent_color);
+    $effect(() => {
+        if (deco_element) {
+            deco_element.style.setProperty('--accent-color', RecordDeco.get_style(record).accent_color);
+            container_element.style.setProperty('--accent-color', RecordDeco.get_style(record).accent_color);
 
-        deco_element.style.setProperty('--gutter-size', `${RecordDeco.size}px`);
-        container_element.style.setProperty('--gutter-size', `${RecordDeco.size}px`);
-    }
+            deco_element.style.setProperty('--gutter-size', `${RecordDeco.size}px`);
+            container_element.style.setProperty('--gutter-size', `${RecordDeco.size}px`);
+        }
+    });
 
-    $: gutter_deco_artist = new RecordDeco.GutterDecoArtist(style);
+    let gutter_deco_artist = new RecordDeco.GutterDecoArtist(style);
 </script>
 
 <div class="view-container">

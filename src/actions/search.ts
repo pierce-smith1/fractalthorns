@@ -1,7 +1,5 @@
 import * as Api from "../api/api";
-import Db from "../data/db.ts";
 import * as RecordLoader from "../data/loaders/record";
-import * as Schema from "../data/schema/schema.ts";
 import * as GenericUtil from "../genericutil";
 import * as RecordQueries from "../queries/record.ts";
 

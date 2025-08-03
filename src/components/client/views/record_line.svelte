@@ -1,15 +1,22 @@
 <script lang="ts">
     import {marked} from "marked";
-    import {onMount} from "svelte";
 
     import * as Api from "../../../api/api";
     import * as RecordHelpers from "../../../helpers/record";
 
-    export let record: Api.RecordTextResponse;
-    export let line: Api.RecordLine;
-    export let last_line: Api.RecordLine | undefined = undefined;
-    export let line_index: number;
-    export let requested_line_index: number | undefined;
+    let {
+        record,
+        line,
+        last_line = undefined,
+        line_index,
+        requested_line_index = undefined,
+    }: {
+        record: Api.RecordTextResponse,
+        line: Api.RecordLine,
+        last_line?: Api.RecordLine,
+        line_index: number,
+        requested_line_index?: number,
+    } = $props();
 
     const should_show_speaker = line.character 
         && line.character !== RecordHelpers.narrator_character
@@ -33,16 +40,18 @@
 
         return emphasized_text;
     }
-
+/*
     onMount(() => {
         if (requested_line_index === line_index) {
             document.querySelector(`#line_${line_index}`)?.scrollIntoView();
         }
     });
-
-    $: if (requested_line_index === line_index) {
-        document.querySelector(`#line_${line_index}`)?.scrollIntoView();
-    }
+ */
+    $effect(() => {
+        if (requested_line_index === line_index) {
+            document.querySelector(`#line_${line_index}`)?.scrollIntoView();
+        }
+    });
 </script>
 
 <div class={`record-line-container iter-${record.iteration}`} id={`line_${line_index}`} class:continuation={is_continuation_line}>

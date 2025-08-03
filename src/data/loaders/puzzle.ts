@@ -1,7 +1,6 @@
 import Config from "../../config";
 import * as Filesystem from "../../filesystem";
 import Db from "../db";
-import * as Schema from "../schema/schema";
 
 export type PuzzlesDefinition = Array<{
     chapter: string,

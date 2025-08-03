@@ -111,7 +111,7 @@ function adjust_points_by_crowdedness(points: number, tier_crowdedness: number) 
 type Points = {points: Array<{tier: Tier, points: number}>, average: number};
 const averaged_placements: {[character in Character]?: Points} = {};
 
-for (const [player, placements] of Object.entries(all_placements)) {
+for (const [_player, placements] of Object.entries(all_placements)) {
     for (const [tier, characters] of Object.entries(placements)) {
         for (const character of characters) {
             averaged_placements[character] ??= {points: [], average: 0};

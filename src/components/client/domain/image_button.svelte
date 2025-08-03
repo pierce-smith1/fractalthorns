@@ -1,15 +1,17 @@
 <script lang="ts">
-    import * as Api from "../../../api/api.ts";
-    import * as RecordHelpers from "../../../helpers/record";
+    import * as Api from "../../../api/api.ts"
+    import * as RecordHelpers from "../../../helpers/record"
 
-    import {current} from "../page.ts";
+    import * as Page from "../page.svelte.ts"
 
-    import PageLink from "../page_link.svelte";
-    import ImageButtonPortrait from "./image_button_portrait.svelte";
+    import PageLink from "../page_link.svelte"
+    import ImageButtonPortrait from "./image_button_portrait.svelte"
 
-    export let image: Api.ImageObject;
+    let {image}: {
+        image: Api.ImageObject,
+    } = $props();
 
-    $: selected = $current.domain === "image" && $current.name === image.name;
+    let selected = $derived(Page.state.current.domain === "image" && Page.state.current.name === image.name);
 </script>
 
 <div class="image-portrait">

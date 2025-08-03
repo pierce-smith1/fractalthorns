@@ -7,7 +7,7 @@
     import * as Interfaces from "../../../interfaces";
 
     const endpoints = Object.entries(Api.endpoints)
-        .filter(([name, endpoint]) => name !== "solve_puzzle");
+        .filter(([name, _endpoint]) => name !== "solve_puzzle");
 
     function describe_interface(interface_: {[key: string]: {type: Interfaces.FieldTypes, description: string}}, type: "request" | "response") {
         if (Object.entries(interface_).length === 0) {

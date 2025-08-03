@@ -1,6 +1,15 @@
 <script lang="ts">
-    export let title: string | undefined = undefined;
-    export let title_bar: boolean = true;
+    import * as Svelte from "svelte"
+
+    let {
+        title = undefined,
+        title_bar = true,
+        children,
+    }: {
+        title?: string,
+        title_bar?: boolean,
+        children: Svelte.Snippet,
+    } = $props();
 </script>
 
 <div class="pane-container">
@@ -12,7 +21,7 @@
         </div>
     {/if}
     <div class="pane-contents" class:no-titlebar={!title_bar}>
-        <slot />
+        {@render children()}
     </div>
 </div>
 

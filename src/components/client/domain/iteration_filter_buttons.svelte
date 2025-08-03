@@ -1,8 +1,8 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    import {nav_state, register_filter, unregister_filter} from "../nav";
-    import {current} from "../page";
+    import * as Nav from "../nav.svelte.ts";
+    import * as Page from "../page.svelte.ts";
 
     import * as RecordHelpers from "../../../helpers/record";
     import * as Domain from "../../../helpers/domain";
@@ -11,14 +11,14 @@
     export let mouseover_handler: (iteration: RecordHelpers.Iteration) => void = () => {};
     export let mouseout_handler: (iteration: RecordHelpers.Iteration) => void = () => {};
 
-    let selected_iterations = new Set<RecordHelpers.Iteration>();
+    let selected_iterations = $state(new Set<RecordHelpers.Iteration>());
     
     function clear_selected() {
         selected_iterations.clear();
     }
 
     // Clear selection on changing tabs
-    $: domain = $current.domain;
+    let domain = $derived(Page.state.current.domain);
     $: if (domain) {
         clear_selected();
     }

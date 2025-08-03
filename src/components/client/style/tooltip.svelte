@@ -1,9 +1,14 @@
 <script lang="ts">
-    export let text: string;
+    import * as Svelte from "svelte"
+
+    let {text, children}: {
+        text: string,
+        children: Svelte.Snippet,
+    } = $props();
 </script>
 
 <div class="tooltip-container" data-tooltip={text}>
-    <slot/>
+    {@render children()}
 </div>
 
 <style>

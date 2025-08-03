@@ -1,15 +1,17 @@
 <script lang="ts">
     import * as Subproject from "../../../helpers/subproject";
 
-    import {current} from "../page";
+    import * as Page from "../page.svelte.ts";
 
     import PageLink from "../page_link.svelte";
 
-    export let subproject: Subproject.Model;
+    let {subproject}: {
+        subproject: Subproject.Model
+    } = $props();
 </script>
 
 <PageLink dest={{domain: "subproject", name: subproject.name}} cause_layout_switch>
-    <div class="subproject-button" class:selected={$current.domain === "subproject" && $current.name === subproject.name}>
+    <div class="subproject-button" class:selected={Page.state.current.domain === "subproject" && Page.state.current.name === subproject.name}>
         <div class="subproject-icon-container">
             <img class="subproject-icon" src={`/assets/images/common/subproject-${subproject.name}.png`} />
         </div>

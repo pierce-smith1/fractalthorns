@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {nav_state, execute_search} from "./nav";
+    import * as Nav from "./nav.svelte.ts"
 
     let search_box: HTMLInputElement;
 
     // In the browser a timeout handle is a number, not a NodeJS.Timeout.
     // It doesn't matter for this usecase though, at least not right now.
-    let submit_timeout_handle: NodeJS.Timeout | undefined = undefined; 
+    let submit_timeout_handle: NodeJS.Timeout | null = null;
     const submit_timeout_debounce_ms = 500;
 
     function submit_search(event: KeyboardEvent) {
@@ -13,7 +13,7 @@
         const term = event.target.value as string;
 
         if (event.key === "Enter") {
-            execute_search(term, {set_term: false});
+            Nav.execute_search(term, {set_term: false});
         }
 
         if (submit_timeout_handle) {
@@ -22,28 +22,28 @@
 
         if (event.key !== "Enter") {
             submit_timeout_handle = setTimeout(() => {
-                execute_search(term);
+                Nav.execute_search(term);
             }, submit_timeout_debounce_ms);
         }
     }
 
     function clear_search() {
-        $nav_state = {...$nav_state, 
-            search_term: "",
-            viewing_search_results: false,
-        };
+        Nav.clear_search();
 
         search_box.value = "";
 
-        clearTimeout(submit_timeout_handle);
-        submit_timeout_handle = undefined;
+        if (submit_timeout_handle) {
+            clearTimeout(submit_timeout_handle);
+        }
+
+        submit_timeout_handle = null;
     }
 </script>
 
 <div class="domain-search-container">
-    <input bind:this={search_box} type="search" class="domain-search-box" placeholder="search everything" on:keyup={submit_search} value={$nav_state.search_term}/>
-    {#if $nav_state.viewing_search_results}
-        <button type="button" class="close-search-button" on:click={clear_search}>╳</button>
+    <input bind:this={search_box} type="search" class="domain-search-box" placeholder="search everything" onkeyup={submit_search} value={Nav.state.search_term} />
+    {#if Nav.state.viewing_search_results}
+        <button type="button" class="close-search-button" onclick={clear_search}>╳</button>
     {/if}
 </div>
 

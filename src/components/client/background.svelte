@@ -1,59 +1,12 @@
 <script lang="ts">
-    import p5 from "p5";
+    import * as Page from "./page.svelte.ts"
+    import * as Theme from "./theme.svelte.ts"
 
-    import {Artist} from "../canvas/artist";
-    import * as Page from "./page.ts";
-
-    import Canvas from "../canvas/canvas.svelte";
-
-    type Point = {x: number; y: number};
-
-    class BackgroundArtist extends Artist {
-        state: {[key: string]: any} = {};
-
-        width() {
-            return window.innerWidth;
-        }
-
-        height() {
-            return window.innerHeight;
-        }
-
-        preload(p5: p5) {
-            p5.windowResized = () => {
-                p5.resizeCanvas(window.innerWidth, window.innerHeight);
-            };
-        }
-
-        domain: string | undefined;
-        setup(p5: p5, canvas: HTMLCanvasElement) {
-            super.setup(p5, canvas);
-
-            Page.current.subscribe(new_page => {
-                this.domain = new_page?.domain;
-            });
-
-            p5.frameRate(1);
-        }
-
-        draw(p5: p5) {
-            this.draw_stars(p5, [
-                /* TODO */
-            ]);
-        }
-
-        draw_stars(p5: p5, stars: Array<Point>) {
-            p5.stroke(p5.color(255, 255, 255));
-            for (const star of stars) {
-                p5.point(star.x, star.y);
-            }
-        }
-    }
-
-    const artist = new BackgroundArtist();
+    import Loading from "./loading.svelte";
 
     type RgbColor = {r: number, g: number, b: number};
     type HslColor = {h: number, s: number, l: number};
+
     // Algorithm from https://www.rapidtables.com/convert/color/rgb-to-hsl.html
     function rgb_to_hsl(color: RgbColor): HslColor {
         const ri = color.r / 255;
@@ -106,16 +59,6 @@
         return filters;
     }
 
-    let current_theme = Page.default_theme;
-    Page.theme_promise.subscribe(theme_promise => {
-        theme_promise.then(theme => {
-            if (theme === Page.default_theme) {
-                return;
-            }
-            current_theme = theme;
-        });
-    });
-
     const backgrounds = [
         "canyon",
         "inferno",
@@ -129,16 +72,25 @@
     const background_for_today = backgrounds[new Date().getDay() % backgrounds.length];
 </script>
 
-<div>
-    <div class="background" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.webp)`} style:filter={colorize_filters(current_theme.primary_color)}></div>
-    <div class="background bg-overlay" style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.webp)`} style:filter={colorize_filters(current_theme.secondary_color)}></div>
-    <div class="canvas">
-        <Canvas {artist} />
+{#await Theme.get_theme_for_page(Page.state.current)}
+    <Loading />
+{:then theme}
+    <div>
+        <div
+            class="background"
+            style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}.webp)`}
+            style:filter={colorize_filters(theme.primary_color)}
+        ></div>
+        <div
+            class="background bg-overlay"
+            style:background-image={`url(/assets/images/common/backgrounds/shiftable/bg-${background_for_today}-overlay.webp)`}
+            style:filter={colorize_filters(theme.secondary_color)}
+        ></div>
     </div>
-</div>
+{/await}
 
 <style>
-    .background, .canvas {
+    .background {
         position: fixed;
         z-index: -10;
         padding: 0;
