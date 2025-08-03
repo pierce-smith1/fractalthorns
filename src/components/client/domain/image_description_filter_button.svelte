@@ -2,20 +2,26 @@
     import {onMount} from "svelte"
 
     import * as Nav from "../nav.svelte.ts"
+    import * as Page from "../page.svelte.ts"
 
     import * as Domain from "../../../helpers/domain"
 
-    let descriptions_only = $state(false);
-
-    let {
-        mouseover_handler = () => {},
-        mouseout_handler = () => {},
-    }: {
+    let props: {
         mouseover_handler: () => void,
         mouseout_handler: () => void,
     } = $props();
 
+    let descriptions_only = $state(false);
+
+    $effect(() => {
+        if (Page.state.current.domain) {
+            descriptions_only = false;
+        }
+    });
+
     const filter_fn = (item: Domain.Item) => {
+        debugger;
+
         if (item.domain !== "image") {
             return true;
         }
@@ -42,10 +48,10 @@
         type="button" 
         class="description-filter-button" 
         onclick={toggle_filter}
-        onmouseover={mouseover_handler}
-        onmouseout={mouseout_handler}
-        onfocus={mouseover_handler}
-        onblur={mouseout_handler}
+        onmouseover={props.mouseover_handler}
+        onmouseout={props.mouseout_handler}
+        onfocus={props.mouseover_handler}
+        onblur={props.mouseout_handler}
     >
         <div class="sigil" style:background-image={`url(/assets/images/common/alpha.png)`}></div>
         <div class="button-background" style:background-color={"white"} style:border-color={"white"} class:selected={descriptions_only}></div>

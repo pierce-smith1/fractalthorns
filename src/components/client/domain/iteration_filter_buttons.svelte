@@ -13,17 +13,17 @@
         mouseout_handler?: (iteration: RecordHelpers.Iteration) => void,
     } = $props();
 
-    let selected_iterations = $state(new Set<RecordHelpers.Iteration>());
+    let selected_iterations = $state([] as Array<RecordHelpers.Iteration>);
     
     // Clear selection on changing tabs
     $effect(() => {
         if (Page.state.current.domain) {
-            selected_iterations = new Set();
+            selected_iterations = [];
         }
     });
 
     const filter_fn = (item: Domain.Item) => {
-        if (selected_iterations.size === 0) {
+        if (selected_iterations.length === 0) {
             return true;
         }
 
@@ -32,16 +32,15 @@
             return false;
         }
 
-        return selected_iterations.has(iteration as RecordHelpers.Iteration);
+        return selected_iterations.includes(iteration as RecordHelpers.Iteration);
     };
 
     function toggle_iteration(iteration: RecordHelpers.Iteration) {
-        if (selected_iterations.has(iteration)) {
-            selected_iterations.delete(iteration);
+        if (selected_iterations.includes(iteration)) {
+            selected_iterations = selected_iterations.filter(iter => iter !== iteration);
         } else {
-            selected_iterations.add(iteration);
+            selected_iterations = [...selected_iterations, iteration];
         }
-        selected_iterations = selected_iterations;
     }
 
     onMount(() => {
@@ -62,7 +61,12 @@
             onblur={() => props.mouseout_handler?.(iteration)}
         >
             <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
-            <div class="button-background" style:background-color={RecordHelpers.get_iteration_color(iteration)} style:border-color={RecordHelpers.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
+            <div
+                class="button-background"
+                style:background-color={RecordHelpers.get_iteration_color(iteration)}
+                style:border-color={RecordHelpers.get_iteration_color(iteration)}
+                class:selected={selected_iterations.includes(iteration)}
+            ></div>
         </button>
     {/each}
 </div>
