@@ -23,15 +23,15 @@ export const state: NavState = $state({
     viewing_search_results: false,
 });
 
-export function get_items() {
+export function get_items(state: NavState) {
     const items = state.viewing_search_results || state.search_waiting
         ? state.search_results
         : state.nav_results;
     return items;
 }
 
-export function get_visible_items() {
-    const items = get_items();
+export function get_visible_items(state: NavState) {
+    const items = get_items(state);
     const visible_items = state.item_filters.reduce((acc, filter) => acc.filter(filter.fn), items);
     return visible_items;
 }
@@ -72,7 +72,7 @@ export async function get_landing_page(domain: Domain.Domain): Promise<Domain.Pa
     }
 }
 
-export function set_domain_items(domain: Domain.Domain) {
+export function set_domain_items(state: NavState, domain: Domain.Domain) {
     const new_items_promise: Promise<Array<Domain.Item>> = (async () => {
         switch (domain) {
             case "image":
@@ -107,7 +107,7 @@ export function set_domain_items(domain: Domain.Domain) {
     });
 }
 
-export function execute_search(term: string, options: {set_term?: boolean} = {set_term: true}) {
+export function execute_search(state: NavState, term: string, options: {set_term?: boolean} = {set_term: true}) {
     term = term.trim();
 
     if (options.set_term) {
@@ -145,7 +145,7 @@ export function execute_search(term: string, options: {set_term?: boolean} = {se
     });
 }
 
-export function clear_search() {
+export function clear_search(state: NavState) {
     state.search_term = "";
     state.viewing_search_results = false;
 }

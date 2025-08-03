@@ -23,7 +23,7 @@
     }[domain]);
 
     function hide_search() {
-        Nav.clear_search();
+        Nav.clear_search(Nav.state);
     }
 </script>
 

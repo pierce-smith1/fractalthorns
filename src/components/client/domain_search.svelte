@@ -13,7 +13,7 @@
         const term = event.target.value as string;
 
         if (event.key === "Enter") {
-            Nav.execute_search(term, {set_term: false});
+            Nav.execute_search(Nav.state, term, {set_term: false});
         }
 
         if (submit_timeout_handle) {
@@ -22,13 +22,13 @@
 
         if (event.key !== "Enter") {
             submit_timeout_handle = setTimeout(() => {
-                Nav.execute_search(term);
+                Nav.execute_search(Nav.state, term);
             }, submit_timeout_debounce_ms);
         }
     }
 
     function clear_search() {
-        Nav.clear_search();
+        Nav.clear_search(Nav.state);
 
         search_box.value = "";
 

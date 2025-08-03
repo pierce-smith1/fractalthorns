@@ -7,16 +7,10 @@
     import * as RecordHelpers from "../../../helpers/record";
     import * as Domain from "../../../helpers/domain";
 
-    interface Props {
+    const props: {
         available_iterations: Set<RecordHelpers.Iteration>,
         mouseover_handler?: (iteration: RecordHelpers.Iteration) => void,
         mouseout_handler?: (iteration: RecordHelpers.Iteration) => void,
-    }
-
-    const {
-        available_iterations,
-        mouseover_handler = () => {},
-        mouseout_handler = () => {}
     } = $props();
 
     let selected_iterations = $state(new Set<RecordHelpers.Iteration>());
@@ -57,15 +51,15 @@
 </script>
 
 <div class="iteration-buttons">
-    {#each new Set([...available_iterations, ...selected_iterations]) as iteration}
+    {#each new Set([...props.available_iterations, ...selected_iterations]) as iteration}
         <button 
             type="button" 
             class="iteration-button" 
             onclick={() => toggle_iteration(iteration)}
-            onmouseover={() => mouseover_handler(iteration)}
-            onmouseout={() => mouseout_handler(iteration)}
-            onfocus={() => mouseover_handler(iteration)}
-            onblur={() => mouseout_handler(iteration)}
+            onmouseover={() => props.mouseover_handler?.(iteration)}
+            onmouseout={() => props.mouseout_handler?.(iteration)}
+            onfocus={() => props.mouseover_handler?.(iteration)}
+            onblur={() => props.mouseout_handler?.(iteration)}
         >
             <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
             <div class="button-background" style:background-color={RecordHelpers.get_iteration_color(iteration)} style:border-color={RecordHelpers.get_iteration_color(iteration)} class:selected={selected_iterations.has(iteration)}></div>
