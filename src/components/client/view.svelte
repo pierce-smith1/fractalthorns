@@ -3,7 +3,7 @@
     import * as Domain from "../../helpers/domain.ts";
     import * as Fetchers from "../../fetchers";
 
-    import {current} from "./page.ts";
+    import * as Page from "./page.svelte.ts";
 
     import HomeView from "./views/home.svelte";
     import ImageView from "./views/image.svelte";
@@ -14,10 +14,12 @@
     import Loading from "./loading.svelte";
     import GlassPane from "./style/glass_pane.svelte";
 
-    export let page: Domain.Page | undefined = undefined;
+    let {page = undefined}: {
+        page?: Domain.Page,
+    } = $props();
 
-    $: current_page = page ?? $current;
-    $: clear_bg = current_page.domain === "home" || current_page.domain === "episodic";
+    let current_page = $derived(page ?? Page.state.current);
+    let clear_bg = $derived(current_page.domain === "home" || current_page.domain === "episodic");
 
     let news_promise = Fetchers.get.all_news({});
 

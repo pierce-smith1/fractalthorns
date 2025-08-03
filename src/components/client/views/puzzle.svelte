@@ -9,15 +9,20 @@
 
     import PageLink from "../page_link.svelte";
 
-    export let puzzle: Api.PuzzleObject;
-    let return_records: Array<string> | null = puzzle.solved;
+    let {
+        puzzle,
+        return_records = puzzle.solved
+    }: {
+        puzzle: Api.PuzzleObject,
+        return_records?: Array<string>,
+    } = $props();
 
     // BRITTLE: hardcoding paths because it's the only way
     // Vite needs to know how to bundle these things, the only way it
     // can do that is if we specify the path directly :(
-    $: puzzle_modules = import.meta.glob("../../../../_content/puzzles/**/*.ts");
-    $: [module_path, get_module_promise] = Object.entries(puzzle_modules)
-        .find(([path, get_promise]) => path.includes(`${puzzle.name}.ts`))!;
+    let puzzle_modules = $state(import.meta.glob("../../../../_content/puzzles/**/*.ts"));
+    let [_module_path, get_module_promise] = $derived(Object.entries(puzzle_modules)
+        .find(([path, _get_promise]) => path.includes(`${puzzle.name}.ts`))!);
 
     let ctx: p5 | undefined;
     function refresh_ctx(sketch: (ctx: p5) => void) {
@@ -25,8 +30,8 @@
         ctx = new p5(sketch);
     }
 
-    $: module_promise = get_module_promise() as Promise<Puzzle.PuzzleModule>;
-    $: if (module_promise) {
+    let module_promise = $derived(get_module_promise() as Promise<Puzzle.PuzzleModule>);
+    $effect(() => {
         module_promise.then(module => {
             refresh_ctx(module.sketch);
 
@@ -38,7 +43,7 @@
                 Fetchers.invalidate_cache("single_puzzle");
             });
         });
-    }
+    })
 
     onDestroy(() => {
         ctx?.remove();

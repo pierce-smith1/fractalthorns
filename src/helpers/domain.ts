@@ -16,7 +16,7 @@ export type Page =
     | {domain: "sketch", name?: string}
     | {domain: "episodic", record_name?: string, line_index?: number}
     | {domain: "discover", name?: string}
-    | {domain: "home"}
+    | {domain: "home", rune_i?: number}
     | {domain: "subproject", name?: string}
 
 export type Item = 

@@ -3,7 +3,9 @@
 
     import ViewportDeferredImage from "../style/viewport_deferred_image.svelte";
 
-    export let image: Api.ImageObject;
+    let {image}: {
+        image: Api.ImageObject,
+    } = $props();
 </script>
 
 <div class="portrait">

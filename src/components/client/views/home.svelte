@@ -4,7 +4,8 @@
     import * as Fetchers from "../../../fetchers"
     import * as MarchingSquares from "./graphics/marching_squares.ts"
     import * as Julia from "./graphics/julia.ts"
-    import * as Page from "../page"
+    import * as Page from "../page.svelte.ts"
+    import * as Theme from "../theme.svelte.ts"
 
     import {Artist} from "../../canvas/artist";
 
@@ -32,7 +33,6 @@
         }
 
         font_lekton: p5.Font = null!;
-        quintic_image: p5.Image = null!;
 
         preload(ctx: p5) {
             ctx.windowResized = () => {
@@ -40,12 +40,10 @@
             };
 
             this.font_lekton = ctx.loadFont("/assets/fonts/Lekton-Bold.ttf");
-            this.quintic_image = ctx.loadImage("/assets/images/common/thorns.png");
         }
 
         quintic_points: Array<Array<[number, number]>> = [];
         rune_points: Array<Array<Array<[number, number]>>> = [];
-        rune_colors: Array<{primary: p5.Color, secondary: p5.Color}> = [];
         rune_groupings: Array<{group: number, pip: number}> = [];
 
         last_held_rune_i: number | null = null;
@@ -128,29 +126,6 @@
                 [
                     [[2, 8], [0, 8], [0, 0], [4, 0], [4, 8], [8, 8]],
                 ],
-            ];
-
-            this.rune_colors = [
-                {primary: ctx.color("#0d4f9c"), secondary: ctx.color("#647fc8")},
-                {primary: ctx.color("#000000"), secondary: ctx.color("#000000")},
-                {primary: ctx.color("#1d82b6"), secondary: ctx.color("#12a1cc")},
-                {primary: ctx.color("#9bacdc"), secondary: ctx.color("#59771f")},
-                {primary: ctx.color("#5ad6d4"), secondary: ctx.color("#5652e7")},
-                {primary: ctx.color("#ffffff"), secondary: ctx.color("#ffeebb")},
-                {primary: ctx.color("#00ea42"), secondary: ctx.color("#352929")},
-                {primary: ctx.color("#c01e1c"), secondary: ctx.color("#866bca")},
-                {primary: ctx.color("#b62c37"), secondary: ctx.color("#ffffff")},
-                {primary: ctx.color("#abdbe9"), secondary: ctx.color("#ffffff")},
-                {primary: ctx.color("#fc00b4"), secondary: ctx.color("#fd01c8")},
-                {primary: ctx.color("#077d86"), secondary: ctx.color("#57375e")},
-                {primary: ctx.color("#d0bdaa"), secondary: ctx.color("#e1cbbc")},
-                {primary: ctx.color("#aa5250"), secondary: ctx.color("#37457e")},
-                {primary: ctx.color("#026ed1"), secondary: ctx.color("#0055a2")},
-                {primary: ctx.color("#a6aed3"), secondary: ctx.color("#314027")},
-                {primary: ctx.color("#d3d322"), secondary: ctx.color("#7589da")},
-                {primary: ctx.color("#1618a0"), secondary: ctx.color("#c01e1c")},
-                {primary: ctx.color("#d0805a"), secondary: ctx.color("#e88038")},
-                {primary: ctx.color("#ca8840"), secondary: ctx.color("#ca2010")},
             ];
 
             this.rune_groupings = [
@@ -331,15 +306,7 @@
                         this.last_held_rune_i = i;
                         this.last_held_rune_change_time = Date.now();
 
-                        Page.set_home_theme({
-                            primary_color: this.rune_colors[i].primary.toString("#rrggbb"),
-                            secondary_color: this.rune_colors[i].secondary.toString("#rrggbb"),
-                        });
-
-                        // Dumbass hack to force background to update
-                        // TODO: The theme should probably just be a global store instead
-                        // of a store derived from page state
-                        Page.current.update(current => ({...current}));
+                        Page.state.current = {domain: "home", rune_i: i};
                     }
                 }, rune_grab_length_ms);
             }
@@ -357,7 +324,7 @@
             ctx.noFill();
             ctx.stroke(ctx.lerpColor(
                 ctx.color(255, 128),
-                this.rune_colors[i].primary,
+                ctx.color(Theme.rune_colors[i].primary_color),
                 mouse_t,
             ));
             ctx.strokeWeight(ctx.map(mouse_t, 0, 1.0, 1.0, 2.0));
@@ -387,7 +354,7 @@
 
                         if (group_info.group === group_i + 1 && group_info.pip === pip_i + 1) {
                             ctx.strokeWeight(2);
-                            ctx.stroke(this.rune_colors[i].primary);
+                            ctx.stroke(ctx.color(Theme.rune_colors[i].primary_color));
                         }
 
                         const pip_length = ctx.map(mouse_t, 0.5, 1.0, 0, 10);
@@ -459,8 +426,6 @@
         }
 
         draw_rune_shape(rune_i: number | null, scale: number, wiggle_scale: number, ctx: p5) {
-            const t = Date.now() / 1000;
-
             ctx.strokeCap(ctx.PROJECT);
             ctx.strokeJoin(ctx.MITER);
 
@@ -476,8 +441,6 @@
         }
 
         draw_rune_constellation(rune_i: number | null, scale: number, wiggle_scale: number, ctx: p5) {
-            const t = Date.now() / 1000;
-
             for (const points of this.get_logo_rune_points(rune_i, scale, wiggle_scale, ctx)) {
                 for (const [x, y] of points) {
                     ctx.point(x, y);

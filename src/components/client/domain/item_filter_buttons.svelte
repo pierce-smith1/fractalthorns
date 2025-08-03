@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {current} from "../page.ts";
-    import {nav_state, get_items} from "../nav.ts";
+    import * as Page from "../page.svelte.ts";
+    import * as Nav from "../nav.svelte.ts";
 
     import * as RecordHelpers from "../../../helpers/record";
     import * as PrivateDomain from "../../../helpers/domain.ts";
@@ -12,13 +12,13 @@
         | {type: "iteration", iteration: RecordHelpers.Iteration}
         | {type: "image-descriptions"}
     
-    let current_hovered_button: HoveredButton | undefined = undefined;
+    let current_hovered_button: HoveredButton | undefined = $state();
 
-    $: nav_items = get_items($nav_state);
+    let nav_items = Nav.get_items();
 
-    $: available_iterations = new Set(RecordHelpers.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter)));
+    let available_iterations = $derived(new Set(RecordHelpers.iterations.filter(iter => nav_items.map(PrivateDomain.get_item_iteration).includes(iter))));
 
-    $: filter_tooltip_text = (() => {
+    let filter_tooltip_text = $derived.by(() => {
         if (!current_hovered_button) {
             return "filter items";
         }
@@ -27,9 +27,9 @@
             case "iteration": return `from ${RecordHelpers.get_display_name(current_hovered_button.iteration)}`;
             case "image-descriptions": return "with descriptions";
         }
-    })();
+    });
 
-    $: filter_tooltip_color = (() => {
+    let filter_tooltip_color = $derived.by(() => {
         if (!current_hovered_button) {
             return "rgba(255 255 255 / 50%)";
         }
@@ -38,7 +38,7 @@
             case "iteration": return RecordHelpers.get_iteration_color(current_hovered_button.iteration);
             case "image-descriptions": return "rgba(255 255 255 / 80%)";
         }
-    })();
+    });
 
     let mouseout_timer: NodeJS.Timeout | undefined = undefined;
     function clear_mouseout_timer() {
@@ -72,7 +72,7 @@
                 mouseover_handler={on_iteration_button_mouseover} 
                 mouseout_handler={on_button_mouseout}
             />
-            {#if $current.domain === "image"}
+            {#if Page.state.current.domain === "image"}
                 <ImageDescriptionFilterButton
                     mouseover_handler={on_description_button_mouseover} 
                     mouseout_handler={on_button_mouseout}

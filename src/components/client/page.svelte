@@ -1,39 +1,39 @@
 <script lang="ts">
-    import Nav from "./nav.svelte";
-    import View from "./view.svelte";
+    import Nav from "./nav.svelte"
+    import View from "./view.svelte"
 
-    import {layout_state} from "./page";
+    import * as Page from "./page.svelte.ts"
 
     function toggle_layout_state() {
-        $layout_state = $layout_state === "only-nav" ? "only-page" : "only-nav";
+        Page.state.layout = Page.state.layout === "only-nav" ? "only-page" : "only-nav";
     }
     
     function set_layout_state_by_width(width: number)  {
         if (width > 1200) {
-            $layout_state = "full";
-        } else if ($layout_state === "full") {
-            $layout_state = "only-page";
+            Page.state.layout = "full";
+        } else if (Page.state.layout === "full") {
+            Page.state.layout = "only-page";
         }
     }
 
     set_layout_state_by_width(window.innerWidth);
 
-    window.onresize = event => {
+    window.onresize = _event => {
         set_layout_state_by_width(window.innerWidth);
     };
 </script>
 
 <div class="page">
     <div class="container">
-        <button type="button" class="toggle-layout-button" class:nav-open={$layout_state === "only-nav"} on:click={toggle_layout_state}>
+        <button type="button" class="toggle-layout-button" class:nav-open={Page.state.layout === "only-nav"} on:click={toggle_layout_state}>
             ≡ 
         </button>
-        {#if $layout_state === "full"}
+        {#if Page.state.layout === "full"}
             <Nav />
             <View />
-        {:else if $layout_state === "only-nav"}
+        {:else if Page.state.layout === "only-nav"}
             <Nav />
-        {:else if $layout_state === "only-page"}
+        {:else if Page.state.layout === "only-page"}
             <View />
         {/if}
     </div>

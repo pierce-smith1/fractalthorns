@@ -1,44 +1,41 @@
 <script lang="ts">
     import * as PrivateDomain from "../../helpers/domain.ts";
 
-    import {current} from "./page.ts";
-    import {nav_state} from "./nav.ts";
+    import * as Page from "./page.svelte.ts";
+    import * as Nav from "./nav.svelte.ts";
 
     import PageLink from "./page_link.svelte";
     import Tooltip from "./style/tooltip.svelte";
 
-    export let domain: PrivateDomain.Page["domain"];
-    export let minor: boolean = false;
+    let {domain, minor = false}: {
+        domain: PrivateDomain.Page["domain"],
+        minor?: boolean,
+    } = $props();
 
-    const tooltip_text = (() => {
-        switch (domain) {
-            case "home": return "home";
-            case "image": return "art";
-            case "sketch": return "sketches";
-            case "episodic": return "story";
-            case "discover": return "discovery";
-            case "subproject": return "other";
-        }
-    })();
+    let selected = $derived(Page.state.current.domain === domain);
+    let tooltip_text = $derived({
+        "home": "home",
+        "image": "art",
+        "sketch": "sketches",
+        "episodic": "story",
+        "discover": "discovery",
+        "subproject": "other",
+    }[domain]);
 
     function hide_search() {
-        $nav_state = {...$nav_state, 
-            search_term: "",
-            viewing_search_results: false,
-        };
+        Nav.clear_search();
     }
-
-    function on_click() {
-        hide_search();
-    }
-
-    $: selected = $current?.domain === domain;
 </script>
 
 <div class="domain-button-container">
     <PageLink dest={{domain}}>
-        <Tooltip text={tooltip_text} --color={selected ? "black" : "white"} --background={selected ? "white" : "black"} --font-size={minor ? "0.8rem" : "1rem"}>
-            <button type="button" class="domain-button" class:selected class:minor on:click={on_click}>
+        <Tooltip
+            text={tooltip_text}
+            --color={selected ? "black" : "white"}
+            --background={selected ? "white" : "black"}
+            --font-size={minor ? "0.8rem" : "1rem"}
+        >
+            <button type="button" class="domain-button" class:selected class:minor onclick={hide_search}>
                 <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
             </button>
         </Tooltip>

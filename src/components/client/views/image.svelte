@@ -1,11 +1,10 @@
 <script lang="ts">
-    import {marked} from "marked";
+    import {marked} from "marked"
 
-    import {layout_state} from "../page";
-    import * as ImageHelpers from "../../../helpers/image";
-    import * as Fetchers from "../../../fetchers";
-    import * as Nav from "../nav";
-    import * as Api from "../../../api/api";
+    import * as Page from "../page.svelte.ts"
+    import * as Fetchers from "../../../fetchers"
+    import * as Nav from "../nav.svelte.ts"
+    import * as Api from "../../../api/api"
 
     import Keynav from './keynav.svelte';
 
@@ -49,8 +48,8 @@
     function execute_character_search(character: string) {
         Nav.execute_search(character);
 
-        if ($layout_state !== "full") {
-            $layout_state = "only-nav";
+        if (Page.state.layout !== "full") {
+            Page.state.layout = "only-nav";
         }
     }
 
@@ -70,7 +69,7 @@
                 {#if image.characters}
                     <div class="characters">
                         {#each image.characters as character}
-                            <button class="character-button" type="button" on:click={() => execute_character_search(character)}>
+                            <button class="character-button" type="button" onclick={() => execute_character_search(character)}>
                                 <img class="runeword" src={`/serve/runeword/${character}`} alt={character}>
                             </button>
                         {/each}
@@ -86,7 +85,7 @@
         <div class="scroll-hint">...</div>
     </div>
     <div class="image-container" class:fullview={full_image_view}>
-        <button type="button" class="image-link" on:click={toggle_full_view}>
+        <button type="button" class="image-link" onclick={toggle_full_view}>
             <img src={image.image_url}>
         </button>
     </div>

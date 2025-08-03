@@ -4,10 +4,17 @@
     import * as Domain from "../../../helpers/domain";
     import PageLink from '../page_link.svelte';
 
-    export let page_up: Domain.Page | undefined = undefined;
-    export let page_down: Domain.Page | undefined = undefined;
-    export let page_left: Domain.Page | undefined = undefined;
-    export let page_right: Domain.Page | undefined = undefined;
+    let {
+        page_up = undefined,
+        page_down = undefined,
+        page_left = undefined,
+        page_right = undefined,
+    }: {
+        page_up?: Domain.Page,
+        page_down?: Domain.Page,
+        page_left?: Domain.Page,
+        page_right?: Domain.Page,
+    } = $props();
 
     onMount(() => {
         window.onkeydown = event => {

@@ -1,10 +1,13 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    export let image_url: string;
+    let {image_url}: {
+        image_url: string,
+    } = $props();
 
-    let visible = false;
+    let visible = $state(false);
     let portrait_element: Element;
+
     onMount(() => {
         let scroll_observer = new IntersectionObserver(entries => {
             for (const entry of entries) {

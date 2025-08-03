@@ -7,7 +7,9 @@
     import Yokdeck from "./subprojects/yokdeck.svelte";
     import Yokscr from "./subprojects/yokscr.svelte";
 
-    export let name: string | undefined;
+    let {name}: {
+        name?: string
+    } = $props();
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>

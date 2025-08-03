@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {current} from "./page.ts";
+    import * as Page from "./page.svelte.ts";
     import * as Domain from "../../helpers/domain";
 
     import GlassPane from "./style/glass_pane.svelte";
     import ImagesExtras from "./domain/extras/images.svelte";
 
-    let expanded = false;
+    let expanded = $state(false);
 
     function toggle_expanded() {
         expanded = !expanded;
@@ -19,22 +19,22 @@
     }
 </script>
 
-{#if page_has_extras($current)}
+{#if page_has_extras(Page.state.current)}
     <div class="widget-container">
         {#if expanded}
             <GlassPane title="extras">
                 <div class="widget-controls-container">
                     <div class="spacer"></div>
-                    {#if $current.domain === "image"}
+                    {#if Page.state.current.domain === "image"}
                         <ImagesExtras />
                     {/if}
                     <hr>
-                    <button class="widget-expand-button" type="button" on:click={toggle_expanded}>close</button>
+                    <button class="widget-expand-button" type="button" onclick={toggle_expanded}>close</button>
                 </div>
             </GlassPane>
         {:else}
             <GlassPane title_bar={false}>
-                <button class="widget-expand-button" type="button" on:click={toggle_expanded}>...</button>
+                <button class="widget-expand-button" type="button" onclick={toggle_expanded}>...</button>
             </GlassPane>
         {/if}
     </div>

@@ -1,14 +1,19 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import {onMount} from "svelte"
 
-    import {nav_state, register_filter, unregister_filter} from "../nav";
+    import * as Nav from "../nav.svelte.ts"
 
-    import * as Domain from "../../../helpers/domain";
+    import * as Domain from "../../../helpers/domain"
 
-    let descriptions_only = false;
+    let descriptions_only = $state(false);
 
-    export let mouseover_handler: () => void = () => {};
-    export let mouseout_handler: () => void = () => {};
+    let {
+        mouseover_handler = () => {},
+        mouseout_handler = () => {},
+    }: {
+        mouseover_handler: () => void,
+        mouseout_handler: () => void,
+    } = $props();
 
     const filter_fn = (item: Domain.Item) => {
         if (item.domain !== "image") {
@@ -24,12 +29,11 @@
 
     function toggle_filter() {
         descriptions_only = !descriptions_only;
-        $nav_state = $nav_state;
     }
 
     onMount(() => {
-        register_filter({name: "image-description-filter-button", fn: filter_fn});
-        return () => unregister_filter("image-description-filter-button");
+        Nav.register_filter({name: "image-description-filter-button", fn: filter_fn});
+        return () => Nav.unregister_filter("image-description-filter-button");
     });
 </script>
 
@@ -37,11 +41,11 @@
     <button 
         type="button" 
         class="description-filter-button" 
-        on:click={toggle_filter}
-        on:mouseover={mouseover_handler} 
-        on:mouseout={mouseout_handler}
-        on:focus={mouseover_handler} 
-        on:blur={mouseout_handler}
+        onclick={toggle_filter}
+        onmouseover={mouseover_handler}
+        onmouseout={mouseout_handler}
+        onfocus={mouseover_handler}
+        onblur={mouseout_handler}
     >
         <div class="sigil" style:background-image={`url(/assets/images/common/alpha.png)`}></div>
         <div class="button-background" style:background-color={"white"} style:border-color={"white"} class:selected={descriptions_only}></div>

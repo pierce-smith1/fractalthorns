@@ -3,12 +3,13 @@
 
     import Keynav from "./keynav.svelte";
 
-    export let sketch: Api.SketchObject | undefined;
-    $: this_sketch = sketch!;
+    let {sketch}: {
+        sketch: Api.SketchObject,
+    } = $props();
 </script>
 
 <div class="container">
-    <img src={this_sketch.image_url}>
+    <img src={sketch.image_url}>
 </div>
 <Keynav 
     page_left={{domain: "subproject"}}

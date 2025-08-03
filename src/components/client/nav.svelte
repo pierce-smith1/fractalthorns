@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {current, env} from "./page.ts";
-    import {nav_state} from "./nav.ts";
+    import * as Page from "./page.svelte.ts";
+    import * as Nav from "./nav.svelte.ts";
 
     import GlassPane from "./style/glass_pane.svelte";
     import DomainSearch from "./domain_search.svelte";
@@ -44,9 +44,9 @@
                     </div>
                 </div>
 
-                {#if $nav_state.viewing_search_results || $nav_state.search_waiting}
+                {#if Nav.state.viewing_search_results || Nav.state.search_waiting}
                     <NavItemsList />
-                {:else if $current.domain === "home"}
+                {:else if Page.state.current.domain === "home"}
                     <News />
                 {:else}
                     <NavItemsList />

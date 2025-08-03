@@ -1,14 +1,16 @@
 <script lang="ts">
-    import * as Api from "../../../api/api";
+    import * as Api from "../../../api/api"
 
-    import {current} from "../page";
+    import * as Page from "../page.svelte.ts"
 
-    import PageLink from "../page_link.svelte";
-    import ViewportDeferredImage from "../style/viewport_deferred_image.svelte";
+    import PageLink from "../page_link.svelte"
+    import ViewportDeferredImage from "../style/viewport_deferred_image.svelte"
 
-    export let sketch: Api.SketchObject;
+    let {sketch}: {
+        sketch: Api.SketchObject,
+    } = $props();
 
-    $: selected = $current.domain === "sketch" && $current.name === sketch.name;
+    let selected = $derived(Page.state.current.domain === "sketch" && Page.state.current.name === sketch.name);
 </script>
 
 <div class="sketch_button">

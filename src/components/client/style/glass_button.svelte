@@ -1,8 +1,15 @@
 <script lang="ts">
+    import * as Svelte from "svelte"
+    import type { MouseEventHandler } from "svelte/elements";
+
+    let {children, onclick}: {
+        children: Svelte.Snippet,
+        onclick: MouseEventHandler<HTMLButtonElement>,
+    } = $props();
 </script>
 
-<button on:click class="glass-button" type="button">
-    <slot />
+<button {onclick} class="glass-button" type="button">
+    {@render children()}
 </button>
 
 <style>

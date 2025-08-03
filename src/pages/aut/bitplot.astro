@@ -5,7 +5,7 @@
 <Default>
     <div class="container">
         <div class="canvas-container">
-            <canvas id="bitplot" width=1200 height=800 />
+            <canvas id="bitplot" width="1200" height="800" />
         </div>
         <div class="controls-container">
             <input type="file" id="bin-input" />
@@ -53,7 +53,7 @@
     });
 
     const bin_input_element = document.querySelector<HTMLInputElement>("#bin-input")!;
-    bin_input_element.addEventListener("change", event => {
+    bin_input_element.addEventListener("change", _event => {
         const file = bin_input_element.files?.[0];
         if (!file) {
             return;
@@ -131,11 +131,6 @@
         return visible_rows;
     }
 
-    type RealCoord = {
-        x: number,
-        y: number,
-    } & {__brand: "RealCoord"};
-
     type PixelCoord = {
         x: number,
         y: number,
@@ -149,7 +144,7 @@
 
     const pixel_providers: {[key in Settings["format"]]: (bytes: ArrayBuffer) => Array<Pixel>} = {
         "24bpp-rgb": (bytes: ArrayBuffer) => {
-            const pixels = [...new Uint8Array(bytes)].flatMap((byte, i, array) => {
+            const pixels = [...new Uint8Array(bytes)].flatMap((_byte, i, array) => {
                 if (i % 3 != 0) {
                     return [];
                 }
@@ -160,7 +155,7 @@
         },
 
         "8bpp-rgb": (bytes: ArrayBuffer) => {
-            const pixels = [...new Uint8Array(bytes)].map((byte, i, array) => {
+            const pixels = [...new Uint8Array(bytes)].map((byte, _i, _array) => {
                 // These bytes would be indexes into a palette, so without knowing the palette,
                 // the best thing to do is to make the colors effectively "random"
                 const pixel = {
@@ -174,7 +169,7 @@
         },
 
         "1bpp-rgb": (bytes: ArrayBuffer) => {
-            const pixels = [...new Uint8Array(bytes)].flatMap((byte, i, array) => {
+            const pixels = [...new Uint8Array(bytes)].flatMap((byte, _i, _array) => {
                 const white = {r: 255, g: 255, b: 255};
                 const black = {r: 0, g: 0, b: 0};
                 const dots = [
@@ -193,36 +188,9 @@
         },
     };
 
-    function real_to_pixel_coord(real: RealCoord, settings: Settings): PixelCoord {
-        const pixel_coord = {
-            x: Math.floor(real.x / settings.pixel_scale),
-            y: Math.floor(real.y / settings.pixel_scale),
-        };
-        return pixel_coord as PixelCoord;
-    }
-
-    function pixel_to_real_coord(pixel: PixelCoord, settings: Settings): RealCoord {
-        const real_coord = {
-            x: pixel.x * settings.pixel_scale,
-            y: pixel.y * settings.pixel_scale,
-        };
-        return real_coord as RealCoord;
-    }
-
-    function pixel_index_to_pixel_coord(index: number, settings: Settings): PixelCoord {
-        const pixel_x = index % pixels_per_row(settings);
-        const pixel_y = Math.floor(index / pixels_per_row(settings)) * settings.pixel_scale;
-        return {x: pixel_x, y: pixel_y} as PixelCoord;
-    }
-
     function pixel_coords_to_pixel_index(pixel_coord: PixelCoord, settings: Settings): number {
         const index = pixel_coord.x + pixel_coord.y * pixels_per_row(settings);
         return index;
-    }
-
-    function pixels_with_coords(pixels: Array<Pixel>, settings: Settings): Array<Pixel & PixelCoord> {
-        const with_coords = pixels.map((pixel, i) => ({...pixel, ...pixel_index_to_pixel_coord(i, settings)}));
-        return with_coords;
     }
 
     function draw(p5: p5, bytes: ArrayBuffer, settings: Settings) {

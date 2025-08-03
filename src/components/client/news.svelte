@@ -1,7 +1,5 @@
 <script lang="ts">
     import * as Fetchers from "../../fetchers";
-    import * as ImageHelpers from "../../helpers/image";
-    import * as Admin from "./admin";
 
     import Loading from "./loading.svelte";
 

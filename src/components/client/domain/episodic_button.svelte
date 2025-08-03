@@ -1,18 +1,24 @@
 <script lang="ts">
-    import * as Api from "../../../api/api.ts";
-    import * as RecordHelpers from "../../../helpers/record";
-    import * as Fetchers from "../../../fetchers";
+    import * as Api from "../../../api/api.ts"
+    import * as RecordHelpers from "../../../helpers/record"
+    import * as Fetchers from "../../../fetchers"
 
-    import Loading from "../loading.svelte";
-    import PageLink from "../page_link.svelte";
+    import Loading from "../loading.svelte"
+    import PageLink from "../page_link.svelte"
 
-    import {current} from "../page.ts";
+    import * as Page from "../page.svelte.ts"
 
-    export let record: Api.RedactableRecordEntry;
-    export let prev_neighbor: Api.RedactableRecordEntry | undefined = undefined;
-
-    export let preview_line_index: number | undefined = undefined;
-    export let preview_matched_text: string | undefined = undefined;
+    let {
+        record,
+        prev_neighbor = null,
+        preview_line_index = null,
+        preview_matched_text = null,
+    }: {
+        record: Api.RedactableRecordEntry,
+        prev_neighbor: Api.RedactableRecordEntry | null,
+        preview_line_index: number | null,
+        preview_matched_text: string | null,
+    } = $props();
 
     function truncate_preview_text(contents: string) {
         const max_context = 40;
@@ -47,7 +53,7 @@
         return rejoined_text;
     }
 
-    function should_show_chapter(record: Api.RedactableRecordEntry, prev?: Api.RedactableRecordEntry) {
+    function should_show_chapter(record: Api.RedactableRecordEntry, prev: Api.RedactableRecordEntry | null) {
         return !prev || prev.chapter !== record.chapter;
     }
 
@@ -73,7 +79,11 @@
 {#if should_show_chapter(record, prev_neighbor)}
     <h3 class="chapter-name">{record.chapter}</h3>
 {/if}
-<div class="episodic-button" style:border-color={RecordHelpers.get_iteration_color(record.iteration)} class:selected={$current.domain === "episodic" && $current.record_name === record.name}>
+<div
+    class="episodic-button"
+    style:border-color={RecordHelpers.get_iteration_color(record.iteration)}
+    class:selected={Page.state.current.domain === "episodic" && Page.state.current.record_name === record.name}
+>
     {#if !record.solved}
         {#await get_first_unsolved_puzzle_in_chapter(record.chapter)} 
             <Loading />
@@ -83,11 +93,11 @@
             </PageLink>
         {/await}
     {:else}
-        <PageLink dest={{domain: "episodic", record_name: record.name, line_index: preview_line_index}} cause_layout_switch>
+        <PageLink dest={{domain: "episodic", record_name: record.name, line_index: preview_line_index ?? undefined}} cause_layout_switch>
             <h4 class="record-name">
                 <img class="iteration-sigil" src={`/assets/images/common/iteration-${record.iteration}.png`} /> {record.title}
             </h4>
-            {#if preview_line_index !== undefined}
+            {#if preview_line_index != null}
                 <p class="line-preview">
                     {#await Fetchers.get.record_text({name: record.name})}
                         <Loading />
