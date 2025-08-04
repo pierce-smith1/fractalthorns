@@ -9,7 +9,7 @@ export function get_parameters(request: Request) {
         return {};
     }
 
-    const search_params = new URLSearchParams(url_parts.slice(1).join(""));
+    const search_params = new URLSearchParams(url_parts.slice(1).join("?"));
 
     const params_object = JSON.parse(search_params.get("body") ?? "{}");
     return params_object;
