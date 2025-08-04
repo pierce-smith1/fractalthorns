@@ -32,14 +32,14 @@
             return get_view_height();
         }
 
-        font_lekton: p5.Font = null!;
+        splash_font: p5.Font = null!;
 
         preload(ctx: p5) {
             ctx.windowResized = () => {
                 ctx.resizeCanvas(this.width(), this.height());
             };
 
-            this.font_lekton = ctx.loadFont("/assets/fonts/Lekton-Bold.ttf");
+            this.splash_font = ctx.loadFont("/assets/fonts/Agave-Regular.ttf");
         }
 
         quintic_points: Array<Array<[number, number]>> = [];
@@ -56,7 +56,7 @@
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
 
-            ctx.textFont(this.font_lekton);
+            ctx.textFont(this.splash_font);
 
             this.quintic_points = [
                 [[8, 9], [0, 1], [1, 4], [0, 6], [2, 5], [2, 8], [3, 6], [5, 8]],
@@ -246,7 +246,7 @@
             const t = Date.now() / 500;
 
             const splash_text = (this.splash_text ?? "...then there was silence").toLocaleLowerCase().trim();
-            const splash = `[ ${splash_text} ]`;
+            const splash = `[ the quick brown fox jumps over the lazy dog ]`;
 
             ctx.push();
 
