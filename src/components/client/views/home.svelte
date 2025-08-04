@@ -255,25 +255,30 @@
             const text_size = ctx.min(25, ctx.min(ctx.width, ctx.height) / 25);
             ctx.textSize(text_size);
 
-            const full_splash_width = ctx.textWidth(splash);
+            // calling textWidth on the whole string is what we should be doing here,
+            // but for some reason the sequences "fi" and "fl" cause inaccuracies
+            // in the result of textWidth.
+            // Further research is seriously needed, but for now, we just calculate
+            // the text size linearly by the width of one character.
+            //const full_splash_width = ctx.textWidth(splash);
+
+            const full_splash_width = ctx.textWidth("a") * splash.length;
             this.splash_text_actual_width = full_splash_width;
 
             ctx.noStroke();
             ctx.fill(255, this.splash_text ? 220 : 120);
 
-            let running_splash = "";
-
             for (let i = 0; i < splash.length; i++) {
                 const char = splash[i];
 
                 const char_cycle = ctx.sin(t + i * 100);
+                const x_off = ctx.map(i, 0, splash.length, 0, full_splash_width);
 
                 ctx.text(
                     char,
-                    -full_splash_width / 2 + ctx.textWidth(running_splash),
+                    -full_splash_width / 2 + x_off,
                     this.splash_y_offset + 4 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * (this.splash_text ? 2 : 0.5))
                 );
-                running_splash += char;
             }
 
             ctx.pop();
