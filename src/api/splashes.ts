@@ -39,7 +39,7 @@ export const paged_splash_response_schema = {
 export const discord_splash_upload_request = {
     text: {
         type: Interfaces.fields.required_string,
-        description: "The text of the splash. This may not be longer than 80 characters; if so, the request will fail with a 400."
+        description: "The text of the splash. This may not be longer than 80 characters; if so, the request will fail with a 400. Control characters, such as line breaks, are also disallowed, and if present the request will fail with a 400."
     },
     submitter_display_name: {
         type: Interfaces.fields.required_string,
