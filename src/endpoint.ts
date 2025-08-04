@@ -4,12 +4,12 @@ import * as ApiKeyQueries from "./queries/api_key"
 const api_key_header = "X-Fractalthorns-Api-Key";
 
 export function get_parameters(request: Request) {
-    const url_parts = request.url.split("?", 2);
+    const url_parts = request.url.split("?");
     if (url_parts.length <= 1) {
         return {};
     }
 
-    const search_params = new URLSearchParams(url_parts[1]);
+    const search_params = new URLSearchParams(url_parts.slice(1).join(""));
 
     const params_object = JSON.parse(search_params.get("body") ?? "{}");
     return params_object;
