@@ -246,7 +246,7 @@
             const t = Date.now() / 500;
 
             const splash_text = (this.splash_text ?? "...then there was silence").toLocaleLowerCase().trim();
-            const splash = `[ the quick brown fox jumps over the lazy dog ]`;
+            const splash = `[ ${splash_text} ]`;
 
             ctx.push();
 
