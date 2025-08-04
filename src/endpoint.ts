@@ -4,7 +4,7 @@ import * as ApiKeyQueries from "./queries/api_key"
 const api_key_header = "X-Fractalthorns-Api-Key";
 
 export function get_parameters(request: Request) {
-    const url_parts = request.url.split("?");
+    const url_parts = request.url.split("?", 2);
     if (url_parts.length <= 1) {
         return {};
     }
