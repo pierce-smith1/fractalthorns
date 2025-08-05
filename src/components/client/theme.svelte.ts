@@ -119,3 +119,26 @@ export async function get_theme_for_page(page: Domain.Page) {
 
     return default_theme;
 }
+
+type RuneI = number | undefined;
+const local_rune_i_key = "rune_i";
+
+export let rune: {i: RuneI} = $state({i: load_rune_i()});
+
+export function save_rune_i(rune_i: RuneI) {
+    if (rune_i == null) {
+        localStorage.removeItem(local_rune_i_key);
+    } else {
+        localStorage.setItem(local_rune_i_key, `${rune_i}`);
+    }
+}
+
+function load_rune_i(): RuneI {
+    const stored_value = localStorage.getItem(local_rune_i_key);
+
+    const rune_i = stored_value
+        ? parseInt(stored_value)
+        : undefined;
+
+    return rune_i;
+}

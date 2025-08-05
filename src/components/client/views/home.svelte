@@ -13,6 +13,10 @@
     import Keynav from "./keynav.svelte";
     import Loading from "../loading.svelte";
 
+    $effect(() => {
+        Theme.save_rune_i(Theme.rune.i);
+    });
+
     function get_view_width() {
         const width = document.querySelector(".home-artist-container")?.clientWidth ?? 0;
         return width;
@@ -47,7 +51,8 @@
         rune_groupings: Array<{group: number, pip: number}> = [];
 
         last_held_rune_i: number | null = null;
-        last_held_rune_change_time: number | null = null;
+        last_held_rune_change_time = 0;
+        rune_transition_time_ms = 2500;
 
         splash_text: string | null = null;
         splash_y_offset = 170;
@@ -156,6 +161,9 @@
                 this.splash_text = result.splash?.text ?? null;
                 this.splash_loaded = true;
             });
+
+            this.set_rune(Theme.rune.i ?? null);
+            this.last_held_rune_change_time = 0;
         }
 
         draw(ctx: p5) {
@@ -164,6 +172,7 @@
             this.draw_julia(ctx);
             this.draw_splash(ctx);
             this.draw_logo(ctx);
+            this.check_rune_reset(ctx);
         }
 
         c = {r: 0, i: 0};
@@ -314,10 +323,7 @@
                 // @ts-ignore
                 this.rune_grab_timer = setTimeout(() => {
                     if (this.grabbed_rune_i === i && this.last_held_rune_i !== i) {
-                        this.last_held_rune_i = i;
-                        this.last_held_rune_change_time = Date.now();
-
-                        Page.state.current = {domain: "home", rune_i: i};
+                        this.set_rune(i);
                     }
                 }, rune_grab_length_ms);
             }
@@ -388,8 +394,6 @@
                 return -ctx.cos(ctx.PI * (t ** pow)) / 2 + 0.5;
             }
 
-            const rune_transition_time_ms = 2500;
-
             ctx.push();
 
             ctx.translate(ctx.width / 2, ctx.height / 2);
@@ -400,26 +404,24 @@
             let line_alpha = 255;
             let rotation = 0;
 
-            if (this.last_held_rune_change_time != null) {
-                const ms_since_change = ctx.min(Date.now() - this.last_held_rune_change_time, rune_transition_time_ms);
+            const ms_since_change = ctx.min(Date.now() - this.last_held_rune_change_time, this.rune_transition_time_ms);
 
-                if (ms_since_change < rune_transition_time_ms / 2) {
-                    const t = ctx.map(ms_since_change, 0, rune_transition_time_ms / 2, 1, 0);
+            if (ms_since_change < this.rune_transition_time_ms / 2) {
+                const t = ctx.map(ms_since_change, 0, this.rune_transition_time_ms / 2, 1, 0);
 
-                    size = sine_interp(t, 3) * 20;
-                    line_alpha = sine_interp(t, 10) * 255;
-                    wiggle = sine_interp(t, 10) * 3;
-                    rotation = sine_interp(t, 1/2) * ctx.TWO_PI;
-                } else {
-                    this.logo_rune_i = this.last_held_rune_i;
+                size = sine_interp(t, 3) * 20;
+                line_alpha = sine_interp(t, 10) * 255;
+                wiggle = sine_interp(t, 10) * 3;
+                rotation = sine_interp(t, 1/2) * ctx.TWO_PI;
+            } else {
+                this.logo_rune_i = this.last_held_rune_i;
 
-                    const t = ctx.map(ms_since_change, rune_transition_time_ms / 2, rune_transition_time_ms, 0, 1);
+                const t = ctx.map(ms_since_change, this.rune_transition_time_ms / 2, this.rune_transition_time_ms, 0, 1);
 
-                    size = sine_interp(t, 3) * 20;
-                    line_alpha = sine_interp(t, 10) * 255;
-                    wiggle = sine_interp(t, 10) * 3;
-                    rotation = sine_interp(t, 3) * ctx.TWO_PI;
-                }
+                size = sine_interp(t, 3) * 20;
+                line_alpha = sine_interp(t, 10) * 255;
+                wiggle = sine_interp(t, 10) * 3;
+                rotation = sine_interp(t, 3) * ctx.TWO_PI;
             }
 
             ctx.rotate(rotation);
@@ -483,20 +485,53 @@
 
             return logo_points;
         }
+
+        set_rune(rune_i: number | null) {
+            this.last_held_rune_i = rune_i;
+            this.last_held_rune_change_time = Date.now();
+
+            Theme.rune.i = rune_i ?? undefined;
+
+            Page.state.current = {domain: "home", rune_i: rune_i ?? undefined};
+        }
+
+        check_rune_reset(ctx: p5) {
+            if (this.last_held_rune_i == null) {
+                return;
+            }
+
+            if (Date.now() - this.last_held_rune_change_time < this.rune_transition_time_ms) {
+                return;
+            }
+
+            const reactive_region_size = 120;
+
+            const mouse_x = ctx.mouseX - ctx.width / 2;
+            const mouse_y = ctx.mouseY - ctx.height / 2;
+
+            const mouse_in_region = ctx.dist(mouse_x, mouse_y, 0, 0) < reactive_region_size;
+
+            if (mouse_in_region && ctx.mouseIsPressed) {
+                this.set_rune(null);
+            }
+        }
     };
 
 
     const artist = new HomeArtist();
 
-    let artist_container_element: HTMLDivElement;
-    let artist_ctx: p5 | undefined;
+    let artist_container_element: HTMLDivElement | undefined = $state();
+    let artist_ctx: p5 | undefined = $state();
 
-    let observing = false;
+    let observing = $state(false);
     const resize_observer = new ResizeObserver(() => artist_ctx?.windowResized?.());
-    $: if (artist_container_element && !observing) {
-        resize_observer.observe(artist_container_element);
-        observing = true;
-    }
+
+    $effect(() => {
+        if (artist_container_element && !observing) {
+            resize_observer.observe(artist_container_element);
+            observing = true;
+        }
+    });
 </script>
 
 <div class="home-artist-container" bind:this={artist_container_element}>
