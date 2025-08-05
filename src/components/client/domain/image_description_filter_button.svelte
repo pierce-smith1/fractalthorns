@@ -20,8 +20,6 @@
     });
 
     const filter_fn = (item: Domain.Item) => {
-        debugger;
-
         if (item.domain !== "image") {
             return true;
         }
