@@ -52,6 +52,7 @@
         splash_text: string | null = null;
         splash_y_offset = 170;
         splash_text_actual_width: number | null = null;
+        splash_loaded = false;
 
         setup(ctx: p5, canvas: HTMLCanvasElement) {
             super.setup(ctx, canvas);
@@ -153,6 +154,7 @@
 
             Fetchers.get.current_splash({}).then(result => {
                 this.splash_text = result.splash?.text ?? null;
+                this.splash_loaded = true;
             });
         }
 
@@ -243,6 +245,10 @@
         }
 
         draw_splash(ctx: p5) {
+            if (!this.splash_loaded) {
+                return;
+            }
+
             const t = Date.now() / 500;
 
             const splash_text = (this.splash_text ?? "...then there was silence").toLocaleLowerCase().trim();
