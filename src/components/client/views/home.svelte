@@ -308,9 +308,17 @@
 
             const {i, x, y, scale , ctx} = opts;
 
+            function is_oob(x: number, y: number) {
+                return x < 0 || x > ctx.width || y < 0 || y > ctx.height;
+            }
+
             const mouse_x = ctx.mouseX - ctx.width / 2;
             const mouse_y = ctx.mouseY - ctx.height / 2;
             let mouse_t = ctx.map(ctx.dist(x, y, mouse_x, mouse_y), rune_grab_close_distance, rune_grab_far_distance, 1.0, 0, true);
+
+            if (is_oob(ctx.mouseX, ctx.mouseY)) {
+                mouse_t = 0;
+            }
 
             if (this.grabbed_rune_i == null && mouse_t > 0.5) {
                 this.grabbed_rune_i = i;
