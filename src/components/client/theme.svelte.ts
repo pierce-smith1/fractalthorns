@@ -26,11 +26,11 @@ export const theme_overrides: {[domain in Domain.Domain]?: {[name: string]: Them
 };
 
 export const rune_colors: Array<Theme> = [
-    {primary_color: "#0d4f9c", secondary_color: "#647fc8"},
+    {primary_color: "#0d4f9c", secondary_color: "#94afc8"},
     {primary_color: "#000000", secondary_color: "#000000"},
     {primary_color: "#1d82b6", secondary_color: "#12a1cc"},
+    {primary_color: "#fac398", secondary_color: "#ffffaa"},
     {primary_color: "#9bacdc", secondary_color: "#59771f"},
-    {primary_color: "#5ad6d4", secondary_color: "#5652e7"},
     {primary_color: "#ffffff", secondary_color: "#ffeebb"},
     {primary_color: "#00ea42", secondary_color: "#352929"},
     {primary_color: "#c01e1c", secondary_color: "#866bca"},
@@ -38,14 +38,14 @@ export const rune_colors: Array<Theme> = [
     {primary_color: "#abdbe9", secondary_color: "#ffffff"},
     {primary_color: "#fc00b4", secondary_color: "#fd01c8"},
     {primary_color: "#077d86", secondary_color: "#57375e"},
-    {primary_color: "#d0bdaa", secondary_color: "#e1cbbc"},
-    {primary_color: "#aa5250", secondary_color: "#37457e"},
+    {primary_color: "#545454", secondary_color: "#ae8888"},
+    {primary_color: "#df4af0", secondary_color: "#37457e"},
     {primary_color: "#026ed1", secondary_color: "#0055a2"},
     {primary_color: "#a6aed3", secondary_color: "#314027"},
-    {primary_color: "#d3d322", secondary_color: "#7589da"},
+    {primary_color: "#d3d322", secondary_color: "#25892a"},
     {primary_color: "#1618a0", secondary_color: "#c01e1c"},
     {primary_color: "#d0805a", secondary_color: "#e88038"},
-    {primary_color: "#ca8840", secondary_color: "#ca2010"},
+    {primary_color: "#5010bb", secondary_color: "#300033"},
 ];
 
 export async function get_theme_for_page(page: Domain.Page) {
