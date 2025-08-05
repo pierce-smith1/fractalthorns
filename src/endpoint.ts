@@ -1,5 +1,6 @@
 import * as Api from "./api/api"
 import * as ApiKeyQueries from "./queries/api_key"
+import Config from "./config"
 
 const api_key_header = "X-Fractalthorns-Api-Key";
 
@@ -25,7 +26,7 @@ export function make_handler<
 ): ({request}: {request: Request}) => Promise<Response> {
     return async ({request}: {request: Request}) => {
         const endpoint_is_protected = (Api.endpoints[endpoint_name] as any).protected;
-        if (endpoint_is_protected) {
+        if (endpoint_is_protected && Config.env !== "local") {
             const api_key = request.headers.get(api_key_header);
             const key_lookup_result = api_key && await ApiKeyQueries.key_is_valid(api_key);
 

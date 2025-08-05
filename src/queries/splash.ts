@@ -134,8 +134,10 @@ export async function ensure_cursor_advanced(): Promise<void> {
         .select(eb => eb.fn<number>("max", ["ordinal"]).as("max_splash_ordinal"))
         .executeTakeFirstOrThrow();
 
-    const ms_since_last_advance = now.valueOf() - new Date(cursor.last_updated).valueOf();
-    const advances_needed = Math.floor(ms_since_last_advance / advance_interval_ms);
+    const cursor_midnights = Math.floor(new Date(cursor.last_updated).valueOf() / (advance_interval_ms));
+    const now_midnights = Math.floor(now.valueOf() / (advance_interval_ms));
+
+    const advances_needed = now_midnights - cursor_midnights;
 
     if (advances_needed > 0) {
         await Db
