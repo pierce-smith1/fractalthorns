@@ -133,7 +133,7 @@ export function save_rune_i(rune_i: RuneI) {
     }
 }
 
-function load_rune_i(): RuneI {
+export function load_rune_i(): RuneI {
     const stored_value = localStorage.getItem(local_rune_i_key);
 
     const rune_i = stored_value

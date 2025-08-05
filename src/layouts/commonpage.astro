@@ -61,9 +61,10 @@
 </style>
 
 <script>
-    import * as Domain from "../helpers/domain";
-    import * as Nav from "../components/client/nav.svelte.ts";
-    import * as ClientPage from "../components/client/page.svelte.ts";
+    import * as Domain from "../helpers/domain"
+    import * as Nav from "../components/client/nav.svelte.ts"
+    import * as Theme from "../components/client/theme.svelte.ts"
+    import * as ClientPage from "../components/client/page.svelte.ts"
 
     const body = document.querySelector(".page-body");
 
@@ -78,6 +79,10 @@
     page = Nav.is_incomplete_page(page)
         ? await Nav.get_landing_page(page.domain)
         : page;
+
+    if (page.domain === "home") {
+        page.rune_i = Theme.load_rune_i();
+    }
 
     ClientPage.state.current = page;
     ClientPage.state.env = env;
