@@ -195,14 +195,14 @@
             const scale = ctx.min(
                 ctx.min(this.width() / 2, this.height() / 2),
                 400
-            );
+            ) * 0.8;
 
             const t = Date.now() / 9000;
 
             this.c.r = ctx.sin(t / Math.E) * 0.8;
             this.c.i = ctx.cos(t) * 0.8;
 
-            const iterations = Math.floor(Math.pow(scale, 0.3));
+            const iterations = 4;
             const julia = Julia.scaled_julia_for(this.c, iterations, scale);
 
             ctx.stroke(255);
@@ -214,7 +214,7 @@
 
                 ctx.translate(ctx.width / 2, ctx.height / 2);
 
-                const r = 400;
+                const r = 375;
                 const theta = ctx.map(i, 0, this.rune_points.length, 0, ctx.QUARTER_PI);
 
                 const x = r * ctx.cos(theta);
