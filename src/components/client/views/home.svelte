@@ -195,7 +195,7 @@
             const scale = ctx.min(
                 ctx.min(this.width() / 2, this.height() / 2),
                 400
-            ) * 0.8;
+            ) * 0.9;
 
             const t = Date.now() / 9000;
 
