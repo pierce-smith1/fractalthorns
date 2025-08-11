@@ -10,10 +10,12 @@
 
     const no_description_placeholder = "🛠 *something indistinct echoes from the future...* 🛠";
 
-    export let image: Api.ImageObject;
-    export let description: string | undefined;
-    
-    let full_image_view = false;
+    let props: {
+        image: Api.ImageObject,
+        description?: string,
+    } = $props();
+
+    let full_image_view = $state(false);
 
     function format_subtitle(image: Api.ImageObject) {
         const parts: Array<string> = [];
@@ -46,7 +48,7 @@
     }
 
     function execute_character_search(character: string) {
-        Nav.execute_search(character);
+        Nav.execute_search(Nav.state, character);
 
         if (Page.state.layout !== "full") {
             Page.state.layout = "only-nav";
@@ -60,15 +62,15 @@
 
 <div class="container">
     <div class="smallscreen-image-container">
-        <img src={image.image_url}>
+        <img src={props.image.image_url}>
     </div>
     <div class="image-info-container" class:fullview={full_image_view} use:setup_scroll_hint_observer>
         <div class="image-title-container">
             <div class="title-container">
-                <h1 class="title">{image.title}<span class="title-ordinal">#{image.ordinal}</span></h1>
-                {#if image.characters}
+                <h1 class="title">{props.image.title}<span class="title-ordinal">#{props.image.ordinal}</span></h1>
+                {#if props.image.characters}
                     <div class="characters">
-                        {#each image.characters as character}
+                        {#each props.image.characters as character}
                             <button class="character-button" type="button" onclick={() => execute_character_search(character)}>
                                 <img class="runeword" src={`/serve/runeword/${character}`} alt={character}>
                             </button>
@@ -76,17 +78,17 @@
                     </div>
                 {/if}
             </div>
-            <h2 class="subtitle">{@html format_subtitle(image)}</h2>
+            <h2 class="subtitle">{@html format_subtitle(props.image)}</h2>
         </div>
         <div class="image-description-container">
-            {@html marked.parse(description ?? no_description_placeholder)}
+            {@html marked.parse(props.description ?? no_description_placeholder)}
             <div class="scroll-marker"></div>
         </div>
         <div class="scroll-hint">...</div>
     </div>
     <div class="image-container" class:fullview={full_image_view}>
         <button type="button" class="image-link" onclick={toggle_full_view}>
-            <img src={image.image_url}>
+            <img src={props.image.image_url}>
         </button>
     </div>
 </div>
