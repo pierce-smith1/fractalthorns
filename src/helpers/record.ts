@@ -9,6 +9,7 @@ export const iterations = [
     "auzoan",
     "event",
     "rhodon",
+    "runic",
     "0",
 ] as const;
 export type Iteration = typeof iterations[number];
@@ -23,6 +24,7 @@ export function get_iteration_color(iteration: string | undefined): string {
         case "auzoan": return "#4CE84C";
         case "event": return "#EA0042";
         case "rhodon": return "#FF3300";
+        case "runic": return "#4166FF";
         default:
         case "0": return "#888888";
     }
@@ -38,6 +40,7 @@ export function get_display_name(iteration: Iteration): string {
         case "auzoan": return "auzoa";
         case "0": return "the grove";
         case "event": return "a special occasion";
+        case "runic": return "the runic myths";
         default: return iteration;
     }
 }
