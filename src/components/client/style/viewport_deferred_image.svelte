@@ -1,14 +1,15 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import * as Svelte from "svelte";
 
-    let {image_url}: {
+    let props: {
         image_url: string,
+        children: Svelte.Snippet,
     } = $props();
 
     let visible = $state(false);
     let portrait_element: Element;
 
-    onMount(() => {
+    Svelte.onMount(() => {
         let scroll_observer = new IntersectionObserver(entries => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
@@ -20,11 +21,13 @@
     });
 </script>
 
-<div class="deferred-image" bind:this={portrait_element} style:background-image={visible ? `url(${image_url})` : ""}></div>
+<div class="deferred-image" bind:this={portrait_element} style:background-image={visible ? `url(${props.image_url})` : ""}>
+    {@render props.children()}
+</div>
 
 <style>
     .deferred-image {
-        width: 100%;
-        height: 100%;
+        background-size: cover;
+        background-position: right;
     }
 </style>

@@ -1,11 +1,13 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import * as Svelte from "svelte"
 
-    import * as Nav from "../nav.svelte.ts";
-    import * as Page from "../page.svelte.ts";
+    import * as Nav from "../nav.svelte.ts"
+    import * as Page from "../page.svelte.ts"
 
-    import * as RecordHelpers from "../../../helpers/record";
-    import * as Domain from "../../../helpers/domain";
+    import * as RecordHelpers from "../../../helpers/record"
+    import * as Domain from "../../../helpers/domain"
+
+    import IterationSigil from "./iteration_sigil.svelte"
 
     const props: {
         available_iterations: Set<RecordHelpers.Iteration>,
@@ -43,7 +45,7 @@
         }
     }
 
-    onMount(() => {
+    Svelte.onMount(() => {
         Nav.register_filter({name: "iteration-filter-buttons", fn: filter_fn});
         return () => Nav.unregister_filter("iteration-filter-buttons");
     });
@@ -60,7 +62,7 @@
             onfocus={() => props.mouseover_handler?.(iteration)}
             onblur={() => props.mouseout_handler?.(iteration)}
         >
-            <div class="iteration-sigil" style:background-image={`url(/assets/images/common/iteration-${iteration}.png)`}></div>
+            <IterationSigil {iteration} />
             <div
                 class="button-background"
                 style:background-color={RecordHelpers.get_iteration_color(iteration)}
@@ -106,12 +108,5 @@
 
     .selected {
         opacity: 40%;
-    }
-
-    .iteration-sigil {
-        width: 12px;
-        height: 12px;
-        padding: 3px;
-        background-size: contain;
     }
 </style>

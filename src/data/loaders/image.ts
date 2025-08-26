@@ -257,8 +257,8 @@ export async function load_dominant_colors(data: Buffer) {
 }
 
 async function generate_image_thumbnail(data: Buffer, center: {x: number, y: number}) {
-    const width = 300;
-    const height = 60;
+    const width = 450;
+    const height = 70;
 
     const extended_thumb_data = await sharp(data, {sequentialRead: false})
         .extend({
@@ -272,7 +272,7 @@ async function generate_image_thumbnail(data: Buffer, center: {x: number, y: num
 
     const thumb_data = await sharp(extended_thumb_data)
         .extract({ 
-            left: (center.x + width) - (width / 2),
+            left: (center.x + width) - (width / 2) - 120,
             top: (center.y + height) - (height / 2),
             width,
             height,
