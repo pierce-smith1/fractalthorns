@@ -3,7 +3,7 @@
 
     let props: {
         image_url: string,
-        children: Svelte.Snippet,
+        children?: Svelte.Snippet,
     } = $props();
 
     let visible = $state(false);
@@ -22,7 +22,9 @@
 </script>
 
 <div class="deferred-image" bind:this={portrait_element} style:background-image={visible ? `url(${props.image_url})` : ""}>
-    {@render props.children()}
+    {#if props.children != null}
+        {@render props.children()}
+    {/if}
 </div>
 
 <style>

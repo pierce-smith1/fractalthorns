@@ -24,7 +24,7 @@
             <div class="portrait-container">
                 <ViewportDeferredImage image_url={props.image.thumb_url}>
                     <div class="portrait-backsplash"></div>
-                    <div class="portrait-contents">
+                    <div class="portrait-content">
                         <p class="title-text">{props.image.title}</p>
                     </div>
                 </ViewportDeferredImage>
@@ -56,7 +56,7 @@
         height: 100%;
     }
 
-    .portrait-contents {
+    .portrait-content {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
