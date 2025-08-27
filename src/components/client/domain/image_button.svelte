@@ -81,6 +81,7 @@
         font-weight: 900;
         z-index: 1;
         transition: all 0.2s ease-out;
+        line-height: 1em;
     }
 
     .selected .title-text, :hover .title-text {
