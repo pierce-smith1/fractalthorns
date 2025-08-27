@@ -1,5 +1,5 @@
 <script lang="ts">
-    import p5 from "p5";
+    import p5 from "p5"
 
     import * as Fetchers from "../../../fetchers"
     import * as MarchingSquares from "./graphics/marching_squares.ts"
@@ -7,11 +7,12 @@
     import * as Page from "../page.svelte.ts"
     import * as Theme from "../theme.svelte.ts"
 
-    import {Artist} from "../../canvas/artist";
+    import {Artist} from "../../canvas/artist"
 
-    import Canvas from "../../canvas/canvas.svelte";
-    import Keynav from "./keynav.svelte";
-    import Loading from "../loading.svelte";
+    import Canvas from "../../canvas/canvas.svelte"
+    import Keynav from "./keynav.svelte"
+    import Loading from "../loading.svelte"
+    import GlassButton from "../style/glass_button.svelte"
 
     $effect(() => {
         Theme.save_rune_i(Theme.rune.i);
@@ -202,7 +203,7 @@
             this.c.r = ctx.sin(t / Math.E) * 0.8;
             this.c.i = ctx.cos(t) * 0.8;
 
-            const iterations = 4;
+            const iterations = 5;
             const julia = Julia.scaled_julia_for(this.c, iterations, scale);
 
             ctx.stroke(255);
@@ -525,7 +526,6 @@
         }
     };
 
-
     const artist = new HomeArtist();
 
     let artist_container_element: HTMLDivElement | undefined = $state();
@@ -540,11 +540,19 @@
             observing = true;
         }
     });
+
+    function minimize() {
+        Page.state.minimized = true;
+    }
 </script>
 
 <div class="home-artist-container" bind:this={artist_container_element}>
     <div class="canvas-container">
         <Canvas {artist} bind:ctx={artist_ctx} />
+    </div>
+
+    <div class="close-button">
+        <GlassButton onclick={minimize} borderless={true}>╳</GlassButton>
     </div>
 
     <div class="socials-container">
@@ -595,6 +603,18 @@
 
     .social-link {
         opacity: 30%;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: none;
+        border: none;
+        font-size: 1.1em;
+        margin: 5px;
+        padding: 5px;
+        border-radius: 5px;
     }
 
     * {

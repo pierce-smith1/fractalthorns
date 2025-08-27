@@ -4,10 +4,16 @@
 
     import * as Page from "./page.svelte.ts"
 
+    import GlassButton from "./style/glass_button.svelte"
+
     function toggle_layout_state() {
         Page.state.layout = Page.state.layout === "only-nav" ? "only-page" : "only-nav";
     }
-    
+
+    function update_layout() {
+        set_layout_state_by_width(window.innerWidth);
+    }
+
     function set_layout_state_by_width(width: number)  {
         if (width > 1200) {
             Page.state.layout = "full";
@@ -16,18 +22,23 @@
         }
     }
 
-    set_layout_state_by_width(window.innerWidth);
+    function restore() {
+        Page.state.minimized = false;
+    }
+
+    update_layout();
 
     window.onresize = _event => {
-        set_layout_state_by_width(window.innerWidth);
+        update_layout();
     };
 </script>
 
 <div class="page">
-    <div class="container">
+    <div class="container" class:minimized={Page.state.minimized}>
         <button type="button" class="toggle-layout-button" class:nav-open={Page.state.layout === "only-nav"} on:click={toggle_layout_state}>
             ≡ 
         </button>
+
         {#if Page.state.layout === "full"}
             <Nav />
             <View />
@@ -37,6 +48,12 @@
             <View />
         {/if}
     </div>
+
+    {#if Page.state.minimized}
+        <div class="restore-button">
+            <GlassButton onclick={restore}>restore</GlassButton>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -61,6 +78,11 @@
         justify-content: center;
         align-content: stretch;
         align-items: stretch;
+        transition: opacity 0.2s ease-in;
+    }
+
+    .minimized {
+        opacity: 0;
     }
 
     :global(a) {
@@ -91,5 +113,12 @@
         .container {
             flex-flow: column nowrap;
         }
+    }
+
+    .restore-button {
+        position: absolute;
+        top: 1em;
+        right: 2em;
+        opacity: 0.5;
     }
 </style>

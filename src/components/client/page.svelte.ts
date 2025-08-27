@@ -10,10 +10,12 @@ export type PageState = {
     env: "local" | "test" | "prod",
     current: Domain.Page,
     layout: LayoutState,
+    minimized: boolean,
 };
 
 export let state: PageState = $state({
     env: "prod",
     current: {domain: "home"},
     layout: "full",
+    minimized: false,
 });
