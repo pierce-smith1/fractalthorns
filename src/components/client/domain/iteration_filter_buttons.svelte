@@ -17,13 +17,6 @@
 
     let selected_iterations = $state([] as Array<RecordHelpers.Iteration>);
     
-    // Clear selection on changing tabs
-    $effect(() => {
-        if (Page.state.current.domain) {
-            selected_iterations = [];
-        }
-    });
-
     const filter_fn = (item: Domain.Item) => {
         if (selected_iterations.length === 0) {
             return true;
