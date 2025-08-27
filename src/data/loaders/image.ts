@@ -194,9 +194,14 @@ export async function load_dominant_colors(data: Buffer) {
             return undefined;
         }
 
-        const r = Math.floor((bucket[0].r + bucket[bucket.length - 1].r) / 2);
-        const g = Math.floor((bucket[0].g + bucket[bucket.length - 1].g) / 2);
-        const b = Math.floor((bucket[0].b + bucket[bucket.length - 1].b) / 2);
+        const rs = bucket.map(c => c.r);
+        const gs = bucket.map(c => c.g);
+        const bs = bucket.map(c => c.b);
+
+        const r = Math.floor((Math.min(...rs) + Math.max(...rs)) / 2);
+        const g = Math.floor((Math.min(...gs) + Math.max(...gs)) / 2);
+        const b = Math.floor((Math.min(...bs) + Math.max(...bs)) / 2);
+
         return {r, g, b};
     }
 
@@ -213,7 +218,7 @@ export async function load_dominant_colors(data: Buffer) {
 
     async function get_png_data(): Promise<Buffer> {
         const raw_data = await sharp(data, {sequentialRead: false})
-            .resize(128, 128, {fit: "fill"})
+            .resize(128, 128, {fit: "fill", kernel: "nearest"})
             .ensureAlpha() // TODO: This algo needs to properly ignore fully transparent pixels
                         // it's not the hugest deal though because I haven't made any transparent art yet
             .raw()
