@@ -37,3 +37,30 @@ export function non_null<T>(array: Array<T>): Array<Exclude<T, null | undefined>
 export function undefined_if_all_null<T>(array: Array<T>): Array<Exclude<T, null | undefined>> | undefined {
     return undefined_if_empty(non_null(array));
 }
+
+export function parse_color_string(color: string): {r: number, g: number, b: number} | undefined {
+    if (color.startsWith("#")) {
+        color = color.substring(1);
+    }
+
+    const r = parseInt(color.substring(0, 2), 16);
+    const g = parseInt(color.substring(2, 4), 16);
+    const b = parseInt(color.substring(4, 6), 16);
+
+    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+        return undefined;
+    }
+
+    return {r, g, b};
+}
+
+export function lightness_of_color(color_string: string): "dark" | "light" | undefined {
+    const color = parse_color_string(color_string);
+    if (!color) {
+        return undefined;
+    }
+
+    return (color.r + color.g + color.b > (128 * 3))
+        ? "light"
+        : "dark";
+}
