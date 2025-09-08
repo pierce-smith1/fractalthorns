@@ -72,6 +72,7 @@
         align-items: center;
         width: 90%;
         border-radius: 0 0 5px 5px;
+        hyphens: manual;
     }
 
     .sketch-name {
@@ -81,6 +82,5 @@
         font-weight: 900;
         z-index: 1;
         text-align: center;
-        overflow-wrap: break-word;
     }
 </style>
