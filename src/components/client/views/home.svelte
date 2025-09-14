@@ -4,6 +4,7 @@
     import * as Fetchers from "../../../fetchers"
     import * as MarchingSquares from "./graphics/marching_squares.ts"
     import * as Julia from "./graphics/julia.ts"
+    import * as DPaths from "./graphics/d_paths.ts"
     import * as Page from "../page.svelte.ts"
     import * as Theme from "../theme.svelte.ts"
 
@@ -49,6 +50,7 @@
 
         quintic_points: Array<Array<[number, number]>> = [];
         rune_points: Array<Array<Array<[number, number]>>> = [];
+        rune_path_commands: Array<Array<Array<DPaths.PathCommand>>> = [];
         rune_groupings: Array<{group: number, pip: number}> = [];
 
         last_held_rune_i: number | null = null;
@@ -133,6 +135,21 @@
                 [
                     [[2, 8], [0, 8], [0, 0], [4, 0], [4, 8], [8, 8]],
                 ],
+            ];
+
+            this.rune_path_commands = [
+                [DPaths.d_path_to_commands("m1.5 4.5s-1.5 2.9337 1 3c1.547.04102 3-1 4-3 2-4-1-5-2-2s1 5 3 5")],
+                [DPaths.d_path_to_commands("m1 7.5v-7l3 7v-7l3 7v-7")],
+                [DPaths.d_path_to_commands("m.5 7.5 3-7c.24307 1.9337.8263 4.4226 2 6 1.1161 1.5 3 1 2-1-.44721-.89443-1-1-1-1")],
+                [DPaths.d_path_to_commands("m.5 7.5s1-3 3-3 0 3 2 3c2.0552 0 2-2 2-2 0-2-3-4-5-5")],
+                [DPaths.d_path_to_commands("m.5 7.5s4-6 6-7 1.5 2.9558 0 5c-2.5099 3.4205-3.5087-.47394-3-2 1-3-1-4-3-1")],
+                [DPaths.d_path_to_commands("m.5.5h7c-1.6557 1.628-4 4-7 4 2 0 4 0 7-1 .048157.88821-4.0095 4.1773-6.1547 4.5")],
+                [DPaths.d_path_to_commands("m3.5.5c-1-1-3 .65394-3 3 0 5 7 5 7 1 0-1.3444-.12947-1.9964-1.4419-1.4697-1.3339.5353-2.0261-.95817-1-2 1.2842-1.3038 2.5-.5 2 1")],
+                [
+                    DPaths.d_path_to_commands("m4.5 7.5-1-7 4 4-7.5-1.2374"),
+                    DPaths.d_path_to_commands("m2.5 6.5-1-5"),
+                ],
+                [DPaths.d_path_to_commands("m2.5 6.5c-2 2-3.6769-2.0934-.71274-4.9558 2.4434-2.3596 5.2185.066562 2.7127 2.9558-1.2022 1.3862-1.6639.011086-1-1 .64064-.97568 2.0692-2 3-2 2 0 1 4-1 6")],
             ];
 
             this.rune_groupings = [
@@ -418,7 +435,7 @@
             if (ms_since_change < this.rune_transition_time_ms / 2) {
                 const t = ctx.map(ms_since_change, 0, this.rune_transition_time_ms / 2, 1, 0);
 
-                size = sine_interp(t, 3) * 20;
+                size = sine_interp(t, 3) * 22;
                 line_alpha = sine_interp(t, 10) * 255;
                 wiggle = sine_interp(t, 10) * 3;
                 rotation = sine_interp(t, 1/2) * ctx.TWO_PI;
@@ -427,7 +444,7 @@
 
                 const t = ctx.map(ms_since_change, this.rune_transition_time_ms / 2, this.rune_transition_time_ms, 0, 1);
 
-                size = sine_interp(t, 3) * 20;
+                size = sine_interp(t, 3) * 22;
                 line_alpha = sine_interp(t, 10) * 255;
                 wiggle = sine_interp(t, 10) * 3;
                 rotation = sine_interp(t, 3) * ctx.TWO_PI;
@@ -451,14 +468,29 @@
             ctx.strokeCap(ctx.PROJECT);
             ctx.strokeJoin(ctx.MITER);
 
-            for (const points of this.get_logo_rune_points(rune_i, scale, wiggle_scale, ctx)) {
-                ctx.beginShape();
+            if (rune_i != null && this.rune_path_commands[rune_i] != null) {
+                ctx.push();
 
-                for (const [x, y] of points) {
-                    ctx.vertex(x, y);
+                ctx.translate(-(scale * 8) / 2, -(scale * 8 / 2));
+                ctx.scale(scale);
+                ctx.strokeWeight(0.75);
+                ctx.noFill();
+
+                for (const path of this.rune_path_commands[rune_i]) {
+                    DPaths.draw_d_path(path, wiggle_scale, ctx);
                 }
 
-                ctx.endShape();
+                ctx.pop();
+            } else {
+                for (const points of this.get_logo_rune_points(rune_i, scale, wiggle_scale, ctx)) {
+                    ctx.beginShape();
+
+                    for (const [x, y] of points) {
+                        ctx.vertex(x, y);
+                    }
+
+                    ctx.endShape();
+                }
             }
         }
 
