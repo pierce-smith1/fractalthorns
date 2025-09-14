@@ -140,7 +140,7 @@
             this.rune_path_commands = [
                 [DPaths.d_path_to_commands("m1.5 4.5s-1.5 2.9337 1 3c1.547.04102 3-1 4-3 2-4-1-5-2-2s1 5 3 5")],
                 [DPaths.d_path_to_commands("m1 7.5v-7l3 7v-7l3 7v-7")],
-                [DPaths.d_path_to_commands("m.5 7.5 3-7c.24307 1.9337.8263 4.4226 2 6 1.1161 1.5 3 1 2-1-.44721-.89443-1-1-1-1")],
+                [DPaths.d_path_to_commands("m.5 7.5 3-7c.24307 1.9337.8263 4.4226 2 6 1.1161 1.5 3.3571.75279 1.9725-1.6592")],
                 [DPaths.d_path_to_commands("m.5 7.5s1-3 3-3 0 3 2 3c2.0552 0 2-2 2-2 0-2-3-4-5-5")],
                 [DPaths.d_path_to_commands("m.5 7.5s4-6 6-7 1.5 2.9558 0 5c-2.5099 3.4205-3.5087-.47394-3-2 1-3-1-4-3-1")],
                 [DPaths.d_path_to_commands("m.5.5h7c-1.6557 1.628-4 4-7 4 2 0 4 0 7-1 .048157.88821-4.0095 4.1773-6.1547 4.5")],
@@ -150,6 +150,7 @@
                     DPaths.d_path_to_commands("m2.5 6.5-1-5"),
                 ],
                 [DPaths.d_path_to_commands("m2.5 6.5c-2 2-3.6769-2.0934-.71274-4.9558 2.4434-2.3596 5.2185.066562 2.7127 2.9558-1.2022 1.3862-1.6639.011086-1-1 .64064-.97568 2.0692-2 3-2 2 0 1 4-1 6")],
+                [DPaths.d_path_to_commands("m.5.5c-1.9229 2.4419 2 1 1 2-2 2 .15126 5 2.5082 5 2.4918 0 3.4918-2 3.4918-4 0-3.5025-4-2-4-2")],
             ];
 
             this.rune_groupings = [
@@ -477,7 +478,7 @@
                 ctx.noFill();
 
                 for (const path of this.rune_path_commands[rune_i]) {
-                    DPaths.draw_d_path(path, wiggle_scale, ctx);
+                    DPaths.draw_d_path(path, ctx);
                 }
 
                 ctx.pop();
