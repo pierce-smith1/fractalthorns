@@ -416,51 +416,27 @@
         }
 
         logo_rune_i: number | null = null;
+        logo_graphic: p5.Graphics | null = null;
         draw_logo(ctx: p5) {
-            function sine_interp(t: number, pow: number = 1) {
-                return -ctx.cos(ctx.PI * (t ** pow)) / 2 + 0.5;
-            }
+            this.logo_graphic ??= ctx.createGraphics(256, 256, ctx.WEBGL);
+            this.logo_graphic.setAttributes({antialias: true});
+
+            this.logo_graphic.clear();
+
+            this.logo_graphic.push();
+
+            this.logo_graphic.rotateX(ctx.millis() / 1000);
+            this.logo_graphic.rotateY(ctx.millis() / 4000);
+            this.logo_graphic.box();
+
+            this.logo_graphic.pop();
 
             ctx.push();
 
             ctx.translate(ctx.width / 2, ctx.height / 2);
+
             ctx.imageMode(ctx.CENTER);
-
-            let size = 20;
-            let wiggle = 3;
-            let line_alpha = 255;
-            let rotation = 0;
-
-            const ms_since_change = ctx.min(Date.now() - this.last_held_rune_change_time, this.rune_transition_time_ms);
-
-            if (ms_since_change < this.rune_transition_time_ms / 2) {
-                const t = ctx.map(ms_since_change, 0, this.rune_transition_time_ms / 2, 1, 0);
-
-                size = sine_interp(t, 3) * 22;
-                line_alpha = sine_interp(t, 10) * 255;
-                wiggle = sine_interp(t, 10) * 3;
-                rotation = sine_interp(t, 1/2) * ctx.TWO_PI;
-            } else {
-                this.logo_rune_i = this.last_held_rune_i;
-
-                const t = ctx.map(ms_since_change, this.rune_transition_time_ms / 2, this.rune_transition_time_ms, 0, 1);
-
-                size = sine_interp(t, 3) * 22;
-                line_alpha = sine_interp(t, 10) * 255;
-                wiggle = sine_interp(t, 10) * 3;
-                rotation = sine_interp(t, 3) * ctx.TWO_PI;
-            }
-
-            ctx.rotate(rotation);
-
-            ctx.noFill();
-            ctx.stroke(255, line_alpha);
-            ctx.strokeWeight(this.logo_rune_i != null ? 16 : 13);
-            this.draw_rune_shape(this.logo_rune_i, size, wiggle, ctx);
-
-            ctx.stroke(255, 255 - line_alpha);
-            ctx.strokeWeight(2);
-            this.draw_rune_constellation(this.logo_rune_i, size, wiggle, ctx);
+            ctx.image(this.logo_graphic, 0, 0);
 
             ctx.pop();
         }
