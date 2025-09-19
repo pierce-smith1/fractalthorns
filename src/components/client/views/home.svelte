@@ -168,6 +168,10 @@
         }
 
         draw(ctx: p5) {
+            if (Page.state.minimized) {
+                return;
+            }
+
             ctx.clear();
 
             this.draw_julia(ctx);

@@ -78,11 +78,12 @@
         justify-content: center;
         align-content: stretch;
         align-items: stretch;
-        transition: opacity 0.2s ease-in;
+        transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
     }
 
     .minimized {
         opacity: 0;
+        visibility: hidden;
     }
 
     :global(a) {
