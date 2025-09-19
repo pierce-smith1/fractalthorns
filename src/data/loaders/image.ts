@@ -8,6 +8,7 @@ import * as LoaderUtil from "./util";
 
 export const info_file_name = "info.json";
 export const description_file_name = "descr.md";
+export const remarks_file_name = "remarks.md";
 export const image_file_name = "img.png";
 
 type ImageInfo = {
@@ -58,6 +59,11 @@ export async function upsert_image(name: string, ordinals: OrdinalInformation) {
         ? await Filesystem.read(description_path)
         : null;
 
+    const remarks_path = `${root_path}/${remarks_file_name}`;
+    const remarks = await Filesystem.exists(remarks_path)
+        ? await Filesystem.read(remarks_path)
+        : null;
+
     const data_path = `${root_path}/${image_file_name}`;
     const data = await Filesystem.read_binary(data_path);
 
@@ -84,6 +90,7 @@ export async function upsert_image(name: string, ordinals: OrdinalInformation) {
         characters: info.characters?.join(","),
         primary_color: dominant_colors.primary,
         secondary_color: dominant_colors.secondary,
+        remarks,
     };
 
     return Db
@@ -154,6 +161,19 @@ export async function clear_image_description(name: string) {
         .where("name", "=", name)
         .execute()
         .then(() => console.log(`Cleared description for ${name}`));
+}
+
+export async function clear_image_remarks(name: string) {
+    console.log(`Clearing image remarks ${name}...`);
+
+    return Db
+        .updateTable("image")
+        .set({
+            remarks: null,
+        })
+        .where("name", "=", name)
+        .execute()
+        .then(() => console.log(`Cleared remarks for ${name}`));
 }
 
 export async function load_dominant_colors(data: Buffer) {

@@ -105,6 +105,7 @@ function to_object(row: Kysely.Selectable<Schema.SketchTable>): BaseSketch {
         thumb_url: `/serve/sketch_thumb/${row.name}`,
         primary_color: row.primary_color ?? undefined,
         secondary_color: row.secondary_color ?? undefined,
+        remarks: row.remarks ?? undefined,
     };
 
     return sketch;

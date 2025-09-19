@@ -85,6 +85,11 @@
             <div class="scroll-marker"></div>
         </div>
         <div class="scroll-hint">...</div>
+        {#if props.image.remarks}
+            <div class="remarks-container" class:fullview={full_image_view}>
+                {@html marked.parse(props.image.remarks)}
+            </div>
+        {/if}
     </div>
     <div class="image-container" class:fullview={full_image_view}>
         <button type="button" class="image-link" onclick={toggle_full_view}>
@@ -147,11 +152,11 @@
 
     .image-container {
         display: flex;
+        flex-flow: column nowrap;
         flex-grow: 1;
         justify-content: center;
         align-items: center;
         max-height: 100%;
-        height: 100%;
         margin: 0;
         padding: 0 20px 0 20px;
         transition: width 0.1s ease-out, padding 0.1s ease-out;
@@ -170,7 +175,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        max-height: 100%;
         width: 100%;
         background: none;
         border: none;
@@ -184,6 +189,7 @@
     .image-description-container {
         border-top: 2px solid rgba(255 255 255 / 50%);
         overflow-y: auto;
+        flex-grow: 2;
         scrollbar-width: none;
     }
 
@@ -305,6 +311,19 @@
         position: relative;
         top: 3px;
         width: 16px;
+    }
+
+    .remarks-container {
+        width: 100%;
+        color: white;
+        border-top: 2px solid rgba(255 255 255 / 50%);
+        line-height: 0.2em;
+        transition: height 0.1s ease-out
+    }
+
+    .remarks-container :global(a) {
+        color: white;
+        text-decoration: underline;
     }
 
     @media (width <= 1200px) {

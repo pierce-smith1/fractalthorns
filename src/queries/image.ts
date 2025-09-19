@@ -126,6 +126,7 @@ function to_api_object(row: Kysely.Selectable<Schema.ImageTable>): BaseImage {
         speedpaint_video_url: row.speedpaint_url ?? undefined,
         primary_color: row.primary_color ?? undefined,
         secondary_color: row.secondary_color ?? undefined,
+        remarks: row.remarks ?? undefined,
     };
 
     return image;

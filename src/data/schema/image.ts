@@ -14,4 +14,5 @@ export interface ImageTable {
     characters: string | null,
     primary_color: string | null,
     secondary_color: string | null,
+    remarks: string | null,
 }

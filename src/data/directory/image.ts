@@ -19,6 +19,8 @@ export async function detect_and_resolve_changes() {
             return ImageLoader.delete_image(operation.name);
         } else if (operation.type === "clear-description") {
             return ImageLoader.clear_image_description(operation.name);
+        } else if (operation.type === "clear-remarks") {
+            return ImageLoader.clear_image_remarks(operation.name);
         }
     }));
 }
@@ -26,6 +28,7 @@ export async function detect_and_resolve_changes() {
 type LoadOperation = 
     | {type: "upsert", name: string}
     | {type: "clear-description", name: string}
+    | {type: "clear-remarks", name: string}
     | {type: "delete", name: string}
 
 async function get_load_operations(): Promise<Array<LoadOperation>> {
@@ -41,6 +44,8 @@ async function get_load_operations(): Promise<Array<LoadOperation>> {
             return [{type: "upsert", name: image_change.name}];
         } else if (image_change.type === "descr") {
             return [{type: "clear-description", name: image_change.name}];
+        } else if (image_change.type === "remarks") {
+            return [{type: "clear-remarks", name: image_change.name}];
         } else {
             return [{type: "delete", name: image_change.name}];
         }
@@ -51,7 +56,7 @@ async function get_load_operations(): Promise<Array<LoadOperation>> {
 
 function extract_image_change(change: Directory.DirectoryChange)
     : null 
-    | {name: string, type: "png" | "info" | "descr"} 
+    | {name: string, type: "png" | "info" | "descr" | "remarks"}
 {
     if (!change.path.startsWith("/image")) {
         return null;
@@ -65,6 +70,8 @@ function extract_image_change(change: Directory.DirectoryChange)
         return {name, type: "info"};
     } else if (file === ImageLoader.description_file_name) {
         return {name, type: "descr"};
+    } else if (file === ImageLoader.remarks_file_name) {
+        return {name, type: "remarks"};
     } else {
         return null;
     }

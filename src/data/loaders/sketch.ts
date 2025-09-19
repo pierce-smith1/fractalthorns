@@ -8,6 +8,7 @@ import * as LoaderUtil from "./util";
 
 type SketchInfo = {
     characters?: Array<string>,
+    remarks?: string,
 };
 
 type OrdinalInformation = {
@@ -127,6 +128,7 @@ export async function update_sketch_info(name: string) {
         .updateTable("sketch")
         .set({
             characters: info?.characters?.join(","),
+            remarks: info?.remarks,
         })
         .where("name", "=", name)
         .execute()

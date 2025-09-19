@@ -29,6 +29,10 @@ export const sketch_object_schema = {
         type: Interfaces.fields.optional_string,
         description: "An approximation of the second most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
     },
+    remarks: {
+        type: Interfaces.fields.optional_string,
+        description: "Comments about the image itself, in markdown-formatted text. This is used for additional real-world context about the image, such as crediting depicted characters.",
+    }
 } as const;
 
 export const single_sketch_request_schema = {

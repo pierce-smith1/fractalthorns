@@ -31,7 +31,7 @@ export const image_object_schema = {
     },
     has_description: {
         type: Interfaces.fields.required_boolean,
-        description: "True if and only if the image has a description, i.e. a call to `image_description` will return a non-empty `description` field."
+        description: "True if and only if the image has a description, i.e. a call to `image_description` will return a non-empty `description` field.",
     },
     characters: {
         type: Interfaces.fields.required_array(Interfaces.fields.required_string),
@@ -43,12 +43,16 @@ export const image_object_schema = {
     },
     primary_color: {
         type: Interfaces.fields.optional_string,
-        description: "An approximation of the most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
+        description: "An approximation of the most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image.",
     },
     secondary_color: {
         type: Interfaces.fields.optional_string,
-        description: "An approximation of the second most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image."
+        description: "An approximation of the second most dominant color in the image, in #RRGGBB format. The calculation does not take into account low-saturation colors, so this may be omitted if there are no sufficiently saturated colors in the image.",
     },
+    remarks: {
+        type: Interfaces.fields.optional_string,
+        description: "Comments about the image itself, in markdown-formatted text. This is used for additional real-world context about the image, such as crediting depicted characters.",
+    }
 };
 
 export const single_image_request_schema = {
