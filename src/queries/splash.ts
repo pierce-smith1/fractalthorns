@@ -71,8 +71,6 @@ export async function queue_discord_splash(request: Api.DiscordSplashUploadReque
         .orderBy("splash.created_at", "desc")
         .executeTakeFirst();
 
-    console.log({max_splash_rate_ms});
-
     if (too_recent_splash) {
         return {status: "rate-limited", retry_after_ms: max_splash_rate_ms - (too_recent_splash.s_since_submit * 1000)};
     }

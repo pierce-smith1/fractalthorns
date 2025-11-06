@@ -6,6 +6,7 @@
     import * as Julia from "./graphics/julia.ts"
     import * as Page from "../page.svelte.ts"
     import * as Theme from "../theme.svelte.ts"
+    import * as EmoteHelpers from "../../../helpers/emotes"
 
     import {Artist} from "../../canvas/artist"
 
@@ -47,6 +48,19 @@
             this.splash_font = ctx.loadFont("/assets/fonts/Agave-Regular.ttf");
         }
 
+        emote_images: {[emote: string]: p5.Image} = {};
+
+        get_emote_image(ctx: p5, emote_name: string) {
+            if (this.emote_images[emote_name]) {
+                return this.emote_images[emote_name];
+            }
+
+            const image = ctx.loadImage(`/assets/images/emotes/${emote_name}.png`);
+            this.emote_images[emote_name] = image;
+
+            return image;
+        }
+
         quintic_points: Array<Array<[number, number]>> = [];
         rune_points: Array<Array<Array<[number, number]>>> = [];
         rune_groupings: Array<{group: number, pip: number}> = [];
@@ -55,7 +69,7 @@
         last_held_rune_change_time = 0;
         rune_transition_time_ms = 2500;
 
-        splash_text: string | null = null;
+        splash_chunks: Array<EmoteHelpers.EmoteParsedTextChunk> | null = null;
         splash_y_offset = 170;
         splash_text_actual_width: number | null = null;
         splash_loaded = false;
@@ -159,7 +173,14 @@
             ];
 
             Fetchers.get.current_splash({}).then(result => {
-                this.splash_text = result.splash?.text ?? null;
+                if (result.splash?.text == null) {
+                    this.splash_loaded = true;
+                    return;
+                }
+
+                const formatted_splash = `[ ${(result.splash.text ?? "").toLocaleLowerCase()} ]`;
+
+                this.splash_chunks = EmoteHelpers.parse_discord_emotes(formatted_splash);
                 this.splash_loaded = true;
             });
 
@@ -265,15 +286,16 @@
 
             const t = Date.now() / 500;
 
-            const splash_text = (this.splash_text ?? "...then there was silence").toLocaleLowerCase().trim();
-            const splash = `[ ${splash_text} ]`;
-
             ctx.push();
 
             ctx.translate(ctx.width / 2, ctx.height / 2);
 
             const text_size = ctx.min(25, ctx.min(ctx.width, ctx.height) / 25);
             ctx.textSize(text_size);
+
+            const out_of_splashes = (this.splash_chunks == null);
+            const splash_chunks = this.splash_chunks ?? [{type: "text", text: "[ ...and then there was silence ]"}];
+            const collapsed_splash_length = EmoteHelpers.collapsed_length(splash_chunks);
 
             // calling textWidth on the whole string is what we should be doing here,
             // but for some reason the sequences "fi" and "fl" cause inaccuracies
@@ -282,23 +304,48 @@
             // the text size linearly by the width of one character.
             //const full_splash_width = ctx.textWidth(splash);
 
-            const full_splash_width = ctx.textWidth("a") * splash.length;
+            const char_width = ctx.textWidth("a");
+            const full_splash_width = char_width * collapsed_splash_length;
             this.splash_text_actual_width = full_splash_width;
 
             ctx.noStroke();
-            ctx.fill(255, this.splash_text ? 220 : 120);
+            ctx.fill(255, out_of_splashes ? 120 : 220);
 
-            for (let i = 0; i < splash.length; i++) {
-                const char = splash[i];
+            let i = 0;
+            for (let chunk of splash_chunks) {
+                if (chunk.type === "text") {
+                    for (const char of chunk.text) {
+                        const char_cycle = ctx.sin(t + i * 100);
+                        const x_off = ctx.map(i, 0, collapsed_splash_length, 0, full_splash_width);
 
-                const char_cycle = ctx.sin(t + i * 100);
-                const x_off = ctx.map(i, 0, splash.length, 0, full_splash_width);
+                        ctx.text(
+                            char,
+                            -full_splash_width / 2 + x_off,
+                            this.splash_y_offset + 4 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * (out_of_splashes ? 0.5 : 2))
+                        );
+                        i++;
+                    }
+                }
+                else {
+                    const char_cycle = ctx.sin(t + i * 100);
+                    const x_off = ctx.map(i, 0, collapsed_splash_length, 0, full_splash_width);
 
-                ctx.text(
-                    char,
-                    -full_splash_width / 2 + x_off,
-                    this.splash_y_offset + 4 - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * (this.splash_text ? 2 : 0.5))
-                );
+                    const image = this.get_emote_image(ctx, chunk.name)!;
+                    image.resize(char_width * 2, 0);
+                    image.filter(ctx.GRAY);
+
+                    ctx.push();
+
+                    ctx.image(
+                        this.get_emote_image(ctx, chunk.name)!,
+                        // Images look better when they're on integer coordinates lol
+                        Math.round(-full_splash_width / 2 + x_off),
+                        this.splash_y_offset - char_width - (Math.sign(char_cycle) * (ctx.abs(char_cycle) ** (1/3)) * (out_of_splashes ? 0.5 : 2))
+                    );
+                    i += 2;
+
+                    ctx.pop();
+                }
             }
 
             ctx.pop();
