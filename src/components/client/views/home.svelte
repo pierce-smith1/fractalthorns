@@ -313,8 +313,9 @@
 
             let i = 0;
             for (let chunk of splash_chunks) {
-                if (chunk.type === "text") {
-                    for (const char of chunk.text) {
+                if (chunk.type === "text" || chunk.type === "unknown-emote") {
+                    const text = chunk.type === "text" ? chunk.text : `:${chunk.name}:`;
+                    for (const char of text) {
                         const char_cycle = ctx.sin(t + i * 100);
                         const x_off = ctx.map(i, 0, collapsed_splash_length, 0, full_splash_width);
 
@@ -326,7 +327,7 @@
                         i++;
                     }
                 }
-                else {
+                else if (chunk.type === "known-emote") {
                     const char_cycle = ctx.sin(t + i * 100);
                     const x_off = ctx.map(i, 0, collapsed_splash_length, 0, full_splash_width);
 
@@ -621,7 +622,7 @@
 {#await Fetchers.get.single_image({name: undefined})}
     <Loading />
 {:then image}
-    <Keynav 
+    <Keynav
         page_right={{domain: "image", name: image.name}}
     />
 {/await}

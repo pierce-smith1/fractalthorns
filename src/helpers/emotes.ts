@@ -1,8 +1,9 @@
 export type EmoteParsedTextChunk =
     | {type: "text", text: string}
-    | {type: "emote", name: string}
+    | {type: "known-emote", name: string}
+    | {type: "unknown-emote", name: string}
 
-export const valid_emote_names = [
+export const known_emote_names = [
     "cv",
     "cvdisgust",
     "cvevil",
@@ -56,17 +57,19 @@ export function parse_discord_emotes(input: string): Array<EmoteParsedTextChunk>
         const match = matches[i];
         const emote_name = match[1];
 
-        if (!valid_emote_names.includes(emote_name)) {
-            continue;
-        }
-
         const substring_start = input_cursor;
         const substring_end = match.index;
 
         const leading_text = input.substring(substring_start, substring_end);
 
         chunks.push({type: "text", text: leading_text});
-        chunks.push({type: "emote", name: emote_name});
+
+        if (known_emote_names.includes(emote_name)) {
+            chunks.push({type: "known-emote", name: emote_name});
+        }
+        else {
+            chunks.push({type: "unknown-emote", name: emote_name});
+        }
 
         input_cursor = match.index + match[0].length;
     }
@@ -78,9 +81,15 @@ export function parse_discord_emotes(input: string): Array<EmoteParsedTextChunk>
 }
 
 export function collapsed_length(chunks: Array<EmoteParsedTextChunk>): number {
-    const emote_collapsed_length = 1;
+    const known_emote_collapsed_length = 2;
+
     const length = chunks
-        .map(c => c.type === "text" ? c.text.length : emote_collapsed_length)
+        .map(c => c.type === "text"
+            ? c.text.length
+            : c.type === "known-emote"
+            ? known_emote_collapsed_length
+            : c.name.length
+        )
         .reduce((a, b) => a + b, 0);
 
     return length;

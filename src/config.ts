@@ -4,7 +4,7 @@ function get_or_die(key: string): string {
     if (!value) {
         throw new Error(`Unconfigured environment variable: ${key}`);
     }
-    
+
     return value;
 }
 
