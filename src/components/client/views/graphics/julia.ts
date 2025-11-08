@@ -40,7 +40,7 @@ let z1 = {r: 0, i: 0};
 export function julia_for(c: ComplexNumber, iterations: number): (x: number, y: number) => ComplexNumber {
     return (x, y) => {
         function iterate(z: ComplexNumber): void {
-            complex_pow(z, 4, z1);
+            complex_pow(z, 1, z1);
             complex_pow(z, 2, z);
             complex_sub(z1, z, z);
             complex_add(z, c, z);
