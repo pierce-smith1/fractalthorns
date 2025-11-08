@@ -332,7 +332,7 @@
                     const x_off = ctx.map(i, 0, collapsed_splash_length, 0, full_splash_width);
 
                     const image = this.get_emote_image(ctx, chunk.name)!;
-                    image.resize(char_width * 2, 0);
+                    image.resize(char_width * 2 - 2, 0);
                     image.filter(ctx.GRAY);
 
                     ctx.push();
