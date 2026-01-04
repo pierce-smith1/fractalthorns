@@ -1,19 +1,20 @@
 <script lang="ts">
-    import * as Page from "./page.svelte.ts";
-    import * as Nav from "./nav.svelte.ts";
+    import * as Page from "./page.svelte.ts"
+    import * as Nav from "./nav.svelte.ts"
 
-    import ImageButton from "./domain/image_button.svelte";
-    import EpisodicButton from "./domain/episodic_button.svelte";
-    import PuzzleButton from "./domain/puzzle_button.svelte";
-    import SubprojectButton from "./domain/subproject_button.svelte";
-    import SketchButton from "./domain/sketch_button.svelte";
-    import Keynav from "./views/keynav.svelte";
-    import Loading from "./loading.svelte";
-    import ItemFilterButtons from "./domain/item_filter_buttons.svelte";
+    import ImageButton from "./domain/image_button.svelte"
+    import EpisodicButton from "./domain/episodic_button.svelte"
+    import PuzzleButton from "./domain/puzzle_button.svelte"
+    import SubprojectButton from "./domain/subproject_button.svelte"
+    import SketchButton from "./domain/sketch_button.svelte"
+    import TaleButton from "./domain/tale_button.svelte"
+    import Keynav from "./views/keynav.svelte"
+    import Loading from "./loading.svelte"
+    import ItemFilterButtons from "./domain/item_filter_buttons.svelte"
 
-    import * as GenericUtil from "../../genericutil";
-    import * as Domain from "../../helpers/domain.ts";
-    import * as Subproject from "../../helpers/subproject.ts";
+    import * as GenericUtil from "../../genericutil"
+    import * as Domain from "../../helpers/domain.ts"
+    import * as Subproject from "../../helpers/subproject.ts"
 
     function get_neighboring_record(index: number, items: Array<Domain.Item>, direction: "prev" | "next") {
         const neighbor = GenericUtil.neighbors(index, items)[direction === "prev" ? 0 : 1];
@@ -56,6 +57,7 @@
         (item.domain === "sketch" && Page.state.current.domain === "sketch" && item.sketch.name === Page.state.current.name) ||
         (item.domain === "episodic-item" && Page.state.current.domain === "episodic" && item.record.name === Page.state.current.record_name) ||
         (item.domain === "episodic-line" && Page.state.current.domain === "episodic" && item.record.name === Page.state.current.record_name && item.line_index === Page.state.current.line_index) ||
+        (item.domain === "tale" && Page.state.current.domain === "tale" && item.tale.name === Page.state.current.name) ||
         (item.domain === "discover" && Page.state.current.domain === "discover" && item.puzzle.name === Page.state.current.name) ||
         (item.domain === "subproject" && Page.state.current.domain === "subproject" && item.name === Page.state.current.name)
     ));
@@ -81,12 +83,12 @@
                         {:else if item.domain === "sketch"}
                             <SketchButton sketch={item.sketch} />
                         {:else if item.domain === "episodic-item"}
-                            <EpisodicButton record={item.record} 
-                                prev_neighbor={get_neighboring_record(i, visible_items, "prev")} 
+                            <EpisodicButton record={item.record}
+                                prev_neighbor={get_neighboring_record(i, visible_items, "prev")}
                             />
                         {:else if item.domain === "episodic-line"}
                             <EpisodicButton record={item.record}
-                                prev_neighbor={get_neighboring_record(i, visible_items, "prev")} 
+                                prev_neighbor={get_neighboring_record(i, visible_items, "prev")}
                                 preview_matched_text={item.matched_text}
                                 preview_line_index={item.line_index}
                             />
@@ -94,6 +96,8 @@
                             <PuzzleButton puzzle={item.puzzle}
                                 prev_neighbor={get_neighboring_puzzle(i, visible_items, "prev")}
                             />
+                        {:else if item.domain === "tale"}
+                            <TaleButton tale={item.tale} />
                         {:else if item.domain === "subproject"}
                             <SubprojectButton subproject={get_subproject(item.name ?? "")} />
                         {/if}

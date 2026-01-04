@@ -31,6 +31,7 @@
                     <div class="domain-button-group">
                         <NavButton domain={"episodic"} />
                         <NavButton domain={"discover"} minor={true} />
+                        <NavButton domain={"tale"} />
                     </div>
                     <div class="domain-button-group">
                         <NavButton domain={"subproject"} />

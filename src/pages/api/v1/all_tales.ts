@@ -18,12 +18,14 @@ export const GET = Endpoint.make_handler<"all_tales">("all_tales", async (reques
         name: "tlh",
         title: "The Last Hiinean",
         canon: "auzoan",
+        description: "searching for meaning after losing everything",
         date: "2024-04-15",
         page_url: "/story/the-last-hiinean",
     }, {
         name: "twoe",
         title: "The Weight of Earth",
         canon: "runic",
+        description: "re-learning what it takes to make a difference",
         date: "2026-01-03",
         page_url: "/story/the-weight-of-earth",
     }];

@@ -10,11 +10,6 @@ export type Model = {
 // is probably both very hard and not very useful.
 export const subprojects: Array<Model> = [
     {
-        name: "tlh",
-        title: "The Last Hiinean",
-        description: "a story about loss, identity, and loving oneself"
-    },
-    {
         name: "aor",
         title: "Aegis of Rhodon",
         description: "a (discontinued) idle game of exploration, growth, and death",

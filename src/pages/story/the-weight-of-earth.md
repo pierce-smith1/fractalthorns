@@ -11,13 +11,13 @@
 
 The soft grass and wet soil cradled my still body. Layers of cold air rested on my back, a heavy and frigid blanket of sky. The rising sun was just beginning to chase away the remnants of the dark night, warming up the dewdrops that had scattered across the grass and dripped from my stone body. 
 
-The grass shone a bright yellow-green as light began to play on their blades. The soft purple of the cloudy, waking sky was slowly overcome with rising blues and sharp golden highlights. I peered at the swelling morning from between blades of grass, my eyes just above the earth, my jaw pushed against the soil, breathing in the misty haze that rested just atop it.
+The grass shone a bright yellow-green as light began to play on its blades. The soft purple of the cloudy, waking sky was slowly overcome with rising blues and sharp golden highlights. I peered at the swelling morning from between blades of grass, my eyes just above the earth, my jaw pushed against the soil, breathing in the misty haze that rested just atop it.
 
 I still could not believe what I had just seen. We were just in the Halls of Sculpture. We saw them... Zsung's Totems. That horrible, hateful god... those disgusting puppets of hers. Vile, heartless fiends that should have stayed dead. They should have stayed dead.
 
 Why? Why would she bring them back?! The Llokin were hard enough to take care of, even back then, the last time we drove them away. She was supposed to help... how is this helping? What have we possibly not learned yet? Kraza would always defend her, and say something about balance, no light without darkness, no joy without pain... but why is this much suffering necessary?
 
-Those words... Why. Why? Why?! They bounced aimlessly in my head, stirring my heart with rage. The anger continued to smolder in every bond of my being. At Zsung for her pointless cruelty, at the ungrateful, helpless Llokin who found themselves needing to be saved yet again, at the Totems for their utter complacency in the evil asked of them... at myself, for allowing this to happen.
+Those words... Why. Why? Why?! They bounced aimlessly in my head, stirring my heart with rage. The anger continued to smolder in every bond of my being. At Zsung for her pointless cruelty, at the ungrateful, helpless Llokin who found themselves in need of saving yet again, at the Totems for their utter complacency in the evil asked of them... at myself, for allowing this to happen.
 
 I breathed deeply. There was no time for this... I was all that was left of Kraza's runebearers. It was up to me now. I bottled my rage into guilt, swallowed it deep into my stomach, and rose to my feet.
 
@@ -54,7 +54,7 @@ On the slab in front of them, they each had a pile of valuables. The blue Llokin
 
 "Tchesta... Ah - hello, it is so good to see you..." The runebearer croaked, turning to hack a glob of blood from his mouth into the soil. "Won't you stay and play a round? Please?" His voice was high and pleading, shuddering with the labored rise and fall of his chest. "I'm sure we have... something you would like to win."
 
-I held still to compose myself. My heart boiled with rage, but this was not the time for that to cloud my judgement. Anger is what gave Vaeraw the power to break from Zsung's confines. My kin's anger is what got them killed, and why I now have to hunt for the Chisel. These emotions shall affect me like words would affect a boulder.
+I held still to compose myself. My heart boiled again with familiar rage. But this was not the time for that to cloud my judgement. Anger is what gave Vaeraw the power to break from Zsung's confines. My kin's anger is what got them killed, and why I now have to hunt for the Chisel. These emotions shall affect me like words would affect a boulder.
 
 "What is this?" I dryly spat.
 
@@ -70,7 +70,7 @@ It would never have worked to simply leap towards him and take the Chisel by for
 
 "Fine."
 
-My acceptance pushed out a harrowing, stilted, desperate laugh from the runebearer. "I'll get you a seat..." He growled, and with a sharp breath and a great exertion, he flipped his right hand over, so its jagged palm faced upward, and curled its golden fingers together. A great snapping noise struck my ears and made me jump in my own stone scales as a crude pillar of gold was plunged into reality just beside me, melting into existence as if liquid gold poured and cooled from the sky. I left a few moments for the world to recover from the startling noise - then I took an awkward seat there.
+My acceptance pushed out a harrowing, stilted, desperate laugh from the runebearer. "I'll get you a seat..." He growled, and with a sharp breath and a great exertion, he flipped his right hand over, so its jagged palm faced upward, and curled its golden fingers together. A great snapping noise struck my ears and made me jump in my own stone shell as a crude pillar of gold was plunged into reality just beside me, melting into existence as if liquid gold had poured and cooled from the sky. I left a few moments for the world to recover from the startling noise - then I took an awkward seat there.
 
 "You know, I didn't take you for the gambling type." The stranger remarked to me, halfway to a laugh. "I thought you guys were all about acting virtuously and stuff."
 
@@ -86,7 +86,7 @@ His eyeless mask again turned to stare at me, his whole body leaning forward ont
 
 Breaking my eyes from him and looking down at the table, I slowly opened my own mouth, took hold of my longest front tooth on the left side of my lower jaw, and began to forcefully jolt it left and right, teasing it out of my own body. The unbearable cacophony of cracking and grinding reverberated through my entire skull, every crunch and fracture like a knife into my brain, until it finally unseated itself in an echoing crack. An odious feeling of disgust and regret sank over me as I held my own tooth in my hands. I let it drop to the table, Litul watching with lustful delight.
 
-"How is that?" My mask having cracked, and my mind still recoiling from what I'd done, my voice had recognizably changed. Not even Vaeraw had been able to so much as chip my carapace. Litul certainly would not miss the opportunity to win such a trophy from the bearer of stone, and based on his loudening breaths and the soft muttering that began to fall from his tongue as he stared at its onyx form, it seemed he agreed. The stranger was utterly silent, staring at the dislodged tooth with disbelief. I flung her a stern look, suppressing anything she might want to say.
+"How is that?" My mask having cracked, and my mind still recoiling from what I'd done, my voice had recognizably changed. Not even Vaeraw had been able to so much as chip my carapace. Litul certainly would not miss the opportunity to win such a trophy from the Bearer of Stone, and based on his loudening breaths and the soft muttering that began to fall from his tongue as he stared at its onyx form, it seemed he agreed. The stranger was utterly silent, staring at the dislodged tooth with disbelief. I flung her a stern look, suppressing anything she might want to say.
 
 "Let's play, then, Tchesta..."
 
@@ -122,7 +122,7 @@ I had to do the only thing left that might save her life - I shakily leaned forw
 
 He, of course, did not trade the Chisel with me. He rose the blade of the Chisel into the air and dropped its enchanted quartz into the stranger's skull, splattering his mask with her blood - then letting her body fall into the leaves, he swept up the tooth with his right hand and ran. 
 
-I raced to the Llokin's body, even though there was nothing I could do. With both the chisel and tooth in hand, Litul vanished into the undergrowth - there was the sound of flapping wings as something swooped down to retrieve him, then I heard them both crash through the canopy, tearing through the branches and leaves, until silence returned as all of the remains tumbled to the ground and laid to rest in the soil.
+I raced to the Llokin's body, even though there was nothing I could do. With both the Chisel and tooth in hand, Litul vanished into the undergrowth - there was the sound of flapping wings as something swooped down to retrieve him, then I heard them both crash through the canopy, tearing through the branches and leaves, until silence returned as all of the remains tumbled to the ground and laid to rest in the soil.
 
 That look of strange, senseless fear was frozen on her face. Blood pooled into her lifeless eyes. 
 
@@ -147,7 +147,7 @@ The tiny sting of a drop of rain splashing atop my head pulled me out of my mind
 
 My breath was stolen by it. No ordinary storm could have formed so quickly.
 
-I broke into a steady sprint through the grass towards the hills - as fast as my clumsy frame would reasonably allow. Could this really be what I thought it was? I remember what Vaeraw had done to the bearer of storms - she had broken open his head with a column of stone as he tried to escape. I saw him fall to the earth, but nothing more than that.
+I broke into a steady sprint through the grass towards the hills - as fast as my clumsy frame would reasonably allow. Could this really be what I thought it was? I remember what Vaeraw had done to the Bearer of Storms - she had broken open his head with a column of stone as he tried to escape. I saw him fall to the earth, but nothing more than that.
 
 My running became easier as the grasses slowly started to thin out closer to the hills. The blades grew thinner, shorter, dissipated into meager patches, and lost their brilliant green-yellow shine for an earthy orange, whilst the dirt was gradually replaced with rougher surfaces, gravel and pebbles and rock. The wind had begun to rush directly against me now, slowing me down - my mask shielded my eyes, but I still felt it roll into the cracks in my jaw and the empty socket of my pulled tooth, and while my body was incapable of producing pain, I still felt the ache of every one of those stone scars.
 
@@ -165,7 +165,7 @@ Then a rush of wind picked up from behind me, a few fallen leaves being swept fr
 
 I saw him - my brother of the sky, soaring like a kite through the rain-soaked air, his skin as dark as the clouds, the fog around his wrists and ankles billowing into dense streams of vapor. The rainbow-colored, beetle-like wings sprouting from his shoulders and the base of his tail carried him gently to the ground, the shining rune on the necklace that trailed behind him tossing flecks of colored light all across the earth, somehow catching the meager sunlight that fell through the suffocating blanket of clouds. He peered at me from above, his head half-wrapped in some kind of dark auburn cloth, his sets of long, deep blue horns getting lost in the field of gray behind him.
 
-He made several loops around me as he slowly descended - he did not fly so much as he glided, letting the winds of his whim give him direction. But before long, he came close enough to the ground where I stood, and flung his feet out from behind him so they could catch the dirt. I was waiting right there for him, and I caught him first, in my open arms, before his feet even hit the dirt. I nearly tumbled backwards catching his entire weight. His body was cold and damp from the rain, and his scales were as soft as a cloud, but still it felt as if I had caught a beam of pure sunlight in my arms. I held him as tightly as I could. I was so sure he was lost, I was sure I'd never see him again until I got my hands on the Chisel. 
+He made several loops around me as he slowly descended - he did not fly so much as he glided, letting the winds of his whim give him direction. But before long, he came close enough to the ground where I stood, and flung his feet out from behind him so they could catch the dirt. I was waiting right there for him, and I caught him first, in my open arms, before his feet even hit the ground. I nearly tumbled backwards catching his entire weight. His body was cold and damp from the rain, but still it felt as if I had caught a beam of pure sunlight in my arms. I held him as tightly as I could. I was so sure he was lost, I was sure I'd never see him again until I got my hands on the Chisel. 
 
 "I knew you'd still be out there," he responded, breathlessly, patting me on the shoulder in an attempt to appease my grip before I crushed his lungs. I let him go, his feet pattering softly against the ground. 
 
@@ -258,7 +258,7 @@ Following his trails of darkness across the sky's bright blue expanse, I was led
 
 Following the clouds, traveling closer to the Surface's center, I began to enter the more arid regions of the world, where the distance to the sun grew shorter and its light grew more intense. Many preferred the warmth, and everyone wanted to be as close to the gods as possible, of course, so as grass turned to sand and mountains turned to mesas, settlements of the Llokin would be getting more frequent. For now, though, it was just me and the vast badlands - endless stone and sand of a deep red under my feet, and a sprawling tapestry of clouds above my head. The two colors of the earth and the sky clashed on the horizon, cutting a sharp border along the edges of the world. The occasional splotch of a cheerful green cactus and its lime-colored blossoms, or the dark streak of a crag of ancient limestone poking from underneath the sand, were the only things breaking up the rolling hills of fiery crimson and orange.
 
-Something dashing across my peripheral vision caught my attention - my gaze flicked upwards, and I saw the silhouette of a thin figure with massive wings glide before the clouds, eclipsing the sun and casting its shadow directly over me for a brief moment. Not the bearer of storms - his wings were small, and shone like rainbows when they caught the light. This was definitely Zsokas... but I did not concern myself with her. She could do very little to affect me - and if she tried, I had seen that she was very easy to scare off. I kept my focus simply on trudging forward.
+Something dashing across my peripheral vision caught my attention - my gaze flicked upwards, and I saw the silhouette of a thin figure with massive wings glide before the clouds, eclipsing the sun and casting its shadow directly over me for a brief moment. Not the Bearer of Storms - his wings were small, and shone like rainbows when they caught the light. This was definitely Zsokas... but I did not concern myself with her. She could do very little to affect me - and if she tried, I had seen that she was very easy to scare off. I kept my focus simply on trudging forward.
 
 Attempting to just walk across an entire desert would have been the death of an unprepared mortal. As for me, though hunger and thirst couldn't wear me down, uncertainty and doubt were certainly starting to. Here I find myself, for a third time, wandering around in the middle of nowhere, nothing but a vague direction and an even vaguer goal to guide my feet. It continued to feel both as though this was both my only option and my biggest mistake. More than ever, the people of the Surface needed my protection and my guidance. But how could I give it to them alone? I couldn't even guide myself.
 
@@ -346,7 +346,7 @@ This got the crowd's attention. Many of them opened their eyes, and began to sho
 
 But then, from far above me, somewhere inside the looming branches of the tree, I heard the crackling sound of snapping wood, as if something was shifting around atop them, and saw a small cloud of leaves kicked loose and flutter to the ground. Then the sickening croak of another voice I recognized fell from above, one that instantly made my heart drop and shook me with fear.
 
-"Wh-who would you rather disobey..? You betray Tchesta, and they simply die. You betray Kraza, and you will s-suffer his wrath for eternity." I looked up to the voice. The Totem of Fear sat perched wickedly in the heights of the tree, a tiny crimson splotch in a cloud of bright leaves, as she spit her acidic words to the people below. "The bearer of stone c-could _just as easily_ be a deception as well. Your only safe move is to listen to your god." 
+"Wh-who would you rather disobey..? You betray Tchesta, and they simply die. You betray Kraza, and you will s-suffer his wrath for eternity." I looked up to the voice. The Totem of Fear sat perched wickedly in the heights of the tree, a tiny crimson splotch in a cloud of bright leaves, as she spit her acidic words to the people below. "The Bearer of Stone c-could _just as easily_ be a deception as well. Your only safe move is to listen to your god." 
 
 I attempted to retort. "Kraza would never punish you for doing what you think is right! Do not think these monsters know a thing about him!" 
 
@@ -387,7 +387,7 @@ That was the last thing I remember.
     <div class="act-img" id="act-4"></div>
 </div>
 
-So my body ceased to be. The light behind my mask flickered away, the strings animating my stone snapped apart, the breath of life spilled into the air from my open maw. The bearer of stone crumbled into chunks of earth, returning to the shattered pile of rocks they were first reborn from.
+So my body ceased to be. The light behind my mask flickered away, the strings animating my stone snapped apart, the breath of life spilled into the air from my open maw. The Bearer of Stone crumbled into chunks of earth, returning to the shattered pile of rocks they were first reborn from.
 
 My soul now severed from the corporeal senses, my mind had been plunged deeply into the endless slumber of death. In its darkness, the flow of time spilled across space in a thousand different directions, and dreams shimmered into existence, made real in the void of my thoughts.
 
@@ -463,7 +463,7 @@ The breaths coming from the body below me were so hauntingly calm and delicate. 
 
 The forest was unbelievably quiet, the air still as a frozen lake. Specks of something pure and white began to flutter down from the pink sky, dancing in my periphery. Snowflakes tumbled in the air like leaves plucked gently from great aspens reaching into the clouds. 
 
-With Vaeraw's storms hunting them, everyone here will be dead in a matter of days. I could do nothing. I was too tired to feel my rage anymore - at them for sealing their own fate, at Makeh for stealing their lives, at myself for being so pointless. I scooped my poor son into my arms, and held him against my rocky chest as gently as I could, trying to nestle him against the little patches of orange moss that softly striped my arms. The blood seeping from the back of his head trickled over my palms. 
+With Bareh's storms hunting them, everyone here will be dead in a matter of days. I could do nothing. I was too tired to feel my rage anymore - at them for sealing their own fate, at Makeh for stealing their lives, at myself for being so pointless. I scooped my poor son into my arms, and held him against my rocky chest as gently as I could, trying to nestle him against the little patches of orange moss that softly striped my arms. The blood seeping from the back of his head trickled over my palms. 
 
 He never heard stories of someone who would save the world when everything was lost - that's not who I was supposed to be. He just heard stories of someone that would try. Somewhere along the way, I stopped trying. Really trying, not just trashing against the surface of the water that held my reflection. Really believing I could act to make the world a better place, not just to prove something to myself. Perhaps the guilt of losing my family did that to me - replaced everything good I had in my soul with frustration that I wasn't better. I could have just been good.
 
@@ -574,7 +574,7 @@ Laughing and cheering with nervelessness, Senteh spread his feet and planted the
 
 With an outstretched claw - made of black, bloody metal just as Vaeraw's were - he crashed directly into Senteh's gauntlet, their eyes locking for a brief moment, the impact quaking the earth and lifting the very snow and soil and his feet. Chunks of indigo stone from Senteh's gauntlet flung off into the formless night, and I heard his voice catch in pain.
 
-I ran towards the two of them as they began to tear into each other. The Bearer of Storms, uncontrollably, relentlessly, ferociously raked Senteh with his bloody claws, digging away at Senteh's stone armor, every impact arcing with thunder that leapt into and seared his skin. Senteh, standing several feet taller than his opponent, tried to make space with his spear, but Bareh moved with swift fluidity to dance around every swipe of its blazing point. Distress in his eyes, Senteh put both hands across his face and rose the earth around him to push Bareh away, which caught him off-guard and rewarded him with a blunt column of frozen soil to the stomach, tossing him to the side for a brief moment.
+I ran towards the two of them as they began to tear into each other. The Bearer of Storms, uncontrollably, relentlessly, ferociously raked Senteh with his bloody claws, digging away at his stone armor, every impact arcing with thunder that leapt into and seared his skin. Senteh, standing several feet taller than his opponent, tried to make space with his spear, but Bareh moved with swift fluidity to dance around every swipe of its blazing point. Distress in his eyes, Senteh put both hands across his face and rose the earth around him to push Bareh away, which caught him off-guard and rewarded him with a blunt column of frozen soil to the stomach, tossing him to the side for a brief moment.
 
 Having closed the distance to them, I tried to follow through, sliding to meet Bareh on the ground and aiming to pin one of my horns through his wings to immobilize him. Looking over him, I met his one good eye - their whites had turned into a void, and his pupil was nothing more than a purple flame, descending into infinity, reflecting nothing but pain.
 
@@ -616,7 +616,7 @@ Despite everything he had done, It would have taken rage for me to hurt him any 
 
 Bareh did not agree, of course. He ripped my horns from his body and threw us apart with a strike from his spiked fists, leaving me to tumble once again into the icy snow, landing sharply on my back. I stared up into the endless fog and flying spikes of ice, until shortly he came into view, towering over me, his fists raised, his lightless, burning eye staring into mine with boundless malice. Wordlessly, only able to scream, he began to pummel his fists against my mask, alternating the blows from his left and right arms, battering my head back and forth. The frigid metal spikes on his knuckles cracked against my snout, and my jaw, and even into my eyes, but still no part of me could be broken. I felt every shock as they concussed my thoughts, blurred my vision, and tried to leak mindless rage out of my heart, but I remained still, soaking up every drop of his anger I could.
 
-It was hard. My heart was tumultuous, chaotic, unsatisfied. The irony, the stupidity, the senselessness of it all was unbelievable. This is what the guardians of the Surface were reduced to: consumed by madness, tearing each other apart, so utterly consumed by their family's death that we had no choice but to kill each other again, laying waste to everything we built while we tore at each others' necks. And it was all. My. Fault. 
+It was hard. My heart was tumultuous, chaotic, unsatisfied. The irony, the stupidity, the senselessness of it all was unbelievable. This is what the guardians of the Surface were reduced to: consumed by madness, tearing each other apart, so utterly ruined by their family's death that we had no choice but to kill each other again, laying waste to everything we built while we tore at each others' necks. And it was all. My. Fault. 
 
 There was no world where it would not be my fault. What happened has happened. How could I have made those mistakes? Well, I did. We did. We're not going to stop making mistakes. They're just going to keep happening. All the time, everything we do, everywhere we go. That will never change, those scars will be all that I can carry. But I do have the power to forgive. Tchesta... I forgive you. 
 
@@ -672,9 +672,13 @@ From the mountaintop's silent, unmoving air, I surveyed the world below. A seaml
 
 The sight was enthralling, but there was an emptiness I could not ignore. No clouds painted the sky, no winds swept over the trees and sang through the grass... even the plants seemed to have stopped growing. I slid the rune of storms between my fingers, feeling its smooth but quiet surface against my rough fingertips. It still shone with glorious rainbow light, and smelled of fresh rain. My own emerald eyes reflected in its flawless surface.
 
-I did what I could to search for my sisters Lasii and Taerxun, but weeks and weeks of scouring the land had taken me nowhere, nothing even as small as a purple petal off the flowers on Lasii's head, or a flake of enchanted bark from Taerxun's wooden antlers. My heart ached to see them again, but I couldn't afford to wait for them forever.
+It had been quite some time since I ended his life. With no Chisel to reclaim his soul - to reclaim any of their souls - my family may never walk the Surface again. 
 
-Maybe it was true that Kraza's purpose for us was lost a long time ago, that now the Llokin have grown and need to learn to take care of themselves. But after everything... of course I feel like I have to redeem myself for my mistakes. As long as I still exist, I can do something - and resting now will rot away my heart .
+I... did my best to save Senteh. And I did what was necessary to snuff Vaeraw's influence from the world. It is pointless to dwell... maybe Bareh was right, and now that the Chisel was destroyed and Vaeraw was dead, this would finally be the last of the Totems. But I think it is more likely that, as long as we live, we will just need to keep proving to Zsung we understand her lessons.
+
+My sisters Lasii and Taerxun were, ostensibly, still alive, but weeks of scouring the land for clues to their whereabouts had taken me nowhere, nothing even as small as a purple petal off the flowers on Lasii's head, or a flake of enchanted bark from Taerxun's wooden antlers. My heart ached to see them again, but I couldn't afford to wait for them forever.
+
+Maybe it was true that Kraza's purpose for us was lost a long time ago, that now the Llokin have grown and need to learn to take care of themselves. But after everything... of course I feel like I have to redeem myself for my mistakes. As long as I still exist, I can do something - and resting now will rot away my heart.
 
 It was as uplifting of a feeling as it was terrifying. Little splashes of fear bubbled inside me as I thought about the future of the Surface in my hands alone. What made me think I could do more good than harm this time? It wasn't even that long ago that I - that all of my family - were the very backbone of the world, the source of all virtue and love. Time changed that. How do I beat the passage of time? I feel different now, but have I really learned anything... anything that will last?
 
@@ -684,13 +688,13 @@ A weak but familiar voice suddenly echoed from behind me - thoroughly startling 
 
 "Zsokas..!" I brightly exclaimed, raising to my feet with a rumble of stone against gravel, and spun towards the source of the voice. With a brief glimpse of the figure's slender, winged silhouette, it was indeed her - but my legs stopped dead and my whole upper body jolted backwards with a crash of shock when my vision materialized and saw her clearly.
 
-The wounds all along her legs and arms, the massive rune clawed into her stomach and the top of her head, the nearly-skeletal construction of her frame... the shadows of Zsung's punishment remained, but had, unbelievably, all started to heal. The lesions on her limbs had recovered into rough scars, new layers of scales slowly growing in to cover them, and the rune once leaking blood from her abdomen had almost fully sealed with under a layer of fresh flesh. Though her body still resembled a skeleton wrapped in scales, there was enough meat and muscle returning to her bones that not every single angle of her pelvis and sternum were visible. Even the glorious set of ram-like horns atop her head seemed to have grown a more vivid orange color.
+The wounds all along her legs and arms, the massive rune clawed into her stomach and the top of her head, the nearly-skeletal construction of her frame... the shadows of Zsung's punishment remained, but had, unbelievably, all started to heal. The lesions on her limbs had recovered into rough scars, new layers of scales slowly growing in to cover them, and the rune once leaking blood from her abdomen had almost fully sealed under a layer of fresh flesh. Though her body still quite resembled a skeleton wrapped in scales, there was enough meat and muscle returning to her bones that _not_ every single angle of her pelvis and sternum were visible, and her stomach had become appreciably flat rather than concave. Even the glorious set of ram-like horns atop her head seemed to have grown a more vivid orange color.
 
-She looked down at me with a weak smile and drooped eyelids. Though she held her head high, and the pain of her disfigurement had drained a little from her eyes, her recovery seems to have left her exhausted.
+She looked down at me with a weak smile and drooped eyelids. Though she held her head high, and the pain of her disfigurement had drained a little from her eyes, her recovery seemed to have left her exhausted.
 
-I embraced her in my arms as carefully as I could, my head and horns coming to rest against her waist - as even in a pained hunch, her limber frame still rose significantly higher than me. My spirit leapt with joy to see her here, in front of me, not just alive, but sensing my fear and responding with encouragement! 
+I embraced her in my arms as carefully as I could, my solid head and sharp horns coming to rest gently against her waist - even in a pained hunch, her limber frame still rose significantly higher than me. My spirit leapt with joy to see her here, in front of me, not just alive, but sensing my fear and responding with encouragement! 
 
-She placed a hand on my back, her claws clacking against my stone.
+She placed a hand on my back, her claws clacking against my stone, her roughened but clean scales sliding slowly against it
 
 "Zsokas... did you do it?" I said, with a catch in my throat. The strong light from the sun directly overhead danced across her face, which sparkled on her vermilion scales, stretched with a tired expression that held a tinge of regret.
 
@@ -700,7 +704,7 @@ She placed a hand on my back, her claws clacking against my stone.
 
 My heart swelled as I spoke to her. It was true - I was so proud of her. She wasn't perfect. She did abandon me after killing Makeh and missed our final confrontation with the Totem of Rage. But unmistakably, she was no longer acting like the villain she was reborn to be. I felt bittersweet grief drip over my heart, wondering if this meant she was going to be laid to rest right in front of me, as Zsung finally absolved her of her responsibilities and sought a new Totem of Fear. But she kept her heavy eyes open, for now.
 
-"Thank you..." She said so softly that I could only barely hear, her eyes falling from mine and gluing their gaze to the ground. "After that happened, and after you subdued Bareh... I still wasn't getting any better. I had to find a way to do more. I have..." She paused for a few long seconds, not moving her eyes from the gravel. "I have been trying to visit the people, looking for anything I can do to help. You know... like you."
+"Thank you..." She said so softly that I could only barely hear, her eyes falling from mine and gluing their gaze to the ground, her pupils rolling over the pebbles beneath her feet. "After that happened, and after you subdued Bareh... I still wasn't getting any better. I had to find a way to do more. I have..." She paused for a few long seconds, not moving her eyes from the gravel. "I have been trying to visit the people, looking for anything I can do to help. You know... like you."
 
 Like... me?
 
@@ -712,11 +716,11 @@ I snapped back into my body. "W-what?"
 
 A warm smile crept across her face. "Some people thought I was one of your sisters... isn't that funny?" She let out a genuine chuckle from the core of her lungs, and her smile crept up into her eyes, showing some of her teeth. "But I couldn't flick my wrist to grow a tree or summon rain or anything. Some people were afraid of what was going to happen now that it looks like most of Kraza's little helpers are gone for good, and I tried to reassure those people, but... honestly, most of them didn't even care."
 
-The brightness in her voice and on her face fell. "So now I don't have much to do to... make up for everything I did. I can't think of any worse feeling  than asking for forgiveness when... when you know you don't deserve it."
+The brightness in her voice and on her face darkened, her exhaustion rushing in to fill the void left behind. "So now I don't have much to do to... make up for everything I did. I can't think of any worse feeling  than asking for forgiveness when... when you know you don't deserve it."
 
-I felt the smoothness of Bareh's rune still in my hands, the loop of thread making up its necklace sliding between my fingers. I closed the rune in a fist and took a deep breath, Zsokas finally rising her eyes to meet mine again. 
+I felt the smoothness of Bareh's rune still in my hands, the loop of thread making up its necklace sliding between my fingers, catching on the little pores and pockets in my stone. It felt cold and damp, as if it were a shard of glass left out in the rain. I closed the rune in a fist and took a deep breath, Zsokas taking notice and finally rising her eyes to meet mine again. 
 
-Lifting my closed hand up to my shoulder level, I then opened my hand and let the rune fall from my palm, dangling from its loop around my middle and pointer finger.
+Lifting my closed hand up to my shoulders, I spread its fingers apart and let the rune fall from my palm, catching itself by the thread, dangling from its loop around my middle and pointer finger.
 
 Zsokas's gaze locked onto it, and her beady eyes widened. The sight of it knocked the exhaustion right out of her body, and she took an unsteady step back, as if she'd been poked in the stomach, bringing her wings and her tail close to her body, standing up so straight her spine arced backwards, looming at least twice my own height. She exhaled sharply after a second or two of silence, her feet fidgeting and claws scraping against the pebbles on the ground.
 
@@ -728,21 +732,21 @@ Channeling my strength into my voice, I made my words as solid as stone. "You sa
 
 "Does it scare you?"
 
-Zsokas looked down at me with understanding. Her body slowly started to shed its tension - her wings unfurled, her tail crept out from between her legs and fell behind her again. She darted her eyes between the rune I held and the sky. Uncertainty clearly scrambled behind her face, but she showed little on her expression - all I saw was determination, resolve, courage.
+Zsokas looked down at me with understanding. Her body slowly started to shed its tension - her wings unfurled, and her tail crept out from between her legs, coming to rest behind her again. She darted her eyes between the rune I held and the plain, cloudless sky. Uncertainty clearly scrambled behind her face, but she showed little on her expression - all I saw was determination, resolve, courage.
 
-A long time passed. Then she closed her eyes, and lowered herself onto both of her knees, one by one, settling onto the uneven rocks. She let her arms fall by her side, spread the wings on her back and held them just above the ground, and bowed her head towards me, taking deep, calm breaths.
+A long time passed. Then she closed her eyes, and lowered herself onto both of her knees, one by one, the uneven rocks crakling as she settling onto them. She let her arms fall by her side, spread the wings on her back and held them just above the ground, and bowed her head towards me, taking deep, calm breaths.
 
-A small breeze swept around our feet, picking up little motes of dust to join them with the sky.
+A small breeze swept around our feet, picking up little motes of dust and dissolving them into the air.
 
 I loosed the necklace so it would fit around her massive set of curled horns, then slid it gently over her head, until it rested against the back of her neck and the rune itself dangled just across her chest. The thread of the necklace crackled with static against her scales as it came in contact with her skin, and the rune sang with delight and shone with sunlight and it bonded with her soul.
 
-The breeze swelled into a gust, rushing against my head and shoulders, filling my ears with a concert of noise. Zsokas rose her knees from the ground, shifting her weight back onto her feet, towering above me again - and she opened her eyes,  lightning flickering within her pupils, her mouth hung cautiously ajar, words on the tip of her tongue but not quite coming out. The smell of petrichor, exactly that my brother used to have, overcame my nostrils.
+The breeze swelled into a gust, rushing against my head and shoulders, filling my ears with a concert of noise. Zsokas rose her knees from the ground, shifting her weight back onto her feet, towering above me again - and she opened her eyes,  lightning flickering within her pupils, her mouth hung cautiously ajar, words on the tip of her tongue but not quite coming out. The smell of petrichor, that sweet scent I remember from my late brother, overcame my nostrils.
 
-Slowly, the wind settled back to a gentle breeze, leaving the sky streaked with brushstrokes of white as nascent clouds swam in its depth again.
+Slowly, the wind settled back to a gentle breeze, leaving the sky streaked with brushstrokes of white as nascent clouds hatched and swam in its depths again.
 
 "What happens now?" She finally asked.
 
-"We do better," I replied, staring out over the sprawling Surface, whose rolling grasses and trees were animated by the wind again.
+"We do our best," I replied, staring out over the sprawling Surface, soft waves of motion newly rolling across the endless grasses and trees.
 
 <div class="act-img-header">
     <div class="act-img-frame" id="act-frame-end"></div>

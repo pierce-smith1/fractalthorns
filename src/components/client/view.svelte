@@ -1,18 +1,19 @@
 <script lang="ts">
-    import * as Api from "../../api/api";
-    import * as Domain from "../../helpers/domain.ts";
-    import * as Fetchers from "../../fetchers";
+    import * as Api from "../../api/api"
+    import * as Domain from "../../helpers/domain.ts"
+    import * as Fetchers from "../../fetchers"
 
-    import * as Page from "./page.svelte.ts";
+    import * as Page from "./page.svelte.ts"
 
-    import HomeView from "./views/home.svelte";
-    import ImageView from "./views/image.svelte";
-    import SketchView from "./views/sketch.svelte";
-    import RecordView from "./views/record.svelte";
-    import PuzzleView from "./views/puzzle.svelte";
-    import SubprojectView from "./views/subproject.svelte";
-    import Loading from "./loading.svelte";
-    import GlassPane from "./style/glass_pane.svelte";
+    import HomeView from "./views/home.svelte"
+    import ImageView from "./views/image.svelte"
+    import SketchView from "./views/sketch.svelte"
+    import RecordView from "./views/record.svelte"
+    import PuzzleView from "./views/puzzle.svelte"
+    import TaleView from "./views/tale.svelte"
+    import SubprojectView from "./views/subproject.svelte"
+    import Loading from "./loading.svelte"
+    import GlassPane from "./style/glass_pane.svelte"
 
     let {page = undefined}: {
         page?: Domain.Page,
@@ -44,10 +45,16 @@
 
         return {entry, lines};
     }
-    
+
     async function get_puzzle_data(name?: string): Promise<Api.PuzzleObject> {
         const puzzle = await Fetchers.get.single_puzzle({name});
         return puzzle;
+    }
+
+    async function get_tale_data(name?: string): Promise<Api.TaleEntry | undefined> {
+        const {tales} = await Fetchers.get.all_tales({});
+        const tale = tales.find(tale => tale.name === name);
+        return tale;
     }
 </script>
 
@@ -55,8 +62,8 @@
     <Loading />
 {:then news}
     <div class="view-container" class:reading-mode={current_page.domain === "episodic"} class:solving-mode={current_page.domain === "discover"}>
-        <GlassPane 
-            --background-color={clear_bg ? "none" : undefined} 
+        <GlassPane
+            --background-color={clear_bg ? "none" : undefined}
             --blur-amount={current_page.domain === "episodic" ? "0px" : "10px"}
             title={`fractalthorns.com / ${news.items.filter(item => item.version)[0].version}`}
         >
@@ -77,7 +84,7 @@
             {:else if current_page.domain === "episodic"}
                 {#await get_record_data(current_page.record_name)}
                     <Loading />
-                {:then {entry, lines}} 
+                {:then {entry, lines}}
                     <RecordView record={entry} text={lines} line_index={current_page.line_index} />
                 {:catch}
                     <div class="record-error-container">
@@ -89,6 +96,14 @@
                     <Loading />
                 {:then puzzle}
                     <PuzzleView {puzzle} />
+                {/await}
+            {:else if current_page.domain === "tale"}
+                {#await get_tale_data(current_page.name)}
+                    <Loading />
+                {:then tale}
+                    {#if tale}
+                        <TaleView {tale}></TaleView>
+                    {/if}
                 {/await}
             {:else if current_page.domain === "subproject"}
                 <SubprojectView name={current_page.name} />
@@ -106,7 +121,7 @@
 
     .reading-mode {
         /* BRITTLE over the record gutter deco */
-        background-image: linear-gradient(to right, transparent, 65px, rgba(255 255 255 / 80%) 65px); 
+        background-image: linear-gradient(to right, transparent, 65px, rgba(255 255 255 / 80%) 65px);
         backdrop-filter: blur(30px);
         -webkit-backdrop-filter: blur(30px);
     }

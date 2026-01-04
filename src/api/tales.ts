@@ -3,11 +3,15 @@ import * as Interfaces from "../interfaces"
 export const tale_entry_schema = {
     name: {
         type: Interfaces.fields.required_string,
-        description: "The identifying name of this tale."
+        description: "The identifying name of this tale.",
     },
     title: {
         type: Interfaces.fields.required_string,
-        description: "The display title of this tale."
+        description: "The display title of this tale.",
+    },
+    description: {
+        type: Interfaces.fields.required_string,
+        description: "A very brief summary of the tale.",
     },
     canon: {
         type: Interfaces.fields.optional_string,

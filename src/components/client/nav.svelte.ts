@@ -79,7 +79,7 @@ export function set_domain_items(state: NavState, domain: Domain.Domain) {
                 const {images} = await Fetchers.get.all_images({});
                 return images.map(image => ({domain, image}));
 
-            case "sketch": 
+            case "sketch":
                 const {sketches} = await Fetchers.get.all_sketches({});
                 return sketches.map(sketch => ({domain, sketch}));
 
@@ -90,12 +90,17 @@ export function set_domain_items(state: NavState, domain: Domain.Domain) {
                     record
                 })));
 
-            case "discover": 
+            case "discover":
                 const {chapters: puzzle_chapters} = await Fetchers.get.all_puzzles({});
                 return puzzle_chapters.flatMap(chapter => chapter.puzzles.map(puzzle => ({
                     domain: "discover",
                     puzzle
                 })));
+
+            case "tale": {
+                const {tales} = await Fetchers.get.all_tales({});
+                return tales.map(tale => ({domain, tale}));
+            }
 
             case "subproject": return Promise.resolve(Subproject.subprojects.map(subproject => ({domain, name: subproject.name})));
         }
