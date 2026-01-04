@@ -15,11 +15,15 @@
         children?: Svelte.Snippet,
     } = $props();
 
-    async function navigate(event: MouseEvent) {
+    async function onclick(event: MouseEvent) {
         event.preventDefault();
 
         window.history.pushState(JSON.stringify(dest), "", Domain.page_to_path(dest));
 
+        await navigate(dest);
+    }
+
+    async function navigate(dest: Domain.Page) {
         const actual_dest = Nav.is_incomplete_page(dest)
             ? await Nav.get_landing_page(dest.domain)
             : dest;
@@ -33,12 +37,13 @@
         Nav.set_domain_items(Nav.state, dest.domain);
     }
 
-    window.onpopstate = (event: PopStateEvent) => {
-        Page.state.current = JSON.parse(event.state);
+    window.onpopstate = async (event: PopStateEvent) => {
+        const dest = JSON.parse(event.state) as Domain.Page;
+        await navigate(dest);
     };
 </script>
 
-<a href={Domain.page_to_path(dest)} onclick={navigate}>
+<a href={Domain.page_to_path(dest)} {onclick}>
     {#if children}
         {@render children()}
     {/if}
