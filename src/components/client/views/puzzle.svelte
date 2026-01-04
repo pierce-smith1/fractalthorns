@@ -1,13 +1,14 @@
 <script lang="ts">
-    import p5 from "p5";
-    import {onDestroy} from "svelte";
+    import p5 from "p5"
+    import {onDestroy} from "svelte"
 
-    import * as Api from "../../../api/api";
-    import * as Fetchers from "../../../fetchers";
-    import * as Puzzle from "../../../helpers/puzzle";
-    import * as Record from "../../../helpers/record";
+    import * as Api from "../../../api/api"
+    import * as Fetchers from "../../../fetchers"
+    import * as Puzzle from "../../../helpers/puzzle"
+    import * as Record from "../../../helpers/record"
 
-    import PageLink from "../page_link.svelte";
+    import PageLink from "../page_link.svelte"
+    import KeyNav from "./keynav.svelte"
 
     let {
         puzzle,
@@ -64,6 +65,11 @@
     </div>
 </div>
 
+<KeyNav
+    page_left={{domain: "episodic"}}
+    page_right={{domain: "tale"}}
+/>
+
 <style>
     .puzzle-container {
         height: 100%;
@@ -83,7 +89,7 @@
         border-radius: 5px;
         transition: height 0.5s ease-out, background-color 2.0s ease-out;
     }
-    
+
     .records-return-container.return-visible {
         display: block;
         padding: 10px 30px;

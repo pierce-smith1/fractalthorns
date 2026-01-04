@@ -52,11 +52,11 @@
             <pre class="record-header">{text.header_lines.join("\n")}</pre>
             <div class="record-body-container">
                 {#each text.lines as line, i}
-                    <RecordLine 
-                        {line} 
-                        last_line={i > 0 ? text.lines[i - 1] : undefined} 
-                        record={text} 
-                        line_index={i} 
+                    <RecordLine
+                        {line}
+                        last_line={i > 0 ? text.lines[i - 1] : undefined}
+                        record={text}
+                        line_index={i}
                         requested_line_index={line_index}
                     />
                 {/each}
@@ -64,14 +64,11 @@
         </div>
     </div>
 </div>
-{#await Fetchers.get.single_image({name: undefined})}
-    <Loading />
-{:then image}
-    <Keynav
-        page_left={{domain: "image", name: image.name}}
-        page_right={{domain: "subproject"}}
-    />
-{/await}
+
+<Keynav
+    page_left={{domain: "sketch"}}
+    page_right={{domain: "discover"}}
+/>
 
 <style>
     .view-container {
@@ -103,7 +100,7 @@
     .record-container:has(.record-somehow-i-knew) {
         background-color: rgba(from #f6a9c8 r g b / 50%);
     }
-    
+
     .record-title-container {
         position: relative;
         padding: 20px;

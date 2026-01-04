@@ -11,8 +11,9 @@
 <div class="container">
     <img src={sketch.image_url}>
 </div>
-<Keynav 
-    page_left={{domain: "subproject"}}
+<Keynav
+    page_left={{domain: "image"}}
+    page_right={{domain: "episodic"}}
 />
 
 <style>

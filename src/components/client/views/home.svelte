@@ -619,13 +619,10 @@
         </a>
     </div>
 </div>
-{#await Fetchers.get.single_image({name: undefined})}
-    <Loading />
-{:then image}
-    <Keynav
-        page_right={{domain: "image", name: image.name}}
-    />
-{/await}
+
+<Keynav
+    page_right={{domain: "image"}}
+/>
 
 <style>
     .home-artist-container {

@@ -101,7 +101,7 @@
 {:then episodic}
     <Keynav
         page_left={{domain: "home"}}
-        page_right={{domain: "episodic", record_name: episodic.chapters[0].records[0].name ?? ""}}
+        page_right={{domain: "sketch"}}
     />
 {/await}
 
@@ -216,7 +216,7 @@
         animation: 0.2s linear 0.3s fadein forwards;
     }
 
-    /* TODO this animation looks nice but the real point of it is a nasty hack to 
+    /* TODO this animation looks nice but the real point of it is a nasty hack to
        hide the scroll hint in that split second before the intersection observer
        sees it, since otherwise it flashes on screen like a rave for ants as you
        page through images.
@@ -232,7 +232,7 @@
             opacity: 100%;
         }
     }
-    
+
     .scroll-marker {
         width: 100%;
         height: 1rem;
@@ -251,7 +251,7 @@
         margin: 0;
         padding: 0;
     }
-    
+
     .title-container {
         display: flex;
         flex-flow: row nowrap;
@@ -267,7 +267,7 @@
         font-size: 0.4em;
         color: rgba(255 255 255 / 75%);
         position: relative;
-        bottom: 12px; 
+        bottom: 12px;
         left: 5px;
     }
 
@@ -287,11 +287,11 @@
         opacity: 50%;
         transition: opacity 0.2s ease-out;
     }
-    
+
     .runeword:hover {
         opacity: 80%;
     }
-    
+
     .character-button {
         background: none;
         border: none;
@@ -343,7 +343,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .image-info-container {
             max-width: 90%;
             width: 90%;
