@@ -67,6 +67,9 @@ export async function get_landing_page(domain: Domain.Domain): Promise<Domain.Pa
     } else if (domain === "discover") {
         const latest = await Fetchers.get.single_puzzle({});
         return {domain: "discover", name: latest.name};
+    } else if (domain === "tale") {
+        const latest = (await Fetchers.get.all_tales({})).tales[0];
+        return {domain: "tale", name: latest.name};
     } else {
         return {domain};
     }

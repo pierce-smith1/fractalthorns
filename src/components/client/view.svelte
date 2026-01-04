@@ -51,9 +51,9 @@
         return puzzle;
     }
 
-    async function get_tale_data(name?: string): Promise<Api.TaleEntry | undefined> {
+    async function get_tale_data(name?: string): Promise<Api.TaleEntry> {
         const {tales} = await Fetchers.get.all_tales({});
-        const tale = tales.find(tale => tale.name === name);
+        const tale = tales.find(tale => tale.name === name)!;
         return tale;
     }
 </script>
@@ -101,9 +101,7 @@
                 {#await get_tale_data(current_page.name)}
                     <Loading />
                 {:then tale}
-                    {#if tale}
-                        <TaleView {tale}></TaleView>
-                    {/if}
+                    <TaleView {tale}></TaleView>
                 {/await}
             {:else if current_page.domain === "subproject"}
                 <SubprojectView name={current_page.name} />

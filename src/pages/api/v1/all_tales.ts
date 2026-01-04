@@ -30,5 +30,7 @@ export const GET = Endpoint.make_handler<"all_tales">("all_tales", async (reques
         page_url: "/story/the-weight-of-earth",
     }];
 
+    tales.sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+
     return {tales};
 })
