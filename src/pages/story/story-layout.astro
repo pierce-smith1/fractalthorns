@@ -1,16 +1,24 @@
 ---
     import Default from "../../layouts/default.astro";
 
-    const {image, title} = Astro.props.frontmatter;
+    const {
+        image,
+        title,
+        primary_color,
+        secondary_color,
+        image_dir,
+    } = Astro.props.frontmatter;
 ---
 
 <Default>
-    <div class="container">
-        <div class="title"><strong>{title}</strong></div>
-        <img class="header-image" src={image} />
-        <div class="toc">
-            <ol>
-            </ol>
+    <div class="container" data-image-dir={image_dir}>
+        <div class="header-container">
+            <img class="header-image" src={image}>
+            <div class="title"><strong>{title}</strong></div>
+            <div class="toc">
+                <ol>
+                </ol>
+            </div>
         </div>
         <div class="story">
             <slot />
@@ -32,9 +40,24 @@
         item.appendChild(link);
         toc_list.appendChild(item);
     }
+
+    const image_dir = document.querySelector<HTMLElement>(".container")!.dataset.imageDir;
+
+    const act_images = [...document.querySelectorAll<HTMLElement>(".act-img")];
+    const act_image_frames = [...document.querySelectorAll<HTMLElement>(".act-img-frame")];
+
+    for (const act_image of act_images) {
+        const n = /act-(\w+)/.exec(act_image.id)![1];
+        act_image.style.backgroundImage = `url("/assets/images/${image_dir}/act-image-${n}.png")`;
+    }
+
+    for (const act_image_frame of act_image_frames) {
+        const n = /frame-(\w+)/.exec(act_image_frame.id)![1];
+        act_image_frame.style.backgroundImage = `url("/assets/images/${image_dir}/act-image-frame-${n}.png")`;
+    }
 </script>
 
-<style>
+<style define:vars={{ primary_color, secondary_color }}>
     * {
         font-family: "eczar";
         font-size: 1.05em;
@@ -55,7 +78,7 @@
 
     :global(p) {
         padding-left: 20px;
-        border-left: 1px solid #dad;
+        border-left: 1px solid color-mix(in hsl, var(--primary_color), white );
     }
 
     :global(blockquote) :global(p) {
@@ -67,16 +90,19 @@
     }
 
     .header-image {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        margin-bottom: 40px;
+        max-width: 1920px;
+        min-height: 100%;
+        object-fit: cover;
     }
 
     .title {
-        position: absolute;
-        left: 10vw;
-        top: 60px;
-        width: 30%;
-        filter: drop-shadow(magenta 0 0 10px);
+        padding: 30px;
+        max-width: 25em;
+        filter: drop-shadow(var(--primary_color) 0 0 10px);
     }
 
     @media screen and (max-width: 800px) {
@@ -87,15 +113,17 @@
     }
 
     .title * {
-        line-height: 6vw;
-        font-size: 6vw;
-        color: #f4f;
+        font-size: 4em;
+        line-height: 1em;
+        color: var(--primary_color);
     }
 
-    .toc {
-        position: absolute;
-        top: 18vw;
-        left: 5vw;
+    .header-container {
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        max-width: 1920px;
     }
 
     @media screen and (max-width: 800px) {
@@ -103,18 +131,19 @@
             position: relative;
             left: 0;
             top: 0;
-            border-bottom: 1px solid #a3a;
-            border-top: 1px solid #a3a;
         }
     }
 
     .toc ol {
         list-style-type: none;
         position: sticky;
+        background-color: rgba(0 0 0 / 50%);
+        width: fit-content;
+        padding: 2em 8em 2em 4em;
     }
 
     :global(.toc *) {
-        color: #7af;
+        color: var(--secondary_color);
         text-decoration: none;
     }
 
@@ -122,9 +151,12 @@
         color: #fa0;
         transition: color 0.3s ease-in-out;
     }
-    
+
     .story {
         width: 800px;
+        padding: 0 5em;
+        background-color: #eee;
+        z-index: 1000;
     }
 
     @media screen and (max-width: 800px) {
@@ -158,7 +190,6 @@
         background-repeat: no-repeat;
         width: 800px;
         height: 225px;
-        filter: brightness(75%) saturate(300%);
     }
 
     @media screen and (max-width: 800px) {
@@ -179,49 +210,5 @@
         :global(.act-img) {
             width: 100%;
         }
-    }
-
-    :global(.frame-1) {
-        background-image: url("/assets/images/tlh/act-image-frame-1.png");
-    }
-
-    :global(.frame-2) {
-        background-image: url("/assets/images/tlh/act-image-frame-2.png");
-    }
-
-    :global(.frame-3) {
-        background-image: url("/assets/images/tlh/act-image-frame-3.png");
-    }
-
-    :global(.frame-4) {
-        background-image: url("/assets/images/tlh/act-image-frame-4.png");
-    }
-
-    :global(.frame-5) {
-        background-image: url("/assets/images/tlh/act-image-frame-5.png");
-    }
-
-    :global(.frame-end) {
-        background-image: url("/assets/images/tlh/act-image-frame-end.png");
-    }
-
-    :global(.act-1) {
-        background-image: url("/assets/images/tlh/act-image-1.png");
-    }
-
-    :global(.act-2) {
-        background-image: url("/assets/images/tlh/act-image-2.png");
-    }
-
-    :global(.act-3) {
-        background-image: url("/assets/images/tlh/act-image-3.png");
-    }
-
-    :global(.act-4) {
-        background-image: url("/assets/images/tlh/act-image-4.png");
-    }
-
-    :global(.act-5) {
-        background-image: url("/assets/images/tlh/act-image-5.png");
     }
 </style>

@@ -1,4 +1,4 @@
-import * as Interfaces from "../interfaces";
+import * as Interfaces from "../interfaces"
 
 export const image_object_schema = {
     name: {
@@ -27,7 +27,7 @@ export const image_object_schema = {
     },
     canon: {
         type: Interfaces.fields.optional_string,
-        description: `If applicable, the iteration the image depicts.`,
+        description: "The canon designation for the world that this image depicts. Not application if no relevant canon designation exists.",
     },
     has_description: {
         type: Interfaces.fields.required_boolean,

@@ -1,4 +1,4 @@
-import * as Interfaces from "../interfaces";
+import * as Interfaces from "../interfaces"
 
 export const redactable_record_entry_schema = {
     solved: {
@@ -116,7 +116,7 @@ export const record_text_response_schema = {
     },
     lines: {
         type: Interfaces.fields.required_array(Interfaces.fields.required_object(line_object_schema)),
-        description: "A list of all the lines in this record, ordered first to last. A \"line\" is simply an arbitrary, contiguous chunk of text attributed to a character, and does not consider the presence of line breaks in the text." 
+        description: "A list of all the lines in this record, ordered first to last. A \"line\" is simply an arbitrary, contiguous chunk of text attributed to a character, and does not consider the presence of line breaks in the text."
     },
 } as const;
 

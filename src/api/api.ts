@@ -6,6 +6,7 @@ import * as NewsApi from "./news"
 import * as PuzzleApi from "./puzzles"
 import * as SketchApi from "./sketches"
 import * as SplashApi from "./splashes"
+import * as TaleApi from "./tales"
 
 export const endpoints = {
     all_news: NewsApi.all_news_endpoint,
@@ -24,6 +25,7 @@ export const endpoints = {
     current_splash: SplashApi.current_splash_request_endpoint,
     paged_splashes: SplashApi.paged_splash_request_endpoint,
     submit_discord_splash: SplashApi.discord_splash_upload_endpoint,
+    all_tales: TaleApi.all_tales_endpoint,
 } as const;
 
 export type GetEndpoints = {[endpoint in keyof typeof endpoints]: {
@@ -38,3 +40,4 @@ export * from "./episodic"
 export * from "./domain"
 export * from "./puzzles"
 export * from "./splashes"
+export * from "./tales"

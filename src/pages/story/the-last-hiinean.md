@@ -2,6 +2,9 @@
     layout: ./story-layout.astro
     image: "/serve/image/hiinean"
     title: "The Last Hiinean"
+    primary_color: "#f4f"
+    secondary_color: "#7af"
+    image_dir: "tlh"
 ---
 
 > They say you die twice...
@@ -14,8 +17,8 @@
 ## Act 1 - A Lifetime Apart
 
 <div class="act-img-header">
-    <div class="act-img-frame frame-1"></div>
-    <div class="act-img act-1"></div>
+    <div class="act-img-frame" id="frame-1"></div>
+    <div class="act-img" id="act-1"></div>
 </div>
 
 The cold, cloudy air surrounds me, rushing across my face and my clothes, stealing my exhaled breaths. I overlook a massive savannah, fractured into continents of clay by decades of dryness, spattered with the courageous sproutings of hardy patches of bush and grass. The sun peeks sheepishly from behind the deep blueness of the overcast sky, casting gentle rays that illuminate the falling rain. 
@@ -61,8 +64,8 @@ My whole life, I had been traveling - trying to find who I was, the place I real
 ## Act 2 - The Valley of Midnight
 
 <div class="act-img-header">
-    <div class="act-img-frame frame-2"></div>
-    <div class="act-img act-2"></div>
+    <div class="act-img-frame" id="frame-2"></div>
+    <div class="act-img" id="act-2"></div>
 </div>
 
 As morning turned to noon, I had gotten back on my feet, and in a rocky crevice not far from the valley itself, I rummaged through the countless pockets and pouches on backpack to set up my shelter, a drab, weathered canvas tent that I had become far too used to from my years of vagrancy. 
@@ -202,8 +205,8 @@ My head and chest beginning to forcefully complain of exhaustion, it seemed no c
 ## Act 3 - The Swordsman
 
 <div class="act-img-header">
-    <div class="act-img-frame frame-3"></div>
-    <div class="act-img act-3"></div>
+    <div class="act-img-frame" id="frame-3"></div>
+    <div class="act-img" id="act-3"></div>
 </div>
 
 I don't remember exactly what I dreamt of that night. I know that I was desperate and confused, unable to arrange the enigmatic pieces the world had thrown me into anything meaningful, turning the questions around in my head over and over again as though they were a three-sided coin - a tangled impossibility, a logical contradiction. Yet while these fragments of reality slipped through my fingers, I was still able to hold onto hope.
@@ -369,8 +372,8 @@ She turned to retreat to the lightless corners of her cabin again.
 ## Act 4 - To Dust You Shall Return
 
 <div class="act-img-header">
-    <div class="act-img-frame frame-4"></div>
-    <div class="act-img act-4"></div>
+    <div class="act-img-frame" id="frame-4"></div>
+    <div class="act-img" id="act-4"></div>
 </div>
 
 The world surrendered to night. The sun was shoved out of the sky by encroaching purples and blues, the last sunbeams carving long shadows across the hills as they lashed out against the darkness.
@@ -516,8 +519,8 @@ Alba cupped her beak in her right hand and contemplated momentary - then let out
 ## Act 5 - A Child Of The Earth
 
 <div class="act-img-header">
-    <div class="act-img-frame frame-5"></div>
-    <div class="act-img act-5"></div>
+    <div class="act-img-frame" id="frame-5"></div>
+    <div class="act-img" id="act-5"></div>
 </div>
 
 We spent the next few days among the clouds of Auzoa, cruising along airstreams in Alba's plane. The experience was thrilling at first, but quickly became unenviable. The aircraft was loud and extremely cramped, even for someone of the intended size, forcing me into an punishing, coiled hunch for most of the journey. We stopped frequently, to make sure both the plane and ourselves stayed fueled - though I had little time to stretch out the tension in my legs and back, as Alba seemed to behave in public very erratically, frenzied by an uncontrolled haste and anxiety. I began to suspect her vehicle may have been stolen... there were still many things about her life I had yet to understand.
@@ -555,7 +558,7 @@ Alba froze, peering out into the unending sprawl of the horizon, dotted with gra
 "...why don't we take a walk, then?"
 
 <div class="act-img-header">
-    <div class="act-img-frame frame-end"></div>
+    <div class="act-img-frame" id="frame-end"></div>
     <div class="end-extender"></div>
 </div>
 

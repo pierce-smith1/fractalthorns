@@ -9,8 +9,8 @@ function get_base_url_for_endpoint(endpoint: keyof Api.GetEndpoints) {
 }
 
 function define_fetcher<
-    EndpointName extends keyof Api.GetEndpoints, 
-    Params = Api.GetEndpoints[EndpointName]["request"], 
+    EndpointName extends keyof Api.GetEndpoints,
+    Params = Api.GetEndpoints[EndpointName]["request"],
     Result = Api.GetEndpoints[EndpointName]["response"]
 >(endpoint: EndpointName, method: "GET" | "POST" = "GET"): (request: Params) => Promise<Result> {
     return (request: Params) => {
@@ -56,6 +56,7 @@ export const get = {
     single_puzzle: define_fetcher<"single_puzzle">("single_puzzle"),
     current_splash: define_fetcher<"current_splash">("current_splash"),
     paged_splashes: define_fetcher<"paged_splashes">("paged_splashes"),
+    all_tales: define_fetcher<"all_tales">("all_tales"),
 };
 
 export const post = {

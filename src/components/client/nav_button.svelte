@@ -19,6 +19,7 @@
         "sketch": "sketches",
         "episodic": "story",
         "discover": "discovery",
+        "tale": "tales",
         "subproject": "other",
     }[domain]);
 
@@ -36,7 +37,7 @@
             --font-size={minor ? "0.8rem" : "1rem"}
         >
             <button type="button" class="domain-button" class:selected class:minor onclick={hide_search}>
-                <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div> 
+                <div class="button-background" style:background-image={`url(/assets/images/common/${domain}-button.png)`}></div>
             </button>
         </Tooltip>
     </PageLink>
@@ -78,7 +79,7 @@
     .selected .button-background {
         filter: invert();
     }
-    
+
     .domain-button :global(a) {
         color: white;
         text-decoration: none;

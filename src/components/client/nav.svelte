@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="nav-contents">
-                <div class="nav-sticky"> 
+                <div class="nav-sticky">
                     <div class="domain-search">
                         <DomainSearch />
                     </div>
