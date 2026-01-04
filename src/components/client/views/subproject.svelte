@@ -1,9 +1,6 @@
 <script lang="ts">
-    import * as Fetchers from "../../../fetchers.ts";
-
     import Keynav from "./keynav.svelte";
     import Aor from "./subprojects/aor.svelte";
-    import Tlh from "./subprojects/tlh.svelte";
     import Yokdeck from "./subprojects/yokdeck.svelte";
     import Yokscr from "./subprojects/yokscr.svelte";
 
@@ -13,9 +10,7 @@
 </script>
 
 <div class="subproject-container" class:full={name === "tlh"}>
-    {#if name === "tlh"}
-        <Tlh />
-    {:else if name === "aor"}
+    {#if name === "aor"}
         <Aor />
     {:else if name === "yokdeck"}
         <Yokdeck />
